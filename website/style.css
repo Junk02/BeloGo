@@ -69,3 +69,12 @@ html, body {
     color: white;
     z-index: 2;
 }
+
+.navbar {
+    transition: all 0.3s ease;
+}
+        
+.navbar-hide {
+    transform: translateY(-100%);
+}
+        
