@@ -1,21 +1,27 @@
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+}
+
 .hero {
     background-image: url('img/belarus-bg.jpg');
-    /* положи изображение в папку img/ */
     background-size: cover;
     background-position: center;
     height: 100vh;
     position: relative;
-    filter: blur(3px);
 }
 
-.hero-overlay {
+.hero::before {
+    /* альтернатива overlay — можно использовать это вместо отдельного div */
+    content: "";
     position: absolute;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
     background-color: rgba(0, 0, 0, 0.4);
-    /* затемнение */
+    backdrop-filter: blur(3px);
     z-index: 1;
 }
 
@@ -28,11 +34,3 @@
     text-align: center;
     color: white;
 }
-
-footer {
-    background-color: #f8f9fa;
-    padding: 1rem;
-    text-align: center;
-    margin-top: 0;
-}
-
