@@ -1,0 +1,38 @@
+.hero {
+    background-image: url('img/belarus-bg.jpg');
+    /* положи изображение в папку img/ */
+    background-size: cover;
+    background-position: center;
+    height: 100vh;
+    position: relative;
+    filter: blur(3px);
+}
+
+.hero-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.4);
+    /* затемнение */
+    z-index: 1;
+}
+
+.hero-content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 2;
+    text-align: center;
+    color: white;
+}
+
+footer {
+    background-color: #f8f9fa;
+    padding: 1rem;
+    text-align: center;
+    margin-top: 0;
+}
+
