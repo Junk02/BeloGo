@@ -1,0 +1,103 @@
+html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+        
+        .tiktok-container {
+            height: 100vh;
+            background-color: #000;
+        }
+        
+        .vertical-swiper {
+            height: 100%;
+        }
+        
+        .swiper-slide {
+            height: 100vh;
+            overflow: hidden;
+        }
+        
+        .swiper-pagination-vertical {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .swiper-pagination-vertical .swiper-pagination-bullet {
+            width: 8px;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.5);
+            opacity: 1;
+        }
+        
+        .swiper-pagination-vertical .swiper-pagination-bullet-active {
+            background: #fff;
+            height: 16px;
+            border-radius: 8px;
+        }
+        
+        .horizontal-swiper {
+            height: 100%;
+            width: 100%;
+        }
+        
+        .horizontal-swiper .swiper-slide {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .horizontal-swiper .swiper-pagination {
+            position: absolute;
+            bottom: 20px;
+            left: 0;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .horizontal-swiper .swiper-pagination-bullet {
+            width: 8px;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.5);
+            opacity: 1;
+        }
+        
+        .horizontal-swiper .swiper-pagination-bullet-active {
+            background: #fff;
+            width: 16px;
+            border-radius: 8px;
+        }
+        
+        .slide-content {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            color: white;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.8);
+            z-index: 10;
+        }
+        
+        #mainNavbar {
+            z-index: 1000;
+        }
+        
+        /* Стили для анимации */
+        .vertical-swiper .swiper-slide {
+            transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        
+        .horizontal-swiper .swiper-slide {
+            transition: opacity 0.5s ease;
+        }
+        
+        .horizontal-swiper .swiper-slide:not(.swiper-slide-active) {
+            opacity: 0 !important;
+        }
