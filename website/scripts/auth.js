@@ -24,7 +24,7 @@ document.getElementById('showSignin').addEventListener('click', e => {
     adjustHeight();
 });
 
-// Кастомная валидация поля пароля (например: min 8 символов, без < и >)
+// Кастомная валидация поля пароля
 function validatePassword(input) {
     const value = input.value.trim();
     const invalidChars = /[<>]/;
@@ -112,5 +112,3 @@ if (nameInputLive) {
         adjustHeight();
     });
 }
-
-
