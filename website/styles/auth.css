@@ -1,0 +1,72 @@
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    background: linear-gradient(135deg, #89f7fe 0%, #66a6ff 100%);
+    font-family: 'Segoe UI', Tahoma, Verdana, sans-serif;
+    overflow: hidden;
+}
+
+.auth-container {
+    position: relative;
+    width: 350px;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+    transition: height 0.3s ease;
+}
+
+.form-wrapper {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding: 2rem;
+    box-sizing: border-box;
+    transition: transform 0.5s ease-in-out;
+}
+
+.signin-form {
+    transform: translateX(0);
+    z-index: 2;
+}
+
+.signup-form {
+    transform: translateX(100%);
+    z-index: 1;
+}
+
+.auth-container.show-signup .signin-form {
+    transform: translateX(-100%);
+}
+
+.auth-container.show-signup .signup-form {
+    transform: translateX(0);
+    z-index: 2;
+}
+
+.form-wrapper h2 {
+    margin-bottom: 1.5rem;
+    text-align: center;
+}
+
+.form-wrapper .form-control {
+    margin-bottom: 1rem;
+}
+
+.switch-link {
+    text-align: center;
+    margin-top: 1rem;
+}
+
+/* Валидация: показывать рамки только после попытки submit */
+.needs-validation.was-validated .form-control:invalid {
+    border-color: #dc3545;
+}
+
+.needs-validation.was-validated .form-control:valid {
+    border-color: #28a745;
+}
