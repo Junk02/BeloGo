@@ -1,10 +1,12 @@
 const express = require('express');
 const cors = require('cors');
-const sqlite3 = require('sqlite3').verbose();
 const path = require('path');
+const bcrypt = require('bcrypt');
+const sqlite3 = require('sqlite3').verbose();
 const db = new sqlite3.Database('./users.db');
 const app = express();
 const PORT = 3000;
+const time = new Date();
 
 db.run(`
   CREATE TABLE IF NOT EXISTS users (
@@ -21,14 +23,24 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
 
+const red = '\x1b[31m';
+const green = '\x1b[32m';
+const reset = '\x1b[0m';
+
+function log(text, type='def') {
+    if (type == 'def') console.log((`[${time.getHours()}:${time.getMinutes()}:${time.getSeconds()}] ${text}`));
+    else if (type == 'err') console.log(red + (`[${time.getHours()}:${time.getMinutes()}:${time.getSeconds()}] ${text}` + reset));
+    else if (type == 'suc') console.log(green + (`[${time.getHours()}:${time.getMinutes()}:${time.getSeconds()}] ${text}` + reset));
+}
+
 app.get('/', (req, res) => {
     res.send('Сервер работает!');
 });
 
-app.post('/register', (req, res) => {
+app.post('/register', async (req, res) => {
     const { name, nickname, password } = req.body;
-    console.log('Client data:');
-    console.log({ name, nickname, password });
+    log('Client data:');
+    log(`${JSON.stringify({name, nickname, password })}`);
 
     if (!name || !nickname || !password) {
         return res.status(400).json({ message: 'Пожалуйста, заполните все поля' });
@@ -51,50 +63,89 @@ app.post('/register', (req, res) => {
         return res.status(400).json({ message: 'Пароль должен быть не менее 8 символов и не содержать < и >' });
     }
 
-    // (Позже можно будет добавить проверку на уже существующий ник)
+    try {
+        const hashedPassword = await bcrypt.hash(password, 10);
+        log(`User password hash: ${hashedPassword}`);
 
-    // Добавляем пользователя в базу
-    const sql = `INSERT INTO users (name, nickname, password) VALUES (?, ?, ?)`;
-    db.run(sql, [name, nickname, password], function (err) {
-        if (err) {
-            if (err.code === 'SQLITE_CONSTRAINT') {
-                console.log('User with such an ID already exist');
-                return res.status(409).json({ message: 'Пользователь с таким никнеймом уже существует' });
+        const sql = `INSERT INTO users (name, nickname, password) VALUES (?, ?, ?)`;
+        db.run(sql, [name, nickname, hashedPassword], function (err) {
+            if (err) {
+                if (err.code === 'SQLITE_CONSTRAINT') {
+                    log('User with such an ID already exist', 'err');
+                    return res.status(409).json({ message: 'Пользователь с таким никнеймом уже существует' });
+                }
+                return res.status(500).json({ message: 'Ошибка при сохранении пользователя' });
             }
-            return res.status(500).json({ message: 'Ошибка при сохранении пользователя' });
-        }
 
-        console.log(`User added with ID ${this.lastID}`);
-        res.status(201).json({
-            message: 'Регистрация прошла успешно!',
-            user: { name, nickname }
+            log(`User added with ID ${this.lastID}`);
+            res.status(201).json({
+                message: 'Регистрация прошла успешно!',
+                user: { name, nickname }
+            });
         });
-    });
+    } catch (error) {
+        return res.status(500).json({ message: 'Ошибка при хешировании пароля' });
+    }
 
 });
 
+app.post('/login', (req, res) => {
+  const { nickname, password } = req.body;
+
+  if (!nickname || !password) {
+    return res.status(400).json({ message: 'Пожалуйста, заполните все поля' });
+  }
+
+  // Ищем пользователя в базе по никнейму
+  const sql = `SELECT * FROM users WHERE nickname = ?`;
+  db.get(sql, [nickname], async (err, user) => {
+    if (err) {
+      return res.status(500).json({ message: 'Ошибка при поиске пользователя' });
+    }
+
+    if (!user) {
+        log(`User ${nickname} doesn't exist`, 'err');
+        return res.status(401).json({ message: 'Неверный никнейм или пароль' });
+    }
+
+    // Сравниваем пароль с хешем
+    try {
+      const match = await bcrypt.compare(password, user.password);
+      if (match) {
+        log(`User ${nickname} registered successfully`, 'suc');
+        return res.json({ message: 'Авторизация успешна!', user: { id: user.id, name: user.name, nickname: user.nickname } });
+      } else {
+        log(`User ${nickname} registered unsuccessfully`, 'err');
+        return res.status(401).json({ message: 'Неверный никнейм или пароль' });
+      }
+    } catch {
+      return res.status(500).json({ message: 'Ошибка при проверке пароля' });
+    }
+  });
+});
+
+
 // Получение всех пользователей (админ панель)
 app.get('/users', (req, res) => {
-  db.all('SELECT id, name, nickname FROM users', (err, rows) => {
-    if (err) {
-      return res.status(500).json({ message: 'Ошибка при получении пользователей' });
-    }
-    res.json(rows);
-  });
+    db.all('SELECT id, name, nickname, password FROM users', (err, rows) => {
+        if (err) {
+            return res.status(500).json({ message: 'Ошибка при получении пользователей' });
+        }
+        res.json(rows);
+    });
 });
 
 // Очистка базы (админ панель)
 app.delete('/users', (req, res) => {
-  db.run('DELETE FROM users', function (err) {
-    if (err) {
-      return res.status(500).json({ message: 'Ошибка при очистке базы данных' });
-    }
-    res.json({ message: `Удалено пользователей: ${this.changes}` });
-  });
+    db.run('DELETE FROM users', function (err) {
+        if (err) {
+            return res.status(500).json({ message: 'Ошибка при очистке базы данных' });
+        }
+        res.json({ message: `Удалено пользователей: ${this.changes}` });
+    });
 });
-
 
 // Запуск сервера
 app.listen(PORT, () => {
-    console.log(`Сервер запущен на http://localhost:${PORT}`);
+    log(`Сервер запущен на http://localhost:${PORT}`);
 });

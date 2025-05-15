@@ -30,24 +30,38 @@ function validatePassword(input) {
     else if (/[<>]/.test(value)) input.setCustomValidity('Пароль не должен содержать < и >.');
     else input.setCustomValidity('');
 }
+
 function validateName(input) {
     const value = input.value.trim();
     if (!/^[A-Za-zА-Яа-яЁё]+$/.test(value)) input.setCustomValidity('Имя должно быть только буквы без пробелов.');
     else input.setCustomValidity('');
 }
+
 function validateConfirmPassword(pw, confirm) {
     if (confirm.value !== pw.value) confirm.setCustomValidity('Пароли не совпадают.');
     else confirm.setCustomValidity('');
 }
 
+function validateNickname(input) {
+    const value = input.value.trim();
+    if (value.length < 3) input.setCustomValidity('Никнейм должен быть не менее 3 символов.');
+    else if (!/^[a-zA-Z0-9_]+$/.test(value)) input.setCustomValidity('Никнейм может содержать только латиницу, цифры и _ без пробелов.');
+    else input.setCustomValidity('');
+}
+
 // Валидация + отправка регистрации
 signupForm.addEventListener('submit', async event => {
-    // сначала стандартная валидация полей
+    // кастомная валидация полей
+    const nameInput = signupForm.querySelector('#nameInput');
+    const nicknameInput = signupForm.querySelector('input[placeholder="Никнейм"]');
     const passwordFields = signupForm.querySelectorAll('input[type="password"]');
+
+    validateName(nameInput);
+    validateNickname(nicknameInput);
     validatePassword(passwordFields[0]);
     validateConfirmPassword(passwordFields[0], passwordFields[1]);
-    validateName(signupForm.querySelector('#nameInput'));
 
+    // если есть ошибки — показываем и выходим
     if (!signupForm.checkValidity()) {
         event.preventDefault();
         event.stopPropagation();
@@ -56,16 +70,14 @@ signupForm.addEventListener('submit', async event => {
         return;
     }
 
-    // если прошли валидацию, блокируем дефолт
     event.preventDefault();
 
     // собираем данные
-    const name = signupForm.querySelector('input[placeholder="Имя"]').value.trim();
-    const nickname = signupForm.querySelector('input[placeholder="Никнейм"]').value.trim();
+    const name = nameInput.value.trim();
+    const nickname = nicknameInput.value.trim();
     const password = passwordFields[0].value;
 
     try {
-        // отправляем на сервер
         const response = await fetch('http://localhost:3000/register', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -88,6 +100,50 @@ signupForm.addEventListener('submit', async event => {
     }
 });
 
+// Валидация + отправка авторизации
+signinForm.addEventListener('submit', async event => {
+    const nicknameInput = signinForm.querySelector('input[placeholder="Никнейм"]');
+    const passwordInput = signinForm.querySelector('input[placeholder="Пароль"]');
+
+    validateNickname(nicknameInput);
+    validatePassword(passwordInput);
+
+    if (!signinForm.checkValidity()) {
+        event.preventDefault();
+        event.stopPropagation();
+        signinForm.classList.add('was-validated');
+        adjustHeight();
+        return;
+    }
+
+    event.preventDefault();
+
+    const nickname = nicknameInput.value.trim();
+    const password = passwordInput.value;
+
+    try {
+        const response = await fetch('http://localhost:3000/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ nickname, password }),
+        });
+        const result = await response.json();
+
+        if (response.ok) {
+            alert(`Добро пожаловать, ${result.user.name}! Авторизация успешна.`);
+            signinForm.reset();
+            signinForm.classList.remove('was-validated');
+            adjustHeight();
+            // TODO: редирект на защищённую страницу
+        } else {
+            alert('Ошибка: ' + result.message);
+        }
+    } catch (err) {
+        console.error(err);
+        alert('Не удалось соединиться с сервером.');
+    }
+});
+
 // Валидация на лету и подстройка высоты
 document.querySelectorAll('input[type="password"]').forEach(input =>
     input.addEventListener('input', () => {
@@ -101,3 +157,9 @@ if (nameInputLive) {
         adjustHeight();
     });
 }
+document.querySelectorAll('input[placeholder="Никнейм"]').forEach(input =>
+    input.addEventListener('input', () => {
+        validateNickname(input);
+        adjustHeight();
+    })
+);
