@@ -17,95 +17,84 @@ document.getElementById('showSignup').addEventListener('click', e => {
     container.classList.add('show-signup');
     adjustHeight();
 });
-
 document.getElementById('showSignin').addEventListener('click', e => {
     e.preventDefault();
     container.classList.remove('show-signup');
     adjustHeight();
 });
 
-// Кастомная валидация поля пароля
+// Валидации
 function validatePassword(input) {
     const value = input.value.trim();
-    const invalidChars = /[<>]/;
-
-    if (value.length < 8) {
-        input.setCustomValidity('Пароль должен быть не менее 8 символов.');
-    } else if (invalidChars.test(value)) {
-        input.setCustomValidity('Пароль не должен содержать < и >.');
-    } else {
-        input.setCustomValidity('');
-    }
+    if (value.length < 8) input.setCustomValidity('Пароль должен быть не менее 8 символов.');
+    else if (/[<>]/.test(value)) input.setCustomValidity('Пароль не должен содержать < и >.');
+    else input.setCustomValidity('');
 }
-
-// Кастомная валидация поля имени (только английские или русские буквы)
 function validateName(input) {
     const value = input.value.trim();
-    const onlyLetters = /^[A-Za-zА-Яа-яЁё]+$/;
-
-    if (!onlyLetters.test(value)) {
-        input.setCustomValidity('Имя должно содержать только буквы без пробелов.');
-    } else {
-        input.setCustomValidity('');
-    }
+    if (!/^[A-Za-zА-Яа-яЁё]+$/.test(value)) input.setCustomValidity('Имя должно быть только буквы без пробелов.');
+    else input.setCustomValidity('');
+}
+function validateConfirmPassword(pw, confirm) {
+    if (confirm.value !== pw.value) confirm.setCustomValidity('Пароли не совпадают.');
+    else confirm.setCustomValidity('');
 }
 
-// Проверяет совпадение паролей
-function validateConfirmPassword(passwordInput, confirmInput) {
-    if (confirmInput.value !== passwordInput.value) {
-        confirmInput.setCustomValidity('Пароли не совпадают.');
-    } else {
-        confirmInput.setCustomValidity('');
-    }
-}
+// Валидация + отправка регистрации
+signupForm.addEventListener('submit', async event => {
+    // сначала стандартная валидация полей
+    const passwordFields = signupForm.querySelectorAll('input[type="password"]');
+    validatePassword(passwordFields[0]);
+    validateConfirmPassword(passwordFields[0], passwordFields[1]);
+    validateName(signupForm.querySelector('#nameInput'));
 
-// Подключаем к каждой форме кастомную валидацию
-document.querySelectorAll('.needs-validation').forEach(form => {
-    form.addEventListener('submit', event => {
-        const passwordFields = form.querySelectorAll('input[type="password"]');
-        if (passwordFields.length >= 1) {
-            validatePassword(passwordFields[0]);
-        }
-        if (passwordFields.length === 2) {
-            validateConfirmPassword(passwordFields[0], passwordFields[1]);
-        }
-
-        const nameInput = form.querySelector('#nameInput');
-        if (nameInput) {
-            validateName(nameInput);
-        }
-
-
-        if (!form.checkValidity()) {
-            event.preventDefault();
-            event.stopPropagation();
-        }
-
-        form.classList.add('was-validated');
+    if (!signupForm.checkValidity()) {
+        event.preventDefault();
+        event.stopPropagation();
+        signupForm.classList.add('was-validated');
         adjustHeight();
-    }, false);
+        return;
+    }
+
+    // если прошли валидацию, блокируем дефолт
+    event.preventDefault();
+
+    // собираем данные
+    const name = signupForm.querySelector('input[placeholder="Имя"]').value.trim();
+    const nickname = signupForm.querySelector('input[placeholder="Никнейм"]').value.trim();
+    const password = passwordFields[0].value;
+
+    try {
+        // отправляем на сервер
+        const response = await fetch('http://localhost:3000/register', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name, nickname, password })
+        });
+        const result = await response.json();
+
+        if (response.ok) {
+            alert(result.message);
+            signupForm.reset();
+            signupForm.classList.remove('was-validated');
+            container.classList.remove('show-signup');
+            adjustHeight();
+        } else {
+            alert('Ошибка: ' + result.message);
+        }
+    } catch (err) {
+        console.error(err);
+        alert('Не удалось соединиться с сервером.');
+    }
 });
 
-// Если хочешь валидировать сразу при вводе
-document.querySelectorAll('input[type="password"]').forEach(input => {
+// Валидация на лету и подстройка высоты
+document.querySelectorAll('input[type="password"]').forEach(input =>
     input.addEventListener('input', () => {
         validatePassword(input);
-        adjustHeight(); // чтобы ошибки учитывались в высоте
-    });
-});
-
-// Листенер на поле повтора пароля для сравнения
-document.querySelectorAll('#signupForm input[type="password"]').forEach(input => {
-    input.addEventListener('input', () => {
-        const form = document.getElementById('signupForm');
-        const [passwordInput, confirmInput] = form.querySelectorAll('input[type="password"]');
-        validatePassword(passwordInput);
-        validateConfirmPassword(passwordInput, confirmInput);
         adjustHeight();
-    });
-});
-
-
+    })
+);
 if (nameInputLive) {
     nameInputLive.addEventListener('input', () => {
         validateName(nameInputLive);
