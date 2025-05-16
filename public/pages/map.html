@@ -15,30 +15,39 @@
     <link rel="stylesheet" href="/styles/map.css">
 </head>
 <body>
-    <!-- Навигационная панель -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    
+<!-- Навигационная панель -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top" id="mainNavbar">
         <div class="container">
-            <a class="navbar-brand" href="#">
+            <a class="navbar-brand" href="/index.html">
                 <i class="fas fa-map-marked-alt me-2"></i>BeloGo
             </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
+            <div class="collapse navbar-collapse" id="navbarCollapse">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="#"><i class="fas fa-home me-1"></i> Главная</a>
+                        <a class="nav-link active" href="pages/map.html"><i class="fas fa-map me-1"></i> Карта</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link active" href="#"><i class="fas fa-map me-1"></i> Карта</a>
+                        <a class="nav-link" href="pages/reels.html"><i class="fas fa-home me-1"></i> Лента</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#"><i class="fas fa-user me-1"></i> Профиль</a>
+                        <a class="nav-link" href="#"><i class="fas fa-user me-1"></i> Добавить пост</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="pages/auth.html"><i class="fas fa-user me-1"></i> Войти</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="pages/about.html"><i class="fas fa-user me-1"></i> О нас</a>
                     </li>
                 </ul>
             </div>
         </div>
     </nav>
+
+    <!----------------->
 
     <!-- Контейнер карты -->
     <div id="map-container">
