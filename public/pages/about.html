@@ -3,13 +3,234 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>О нас - BeloGo</title>
+    <title>О нас - Название проекта</title>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
     <!-- Animate.css -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
     
+    <style>
+        :root {
+            --primary-color: #4e73df;
+            --secondary-color: #f8f9fc;
+            --accent-color: #2e59d9;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--secondary-color);
+            color: #333;
+        }
+
+        .hero-section {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--accent-color) 100%);
+            color: white;
+            padding: 5rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiPjxkZWZzPjxwYXR0ZXJuIGlkPSJwYXR0ZXJuIiB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHBhdHRlcm5Vbml0cz0idXNlclNwYWNlT25Vc2UiIHBhdHRlcm5UcmFuc2Zvcm09InJvdGF0ZSg0NSkiPjxyZWN0IHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCIgZmlsbD0icmdiYSgyNTUsMjU1LDI1NSwwLjA1KSIvPjwvcGF0dGVybj48L2RlZnM+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0idXJsKCNwYXR0ZXJuKSIvPjwvc3ZnPg==');
+        }
+
+        .scroll-animate {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.6s ease-out;
+        }
+
+        .scroll-animate.animated {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .scroll-animate.hide-animate {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            background-color: var(--primary-color);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .team-card {
+            transition: all 0.6s ease;
+            border: none;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transform: scale(0.95);
+            opacity: 0;
+        }
+
+        .team-card.animated {
+            transform: scale(1);
+            opacity: 1;
+        }
+
+        .team-card.hide-animate {
+            transform: scale(0.95);
+            opacity: 0;
+        }
+
+        .team-card:hover {
+            transform: translateY(-10px) scale(1);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .team-img {
+            height: 250px;
+            object-fit: cover;
+            object-position: top;
+            opacity: 0;
+            transition: all 0.6s ease;
+            transform: scale(0.9);
+        }
+
+        .team-img.animated {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .team-img.hide-animate {
+            opacity: 0;
+            transform: scale(0.9);
+        }
+
+        .social-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background-color: rgba(78, 115, 223, 0.1);
+            color: var(--primary-color);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 3px;
+            transition: all 0.3s ease;
+        }
+
+        .social-icon:hover {
+            background-color: var(--primary-color);
+            color: white;
+            transform: scale(1.1);
+        }
+
+        .stats-item {
+            padding: 20px;
+            border-radius: 10px;
+            background: white;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: all 0.6s ease;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        .stats-item.animated {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .stats-item.hide-animate {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        .stats-item:hover {
+            transform: translateY(-5px);
+        }
+
+        .stats-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .timeline {
+            position: relative;
+            padding-left: 30px;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: var(--primary-color);
+        }
+
+        .timeline-item {
+            position: relative;
+            padding-bottom: 30px;
+            opacity: 0;
+            transform: translateX(-20px);
+            transition: all 0.6s ease;
+        }
+
+        .timeline-item.animated {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .timeline-item.hide-animate {
+            opacity: 0;
+            transform: translateX(-20px);
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -30px;
+            top: 5px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--accent-color);
+            border: 2px solid white;
+        }
+
+        footer {
+            background-color: #2c3e50;
+            color: white;
+        }
+
+        .img-fluid {
+            opacity: 0;
+            transform: translateX(30px);
+            transition: all 0.6s ease;
+        }
+
+        .img-fluid.animated {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .img-fluid.hide-animate {
+            opacity: 0;
+            transform: translateX(30px);
+        }
+
+    </style>
+
 </head>
 <body>
     <!-- Навигация -->
@@ -43,59 +264,54 @@
         </div>
     </nav>
 
-    <style>
-
-    .navbar-brand {
-        font-weight: 700;
-    }
-        .navbar {
-        transition: all 0.3s ease;
-    }
-            
-    .navbar-hide {
-        transform: translateY(-100%);
-    }
-
-    .navbar-brand {
-        font-weight: 700;
-    }
-    </style>
-
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-        const navbar = document.getElementById('mainNavbar');
-        let lastScroll = 0;
+            const navbar = document.getElementById('mainNavbar');
+            let lastScroll = 0;
 
-        window.addEventListener('scroll', function () {
-            const currentScroll = window.pageYOffset;
+            window.addEventListener('scroll', function () {
+                const currentScroll = window.pageYOffset;
 
-            if (currentScroll <= 0) {
-                // Вверху страницы - показываем хедер
-                navbar.classList.remove('navbar-hide');
-                return;
-            }
+                if (currentScroll <= 0) {
+                    // Вверху страницы - показываем хедер
+                    navbar.classList.remove('navbar-hide');
+                    return;
+                }
 
-            if (currentScroll > lastScroll && !navbar.classList.contains('navbar-hide')) {
-                // Прокрутка вниз - скрываем хедер
-                navbar.classList.add('navbar-hide');
-            } else if (currentScroll < lastScroll && navbar.classList.contains('navbar-hide')) {
-                // Прокрутка вверх - показываем хедер
-                navbar.classList.remove('navbar-hide');
-            }
+                if (currentScroll > lastScroll && !navbar.classList.contains('navbar-hide')) {
+                    // Прокрутка вниз - скрываем хедер
+                    navbar.classList.add('navbar-hide');
+                } else if (currentScroll < lastScroll && navbar.classList.contains('navbar-hide')) {
+                    // Прокрутка вверх - показываем хедер
+                    navbar.classList.remove('navbar-hide');
+                }
 
-            lastScroll = currentScroll;
+                lastScroll = currentScroll;
+            });
         });
-    });
     </script>
 
-    <!----------------->
+    <style>
+        .navbar {
+            transition: all 0.3s ease;
+        }
+                
+        .navbar-hide {
+            transform: translateY(-100%);
+        }
+
+        .navbar-brand {
+            font-weight: 700;
+        }
+
+    </style>
 
     <!-- Герой секция -->
-    <section class="hero-section text-center animate__animated animate__fadeIn" style="padding: 20vh">
+    <section class="hero-section text-center" style="padding: 20vh;">
         <div class="container position-relative">
-            <h1 class="display-3 fw-bold mb-4 animate__animated animate__fadeInDown">О нашем проекте</h1>
-            <p class="lead mb-5 animate__animated animate__fadeInUp animate__delay-1s">Красота Беларуси в одном приложении!</p>
-            <a href="#contact" class="btn btn-light btn-lg px-4 py-2 animate__animated animate__fadeInUp animate__delay-2s">Связаться с нами</a>
+            <h1 class="display-3 fw-bold mb-4 scroll-animate">О нашем проекте</h1>
+            <p class="lead mb-5 scroll-animate" style="transition-delay: 0.2s">Сайт, помогающий узнать Беларусь во всей её красе!</p>
+            <a href="#contact" class="btn btn-light btn-lg px-4 py-2 scroll-animate" style="transition-delay: 0.4s">Связаться с нами</a>
         </div>
     </section>
 
@@ -103,29 +319,29 @@
     <section class="py-5 bg-white">
         <div class="container py-5">
             <div class="row align-items-center">
-                <div class="col-lg-6 mb-5 mb-lg-0 animate-on-scroll" data-animation="animate__fadeInLeft">
-                    <h2 class="fw-bold mb-4">О нашем проекте</h2>
-                    <p class="text-muted mb-4">Сайт для поиска интересных мест в Беларуси. Здесь вы можете не только построить маршрут, но и поделиться фотографиями, сделанными в вашем путешествии, или посмотреть снимки других пользователей.</p>
-                    <p class="text-muted mb-4">дайте дистант пжпжпжпжжпжпжпж</p>
-                    <div class="d-flex align-items-center mb-3">
+                <div class="col-lg-6 mb-5 mb-lg-0">
+                    <h2 class="fw-bold mb-4 scroll-animate">О нашем проекте</h2>
+                    <p class="text-muted mb-4 scroll-animate" style="transition-delay: 0.1s">Здесь вы можете написать описание вашего проекта. Расскажите, чем он занимается, какие проблемы решает и какие преимущества предлагает клиентам.</p>
+                    <p class="text-muted mb-4 scroll-animate" style="transition-delay: 0.2s">Например: "Наш проект был основан в 2020 году с целью предоставления инновационных решений для малого и среднего бизнеса. Мы объединяем опытных специалистов из разных областей, чтобы создавать продукты, которые действительно меняют жизнь людей к лучшему."</p>
+                    <div class="d-flex align-items-center mb-3 scroll-animate" style="transition-delay: 0.3s">
                         <div class="bg-primary rounded-circle p-2 text-white me-3">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
                                 <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
                                 <path d="M10.97 4.97a.235.235 0 0 0-.02.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-1.071-1.05z"/>
                             </svg>
                         </div>
-                        <p class="mb-0">Инновационные технологии(нет)</p>
+                        <p class="mb-0">Инновационные технологии</p>
                     </div>
-                    <div class="d-flex align-items-center mb-3">
+                    <div class="d-flex align-items-center mb-3 scroll-animate" style="transition-delay: 0.4s">
                         <div class="bg-primary rounded-circle p-2 text-white me-3">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
                                 <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
                                 <path d="M10.97 4.97a.235.235 0 0 0-.02.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-1.071-1.05z"/>
                             </svg>
                         </div>
-                        <p class="mb-0">Профессиональная команда?</p>
+                        <p class="mb-0">Профессиональная команда</p>
                     </div>
-                    <div class="d-flex align-items-center">
+                    <div class="d-flex align-items-center scroll-animate" style="transition-delay: 0.5s">
                         <div class="bg-primary rounded-circle p-2 text-white me-3">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
                                 <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
@@ -135,24 +351,24 @@
                         <p class="mb-0">Клиентоориентированный подход</p>
                     </div>
                 </div>
-                <div class="col-lg-6 animate-on-scroll" data-animation="animate__fadeInRight">
+                <div class="col-lg-6">
                     <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="О нашем проекте" class="img-fluid rounded shadow-lg">
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- О себе (здесь вы можете добавить информацию о себе) -->
+    <!-- О себе -->
     <section class="py-5 bg-light">
         <div class="container py-5">
             <div class="row justify-content-center">
-                <div class="col-lg-8 text-center animate-on-scroll" data-animation="animate__fadeInUp">
-                    <h2 class="fw-bold mb-5">О себе</h2>
-                    <div class="bg-white p-5 rounded shadow-sm">
-                        <img src="https://images.unsplash.com/photo-1531427186611-ecfd6d936c79?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80" alt="Ваше фото" class="rounded-circle mb-4" width="150" height="150">
+                <div class="col-lg-8 text-center">
+                    <h2 class="fw-bold mb-5 scroll-animate">О себе</h2>
+                    <div class="bg-white p-5 rounded shadow-sm scroll-animate" style="transition-delay: 0.2s">
+                        <img src="https://images.unsplash.com/photo-1531427186611-ecfd6d936c79?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80" alt="Ваше фото" class="rounded-circle mb-4 team-img" width="150" height="150">
                         <h3 class="h4 mb-3">Ваше Имя</h3>
                         <p class="text-muted mb-4">Здесь вы можете написать о себе, своем опыте, образовании и увлечениях. Расскажите, почему вы создали этот проект и какие цели преследуете.</p>
-                        <p class="text-muted">vfvdabgdb</p>
+                        <p class="text-muted">Например: "Я веб-разработчик с 5-летним опытом работы. Специализируюсь на создании современных веб-приложений с использованием React и Node.js. Люблю решать сложные задачи и создавать продукты, которые приносят пользу людям."</p>
                         <div class="mt-4">
                             <a href="#" class="social-icon me-2"><i class="fab fa-github"></i></a>
                             <a href="#" class="social-icon me-2"><i class="fab fa-linkedin-in"></i></a>
@@ -169,13 +385,13 @@
     <section class="py-5 bg-white">
         <div class="container py-5">
             <div class="row justify-content-center mb-5">
-                <div class="col-lg-8 text-center animate-on-scroll" data-animation="animate__fadeInUp">
-                    <h2 class="fw-bold mb-3">Наша команда</h2>
-                    <p class="text-muted">Познакомьтесь с талантливыми людьми, которые работают над нашим проектом</p>
+                <div class="col-lg-8 text-center">
+                    <h2 class="fw-bold mb-3 scroll-animate">Наша команда</h2>
+                    <p class="text-muted scroll-animate" style="transition-delay: 0.2s">Познакомьтесь с талантливыми людьми, которые работают над нашим проектом</p>
                 </div>
             </div>
             <div class="row g-4">
-                <div class="col-md-6 col-lg-3 animate-on-scroll" data-animation="animate__fadeInUp">
+                <div class="col-md-6 col-lg-3">
                     <div class="team-card h-100">
                         <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80" class="card-img-top team-img" alt="Член команды">
                         <div class="card-body text-center">
@@ -190,7 +406,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-6 col-lg-3 animate-on-scroll" data-animation="animate__fadeInUp" data-animation-delay="100">
+                <div class="col-md-6 col-lg-3">
                     <div class="team-card h-100">
                         <img src="https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80" class="card-img-top team-img" alt="Член команды">
                         <div class="card-body text-center">
@@ -205,7 +421,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-6 col-lg-3 animate-on-scroll" data-animation="animate__fadeInUp" data-animation-delay="200">
+                <div class="col-md-6 col-lg-3">
                     <div class="team-card h-100">
                         <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80" class="card-img-top team-img" alt="Член команды">
                         <div class="card-body text-center">
@@ -220,7 +436,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-6 col-lg-3 animate-on-scroll" data-animation="animate__fadeInUp" data-animation-delay="300">
+                <div class="col-md-6 col-lg-3">
                     <div class="team-card h-100">
                         <img src="https://images.unsplash.com/photo-1489424731084-a5d8b219a5bb?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80" class="card-img-top team-img" alt="Член команды">
                         <div class="card-body text-center">
@@ -243,14 +459,14 @@
     <section class="py-5 bg-light">
         <div class="container py-5">
             <div class="row justify-content-center mb-5">
-                <div class="col-lg-8 text-center animate-on-scroll" data-animation="animate__fadeInUp">
-                    <h2 class="fw-bold mb-3">Наши ценности</h2>
-                    <p class="text-muted">Принципы, которые лежат в основе всего, что мы делаем</p>
+                <div class="col-lg-8 text-center">
+                    <h2 class="fw-bold mb-3 scroll-animate">Наши ценности</h2>
+                    <p class="text-muted scroll-animate" style="transition-delay: 0.2s">Принципы, которые лежат в основе всего, что мы делаем</p>
                 </div>
             </div>
             <div class="row g-4">
-                <div class="col-md-6 col-lg-3 animate-on-scroll" data-animation="animate__fadeInUp">
-                    <div class="h-100 p-4 bg-white rounded shadow-sm text-center">
+                <div class="col-md-6 col-lg-3">
+                    <div class="h-100 p-4 bg-white rounded shadow-sm text-center scroll-animate">
                         <div class="feature-icon mx-auto">
                             <i class="fas fa-lightbulb"></i>
                         </div>
@@ -258,8 +474,8 @@
                         <p class="text-muted mb-0">Мы постоянно ищем новые, более эффективные способы решения задач.</p>
                     </div>
                 </div>
-                <div class="col-md-6 col-lg-3 animate-on-scroll" data-animation="animate__fadeInUp" data-animation-delay="100">
-                    <div class="h-100 p-4 bg-white rounded shadow-sm text-center">
+                <div class="col-md-6 col-lg-3">
+                    <div class="h-100 p-4 bg-white rounded shadow-sm text-center scroll-animate" style="transition-delay: 0.2s">
                         <div class="feature-icon mx-auto">
                             <i class="fas fa-users"></i>
                         </div>
@@ -267,8 +483,8 @@
                         <p class="text-muted mb-0">Мы верим, что лучшие результаты достигаются совместными усилиями.</p>
                     </div>
                 </div>
-                <div class="col-md-6 col-lg-3 animate-on-scroll" data-animation="animate__fadeInUp" data-animation-delay="200">
-                    <div class="h-100 p-4 bg-white rounded shadow-sm text-center">
+                <div class="col-md-6 col-lg-3">
+                    <div class="h-100 p-4 bg-white rounded shadow-sm text-center scroll-animate" style="transition-delay: 0.4s">
                         <div class="feature-icon mx-auto">
                             <i class="fas fa-hand-holding-heart"></i>
                         </div>
@@ -276,8 +492,8 @@
                         <p class="text-muted mb-0">Мы берем на себя обязательства и выполняем их в срок.</p>
                     </div>
                 </div>
-                <div class="col-md-6 col-lg-3 animate-on-scroll" data-animation="animate__fadeInUp" data-animation-delay="300">
-                    <div class="h-100 p-4 bg-white rounded shadow-sm text-center">
+                <div class="col-md-6 col-lg-3">
+                    <div class="h-100 p-4 bg-white rounded shadow-sm text-center scroll-animate" style="transition-delay: 0.6s">
                         <div class="feature-icon mx-auto">
                             <i class="fas fa-chart-line"></i>
                         </div>
@@ -293,25 +509,25 @@
     <section class="py-5 bg-white">
         <div class="container py-5">
             <div class="row g-4">
-                <div class="col-md-6 col-lg-3 animate-on-scroll" data-animation="animate__fadeIn">
+                <div class="col-md-6 col-lg-3">
                     <div class="stats-item text-center p-4">
                         <div class="stats-number mb-2" data-count="150">0</div>
                         <h5 class="mb-0">Довольных клиентов</h5>
                     </div>
                 </div>
-                <div class="col-md-6 col-lg-3 animate-on-scroll" data-animation="animate__fadeIn" data-animation-delay="100">
+                <div class="col-md-6 col-lg-3">
                     <div class="stats-item text-center p-4">
                         <div class="stats-number mb-2" data-count="42">0</div>
                         <h5 class="mb-0">Завершенных проектов</h5>
                     </div>
                 </div>
-                <div class="col-md-6 col-lg-3 animate-on-scroll" data-animation="animate__fadeIn" data-animation-delay="200">
+                <div class="col-md-6 col-lg-3">
                     <div class="stats-item text-center p-4">
                         <div class="stats-number mb-2" data-count="15">0</div>
                         <h5 class="mb-0">Наград</h5>
                     </div>
                 </div>
-                <div class="col-md-6 col-lg-3 animate-on-scroll" data-animation="animate__fadeIn" data-animation-delay="300">
+                <div class="col-md-6 col-lg-3">
                     <div class="stats-item text-center p-4">
                         <div class="stats-number mb-2" data-count="99">0</div>
                         <h5 class="mb-0">Процентов качества</h5>
@@ -325,13 +541,13 @@
     <section class="py-5 bg-light">
         <div class="container py-5">
             <div class="row justify-content-center mb-5">
-                <div class="col-lg-8 text-center animate-on-scroll" data-animation="animate__fadeInUp">
-                    <h2 class="fw-bold mb-3">Наша история</h2>
-                    <p class="text-muted">Путь, который мы прошли с момента основания</p>
+                <div class="col-lg-8 text-center">
+                    <h2 class="fw-bold mb-3 scroll-animate">Наша история</h2>
+                    <p class="text-muted scroll-animate" style="transition-delay: 0.2s">Путь, который мы прошли с момента основания</p>
                 </div>
             </div>
             <div class="row">
-                <div class="col-lg-10 mx-auto animate-on-scroll" data-animation="animate__fadeInUp">
+                <div class="col-lg-10 mx-auto">
                     <div class="timeline">
                         <div class="timeline-item">
                             <h4 class="mb-3">Основание компании</h4>
@@ -388,14 +604,14 @@
     <section class="py-5 bg-white" id="contact">
         <div class="container py-5">
             <div class="row justify-content-center mb-5">
-                <div class="col-lg-8 text-center animate-on-scroll" data-animation="animate__fadeInUp">
-                    <h2 class="fw-bold mb-3">Свяжитесь с нами</h2>
-                    <p class="text-muted">Готовы начать сотрудничество? Напишите нам или зайдите в гости</p>
+                <div class="col-lg-8 text-center">
+                    <h2 class="fw-bold mb-3 scroll-animate">Свяжитесь с нами</h2>
+                    <p class="text-muted scroll-animate" style="transition-delay: 0.2s">Готовы начать сотрудничество? Напишите нам или зайдите в гости</p>
                 </div>
             </div>
             <div class="row g-4">
-                <div class="col-lg-6 animate-on-scroll" data-animation="animate__fadeInLeft">
-                    <div class="bg-light p-5 rounded h-100">
+                <div class="col-lg-6">
+                    <div class="bg-light p-5 rounded h-100 scroll-animate">
                         <h4 class="mb-4">Контактная информация</h4>
                         <div class="d-flex mb-4">
                             <div class="bg-primary rounded-circle p-2 text-white me-3">
@@ -426,8 +642,8 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-6 animate-on-scroll" data-animation="animate__fadeInRight">
-                    <div class="bg-light p-5 rounded h-100">
+                <div class="col-lg-6">
+                    <div class="bg-light p-5 rounded h-100 scroll-animate" style="transition-delay: 0.2s">
                         <h4 class="mb-4">Напишите нам</h4>
                         <form>
                             <div class="mb-3">
@@ -451,68 +667,92 @@
     </section>
 
     <!-- Футер -->
-    <footer class="py-5">
-        <div class="container py-4">
-            <div class="row g-4">
-                <div class="col-lg-4 animate-on-scroll" data-animation="animate__fadeInUp">
-                    <h3 class="h4 text-white mb-4">Название Проекта</h3>
-                    <p class="text-muted">Краткое описание вашего проекта и его миссии. Можно добавить несколько вдохновляющих слов о том, что движет вашей командой.</p>
-                    <div class="mt-4">
-                        <a href="#" class="social-icon me-2"><i class="fab fa-facebook-f"></i></a>
-                        <a href="#" class="social-icon me-2"><i class="fab fa-twitter"></i></a>
-                        <a href="#" class="social-icon me-2"><i class="fab fa-instagram"></i></a>
-                        <a href="#" class="social-icon"><i class="fab fa-linkedin-in"></i></a>
-                    </div>
-                </div>
-                <div class="col-lg-2 col-md-4 animate-on-scroll" data-animation="animate__fadeInUp" data-animation-delay="100">
-                    <h4 class="h5 text-white mb-4">Навигация</h4>
-                    <ul class="list-unstyled">
-                        <li class="mb-2"><a href="#" class="text-muted">Главная</a></li>
-                        <li class="mb-2"><a href="#" class="text-muted">О нас</a></li>
-                        <li class="mb-2"><a href="#" class="text-muted">Услуги</a></li>
-                        <li class="mb-2"><a href="#" class="text-muted">Портфолио</a></li>
-                        <li><a href="#" class="text-muted">Контакты</a></li>
-                    </ul>
-                </div>
-                <div class="col-lg-2 col-md-4 animate-on-scroll" data-animation="animate__fadeInUp" data-animation-delay="200">
-                    <h4 class="h5 text-white mb-4">Услуги</h4>
-                    <ul class="list-unstyled">
-                        <li class="mb-2"><a href="#" class="text-muted">Веб-разработка</a></li>
-                        <li class="mb-2"><a href="#" class="text-muted">Мобильные приложения</a></li>
-                        <li class="mb-2"><a href="#" class="text-muted">UI/UX дизайн</a></li>
-                        <li class="mb-2"><a href="#" class="text-muted">Маркетинг</a></li>
-                        <li><a href="#" class="text-muted">Консалтинг</a></li>
-                    </ul>
-                </div>
-                <div class="col-lg-4 col-md-4 animate-on-scroll" data-animation="animate__fadeInUp" data-animation-delay="300">
-                    <h4 class="h5 text-white mb-4">Подписаться на рассылку</h4>
-                    <p class="text-muted mb-4">Подпишитесь на нашу рассылку, чтобы получать последние новости и обновления.</p>
-                    <form class="mb-3">
-                        <div class="input-group">
-                            <input type="email" class="form-control" placeholder="Ваш email">
-                            <button class="btn btn-primary" type="submit">Подписаться</button>
-                        </div>
-                    </form>
-                    <p class="small text-muted mb-0">Мы не рассылаем спам. Отписаться можно в любое время.</p>
-                </div>
-            </div>
-            <hr class="my-4 bg-secondary">
-            <div class="row align-items-center">
-                <div class="col-md-6 text-center text-md-start animate-on-scroll" data-animation="animate__fadeIn">
-                    <p class="small text-muted mb-0">© 2023 Название Проекта. Все права защищены.</p>
-                </div>
-                <div class="col-md-6 text-center text-md-end animate-on-scroll" data-animation="animate__fadeIn" data-animation-delay="100">
-                    <p class="small text-muted mb-0">Разработано с <i class="fas fa-heart text-danger"></i> командой Название Проекта</p>
-                </div>
-            </div>
+    <footer class="bg-dark text-light py-4 mt-auto">
+        <div class="container text-center">
+            <p class="mb-1">&copy; 2025 <strong>BeloGo</strong>. Все права защищены.</p>
+
+            <p class="mb-2">
+                <i class="bi bi-github me-1"></i>
+                <a href="https://github.com/Junk02/BeloGo" target="_blank" class="link-light text-decoration-underline">
+                    Репозиторий проекта
+                </a>
+            </p>
+
+            <p class="mb-0">
+                <i class="bi bi-github me-1"></i>
+                <a href="https://github.com/Junk02" target="_blank"
+                    class="link-light text-decoration-underline me-3">Junk02</a>
+                <a href="https://github.com/MaksSh2" target="_blank" class="link-light text-decoration-underline">
+                    <i class="bi bi-github me-1"></i>MaksSh2
+                </a>
+            </p>
         </div>
     </footer>
 
-    <!-- Bootstrap JS, Popper.js, Font Awesome и другие скрипты -->
+    <!-- Bootstrap JS, Font Awesome и другие скрипты -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js"></script>
     
-   
+    <script>
+        // Анимация при скролле
+        function animateOnScroll() {
+            const elements = document.querySelectorAll('.scroll-animate, .team-card, .team-img, .stats-item, .timeline-item, .img-fluid');
+            
+            elements.forEach(element => {
+                const elementPosition = element.getBoundingClientRect().top;
+                const elementBottom = element.getBoundingClientRect().bottom;
+                const screenPosition = window.innerHeight / 1.2;
+                
+                if(elementPosition < screenPosition && elementBottom > 0) {
+                    element.classList.add('animated');
+                    element.classList.remove('hide-animate');
+                } else {
+                    element.classList.remove('animated');
+                    element.classList.add('hide-animate');
+                }
+            });
+        }
+        
+        // Анимация счетчиков
+        function animateCounters() {
+            const counters = document.querySelectorAll('.stats-number');
+            const speed = 200;
+            
+            counters.forEach(counter => {
+                const target = +counter.getAttribute('data-count');
+                const count = +counter.innerText;
+                const increment = target / speed;
+                
+                if(count < target) {
+                    counter.innerText = Math.ceil(count + increment);
+                    setTimeout(animateCounters, 1);
+                } else {
+                    counter.innerText = target;
+                }
+            });
+        }
+        
+        // Запуск анимации счетчиков при попадании в область видимости
+        function checkCounters() {
+            const countersSection = document.querySelector('.stats-item');
+            if (!countersSection) return;
+            
+            const countersPosition = countersSection.getBoundingClientRect().top;
+            const screenPosition = window.innerHeight / 1.2;
+            
+            if(countersPosition < screenPosition) {
+                animateCounters();
+                window.removeEventListener('scroll', checkCounters);
+            }
+        }
+        
+        // Инициализация
+        window.addEventListener('load', () => {
+            animateOnScroll();
+            window.addEventListener('scroll', animateOnScroll);
+            window.addEventListener('scroll', checkCounters);
+        });
+    </script>
 </body>
 </html>
