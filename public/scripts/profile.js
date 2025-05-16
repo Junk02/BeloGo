@@ -23,7 +23,7 @@ document.getElementById('logoutBtn').addEventListener('click', async () => {
         method: 'POST',
         credentials: 'include'
     });
-    window.location.href = '/auth/auth.html';
+    window.location.href = '/pages/auth.html';
 });
 
 loadProfile();

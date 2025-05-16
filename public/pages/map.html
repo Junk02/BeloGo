@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BeloGo - Карта Беларуси</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Animate.css -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <link rel="stylesheet" href="/styles/map.css">
+</head>
+<body>
+    <!-- Навигационная панель -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <i class="fas fa-map-marked-alt me-2"></i>BeloGo
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#"><i class="fas fa-home me-1"></i> Главная</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#"><i class="fas fa-map me-1"></i> Карта</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#"><i class="fas fa-user me-1"></i> Профиль</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Контейнер карты -->
+    <div id="map-container">
+        <div id="map"></div>
+        
+        <!-- Элементы управления картой -->
+        <div class="map-controls">
+            <button id="add-marker-btn" class="btn-map-control animate__animated animate__bounceIn" title="Добавить метку">
+                <i class="fas fa-plus"></i>
+            </button>
+            <button id="locate-btn" class="btn-map-control animate__animated animate__bounceIn animate__delay-1s" title="Мое местоположение">
+                <i class="fas fa-location-arrow"></i>
+            </button>
+        </div>
+        
+        <!-- Форма добавления метки -->
+        <div id="marker-form" class="marker-form">
+            <h5 class="mb-3 text-center"><i class="fas fa-map-marker-alt me-2"></i>Добавить новую метку</h5>
+            <div class="mb-3">
+                <label for="marker-title" class="form-label">Название</label>
+                <input type="text" class="form-control" id="marker-title" placeholder="Введите название места">
+            </div>
+            <div class="mb-3">
+                <label for="marker-description" class="form-label">Описание</label>
+                <textarea class="form-control" id="marker-description" rows="3" placeholder="Опишите это место"></textarea>
+            </div>
+            <div class="mb-3">
+                <label for="marker-category" class="form-label">Категория</label>
+                <select class="form-select" id="marker-category">
+                    <option value="attraction">Достопримечательность</option>
+                    <option value="restaurant">Ресторан/Кафе</option>
+                    <option value="hotel">Отель</option>
+                    <option value="nature">Природа</option>
+                    <option value="other">Другое</option>
+                </select>
+            </div>
+            <div class="d-flex justify-content-between">
+                <button id="cancel-marker-btn" class="btn btn-secondary">
+                    <i class="fas fa-times me-1"></i> Отмена
+                </button>
+                <button id="submit-marker-btn" class="btn btn-primary">
+                    <i class="fas fa-check me-1"></i> Отправить на модерацию
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Уведомления -->
+    <div class="toast-container">
+        <div id="toast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header">
+                <strong class="me-auto" id="toast-title">Уведомление</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+            <div class="toast-body" id="toast-message">
+                Ваша метка отправлена на модерацию
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
+    <!-- jQuery (для упрощения AJAX) -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    
+    <script src="/scripts/map.js"></script>
+</body>
+</html>

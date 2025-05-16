@@ -130,11 +130,9 @@ signinForm.addEventListener('submit', async event => {
         const result = await response.json();
 
         if (response.ok) {
-            alert(`Добро пожаловать, ${result.user.name}! Авторизация успешна.`);
-            signinForm.reset();
-            signinForm.classList.remove('was-validated');
-            adjustHeight();
-            // TODO: редирект на защищённую страницу
+            //alert(`Добро пожаловать, ${result.user.name}! Авторизация успешна.`);
+            window.location.href = '/pages/profile.html'; // путь до страницы профиля
+
         } else {
             alert('Ошибка: ' + result.message);
         }

@@ -19,9 +19,13 @@ db.run(`
 `);
 
 
-app.use(cors());
+app.use(cors({
+  origin: 'http://localhost:3000', // замени на свой порт, если другой
+  credentials: true
+}));
+
 app.use(express.json());
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, '../public')));
 app.use(express.urlencoded({ extended: true }));
 // Настройка сессий
 app.use(session({
@@ -138,7 +142,6 @@ app.post('/login', (req, res) => {
                     user: req.session.user
                 });
 
-                return res.json({ message: 'Авторизация успешна!', user: { id: user.id, name: user.name, nickname: user.nickname } });
             } else {
                 log(`User ${nickname} registered unsuccessfully`, 'err');
                 return res.status(401).json({ message: 'Неверный никнейм или пароль' });
