@@ -1,4 +1,5 @@
 const express = require('express');
+const session = require('express-session');
 const cors = require('cors');
 const path = require('path');
 const bcrypt = require('bcrypt');
@@ -20,14 +21,25 @@ db.run(`
 
 app.use(cors());
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.urlencoded({ extended: true }));
+// Настройка сессий
+app.use(session({
+    secret: 'my_secret_key',      // поменяйте на настоящую переменную окружения!
+    resave: false,                // не сохранять сессию, если ничего не изменилось
+    saveUninitialized: false,     // не создавать сессию для анонимных пользователей
+    cookie: {
+        secure: false,              // true — только по HTTPS
+        httpOnly: true,             // JS на фронте не сможет читать cookie
+        maxAge: 24 * 60 * 60 * 1000 // время жизни куки: 1 день
+    }
+}));
 
 const red = '\x1b[31m';
 const green = '\x1b[32m';
 const reset = '\x1b[0m';
 
-function log(text, type='def') {
+function log(text, type = 'def') {
     if (type == 'def') console.log((`[${time.getHours()}:${time.getMinutes()}:${time.getSeconds()}] ${text}`));
     else if (type == 'err') console.log(red + (`[${time.getHours()}:${time.getMinutes()}:${time.getSeconds()}] ${text}` + reset));
     else if (type == 'suc') console.log(green + (`[${time.getHours()}:${time.getMinutes()}:${time.getSeconds()}] ${text}` + reset));
@@ -40,7 +52,7 @@ app.get('/', (req, res) => {
 app.post('/register', async (req, res) => {
     const { name, nickname, password } = req.body;
     log('Client data:');
-    log(`${JSON.stringify({name, nickname, password })}`);
+    log(`${JSON.stringify({ name, nickname, password })}`);
 
     if (!name || !nickname || !password) {
         return res.status(400).json({ message: 'Пожалуйста, заполните все поля' });
@@ -90,39 +102,71 @@ app.post('/register', async (req, res) => {
 });
 
 app.post('/login', (req, res) => {
-  const { nickname, password } = req.body;
+    const { nickname, password } = req.body;
 
-  if (!nickname || !password) {
-    return res.status(400).json({ message: 'Пожалуйста, заполните все поля' });
+    if (!nickname || !password) {
+        return res.status(400).json({ message: 'Пожалуйста, заполните все поля' });
+    }
+
+    // Ищем пользователя в базе по никнейму
+    const sql = `SELECT * FROM users WHERE nickname = ?`;
+    db.get(sql, [nickname], async (err, user) => {
+        if (err) {
+            return res.status(500).json({ message: 'Ошибка при поиске пользователя' });
+        }
+
+        if (!user) {
+            log(`User ${nickname} doesn't exist`, 'err');
+            return res.status(401).json({ message: 'Неверный никнейм или пароль' });
+        }
+
+        // Сравниваем пароль с хешем
+        try {
+            const match = await bcrypt.compare(password, user.password);
+            if (match) {
+                log(`User ${nickname} registered successfully`, 'suc');
+                // Сохраняем данные в сессии
+                req.session.user = {
+                    id: user.id,
+                    name: user.name,
+                    nickname: user.nickname
+                };
+
+                // И возвращаем клиенту:
+                return res.json({
+                    message: 'Авторизация успешна!',
+                    user: req.session.user
+                });
+
+                return res.json({ message: 'Авторизация успешна!', user: { id: user.id, name: user.name, nickname: user.nickname } });
+            } else {
+                log(`User ${nickname} registered unsuccessfully`, 'err');
+                return res.status(401).json({ message: 'Неверный никнейм или пароль' });
+            }
+        } catch {
+            return res.status(500).json({ message: 'Ошибка при проверке пароля' });
+        }
+    });
+});
+
+// Получение профиля пользователя (сессии)
+app.get('/profile', (req, res) => {
+  if (!req.session.user) {
+    return res.status(401).json({ message: 'Не авторизован' });
   }
+  // Иначе возвращаем информацию о пользователе:
+  res.json({ user: req.session.user });
+});
 
-  // Ищем пользователя в базе по никнейму
-  const sql = `SELECT * FROM users WHERE nickname = ?`;
-  db.get(sql, [nickname], async (err, user) => {
-    if (err) {
-      return res.status(500).json({ message: 'Ошибка при поиске пользователя' });
-    }
-
-    if (!user) {
-        log(`User ${nickname} doesn't exist`, 'err');
-        return res.status(401).json({ message: 'Неверный никнейм или пароль' });
-    }
-
-    // Сравниваем пароль с хешем
-    try {
-      const match = await bcrypt.compare(password, user.password);
-      if (match) {
-        log(`User ${nickname} registered successfully`, 'suc');
-        return res.json({ message: 'Авторизация успешна!', user: { id: user.id, name: user.name, nickname: user.nickname } });
-      } else {
-        log(`User ${nickname} registered unsuccessfully`, 'err');
-        return res.status(401).json({ message: 'Неверный никнейм или пароль' });
-      }
-    } catch {
-      return res.status(500).json({ message: 'Ошибка при проверке пароля' });
-    }
+// Выход из профиля (сессии)
+app.post('/logout', (req, res) => {
+  req.session.destroy(err => {
+    if (err) return res.status(500).json({ message: 'Ошибка при выходе' });
+    res.clearCookie('connect.sid'); // имя куки по умолчанию
+    res.json({ message: 'Вы успешно вышли' });
   });
 });
+
 
 
 // Получение всех пользователей (админ панель)
