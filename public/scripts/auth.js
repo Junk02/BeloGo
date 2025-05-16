@@ -61,7 +61,6 @@ signupForm.addEventListener('submit', async event => {
     validatePassword(passwordFields[0]);
     validateConfirmPassword(passwordFields[0], passwordFields[1]);
 
-    // если есть ошибки — показываем и выходим
     if (!signupForm.checkValidity()) {
         event.preventDefault();
         event.stopPropagation();
@@ -72,33 +71,54 @@ signupForm.addEventListener('submit', async event => {
 
     event.preventDefault();
 
-    // собираем данные
     const name = nameInput.value.trim();
     const nickname = nicknameInput.value.trim();
     const password = passwordFields[0].value;
 
     try {
-        const response = await fetch('http://localhost:3000/register', {
+        // Регистрация
+        const registerResponse = await fetch('http://localhost:3000/register', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ name, nickname, password })
         });
-        const result = await response.json();
 
-        if (response.ok) {
-            alert(result.message);
-            signupForm.reset();
-            signupForm.classList.remove('was-validated');
-            container.classList.remove('show-signup');
-            adjustHeight();
+        const registerResult = await registerResponse.json();
+
+        if (registerResponse.ok) {
+            alert(registerResult.message);
+
+            // Автоматический логин
+            const loginResponse = await fetch('http://localhost:3000/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'include', // важно, чтобы сессия сохранилась
+                body: JSON.stringify({ nickname, password })
+            });
+
+            const loginResult = await loginResponse.json();
+
+            if (loginResponse.ok) {
+                // Очистка формы и переключение интерфейса
+                signupForm.reset();
+                signupForm.classList.remove('was-validated');
+                container.classList.remove('show-signup');
+                adjustHeight();
+
+                // Перенаправление на профиль
+                window.location.href = 'http://localhost:3000/pages/profile.html';
+            } else {
+                alert('Ошибка авторизации после регистрации: ' + loginResult.message);
+            }
         } else {
-            alert('Ошибка: ' + result.message);
+            alert('Ошибка регистрации: ' + registerResult.message);
         }
     } catch (err) {
         console.error(err);
         alert('Не удалось соединиться с сервером.');
     }
 });
+
 
 // Валидация + отправка авторизации
 signinForm.addEventListener('submit', async event => {
