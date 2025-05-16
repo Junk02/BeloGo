@@ -2,11 +2,16 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Профиль | BeloGo</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+  <link rel="stylesheet" href="/styles/profile.css">
 </head>
-<body class="container py-5">
+
+<body>
 
   
 <!-- Навигационная панель -->
@@ -27,7 +32,7 @@
                         <a class="nav-link" href="/pages/reels.html"><i class="bi bi-collection-play-fill"></i> Лента</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#"><i class="bi bi-envelope-plus-fill"></i> Добавить пост</a>
+                        <a class="nav-link" href="/pages/loadimg.html"><i class="bi bi-envelope-plus-fill"></i> Добавить пост</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link active" href="/pages/auth.html"><i class="fas fa-user me-1"></i> Войти</a>
@@ -42,10 +47,294 @@
 
     <!----------------->
 
+
   <h1 id="welcome">Загрузка...</h1>
   <p id="info"></p>
   <button class="btn btn-danger" id="logoutBtn">Выйти</button>
 
+
+
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <!-- Карточка профиля -->
+                <div class="profile-card animate__animated animate__fadeIn">
+                    <div class="profile-header">
+                        <button class="edit-profile-btn" data-bs-toggle="modal" data-bs-target="#editProfileModal">
+                            <i class="fas fa-pencil-alt"></i>
+                        </button>
+                    </div>
+                    
+                    <!-- Аватарка -->
+                    <div class="avatar-container animate-pop-in" data-bs-toggle="modal" data-bs-target="#avatarModal">
+                        <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Аватар" class="avatar-img">
+                        <div class="change-avatar-btn">
+                            <i class="fas fa-camera"></i>
+                        </div>
+                    </div>
+                    
+                    <div class="profile-info">
+                        <h1 class="profile-name animate__animated animate__fadeIn animate__delay-1s">Анна Иванова</h1>
+                        <p class="profile-username animate__animated animate__fadeIn animate__delay-1s">@anna_belogo</p>
+                        <p class="profile-bio animate__animated animate__fadeIn animate__delay-1s">Фотограф и путешественник. Люблю исследовать красивые места Беларуси и делиться ими с другими.</p>
+                        
+                        <div class="d-flex justify-content-center mb-4 animate__animated animate__fadeIn animate__delay-2s">
+                            <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
+                            <a href="#" class="social-icon"><i class="fab fa-telegram"></i></a>
+                            <a href="#" class="social-icon"><i class="fab fa-vk"></i></a>
+                            <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
+                        </div>
+                        
+                        <div class="row animate__animated animate__fadeIn animate__delay-2s">
+                            <div class="col-md-4">
+                                <div class="stats-card">
+                                    <div class="stat-value">156</div>
+                                    <div class="stat-label">Публикаций</div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="stats-card">
+                                    <div class="stat-value">1.2K</div>
+                                    <div class="stat-label">Подписчиков</div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="stats-card">
+                                    <div class="stat-value">543</div>
+                                    <div class="stat-label">Подписок</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Раздел "О себе" -->
+                <div class="profile-section animate__animated animate__fadeIn animate__delay-3s">
+                    <h3 class="section-title">О себе</h3>
+                    <p>Я профессиональный фотограф из Минска. Специализируюсь на пейзажной и туристической фотографии. Люблю показывать красоту Беларуси через свои работы.</p>
+                    <p>В свободное время провожу мастер-классы по фотографии и путешествую по стране в поисках интересных кадров.</p>
+                </div>
+                
+                <!-- Раздел "Навыки" -->
+                <div class="profile-section animate__animated animate__fadeIn animate__delay-3s">
+                    <h3 class="section-title">Навыки</h3>
+                    <div>
+                        <span class="skill-badge">Фотография</span>
+                        <span class="skill-badge">Adobe Photoshop</span>
+                        <span class="skill-badge">Lightroom</span>
+                        <span class="skill-badge">Пейзажи</span>
+                        <span class="skill-badge">Путешествия</span>
+                        <span class="skill-badge">Обучение</span>
+                    </div>
+                </div>
+                
+                <!-- Раздел "Последняя активность" -->
+                <div class="profile-section animate__animated animate__fadeIn animate__delay-4s">
+                    <h3 class="section-title">Последняя активность</h3>
+                    <div class="activity-item">
+                        <div class="activity-date">Сегодня, 15:30</div>
+                        <p class="activity-text">Добавил новое место: "Озеро Нарочь"</p>
+                    </div>
+                    <div class="activity-item">
+                        <div class="activity-date">Вчера, 18:45</div>
+                        <p class="activity-text">Прокомментировал публикацию "Старый город в Гродно"</p>
+                    </div>
+                    <div class="activity-item">
+                        <div class="activity-date">2 дня назад</div>
+                        <p class="activity-text">Добавил 5 новых фотографий в альбом "Осень в Беловежской пуще"</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Модальное окно смены аватарки -->
+    <div class="modal fade" id="avatarModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Сменить аватар</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="d-flex flex-wrap justify-content-center">
+                        <div class="m-2 avatar-option selected" onclick="selectAvatar(this, 'https://randomuser.me/api/portraits/women/44.jpg')">
+                            <img src="https://randomuser.me/api/portraits/women/44.jpg" class="rounded-circle" width="80" height="80">
+                        </div>
+                        <div class="m-2 avatar-option" onclick="selectAvatar(this, 'https://randomuser.me/api/portraits/women/68.jpg')">
+                            <img src="https://randomuser.me/api/portraits/women/68.jpg" class="rounded-circle" width="80" height="80">
+                        </div>
+                        <div class="m-2 avatar-option" onclick="selectAvatar(this, 'https://randomuser.me/api/portraits/men/32.jpg')">
+                            <img src="https://randomuser.me/api/portraits/men/32.jpg" class="rounded-circle" width="80" height="80">
+                        </div>
+                        <div class="m-2 avatar-option" onclick="selectAvatar(this, 'https://randomuser.me/api/portraits/women/65.jpg')">
+                            <img src="https://randomuser.me/api/portraits/women/65.jpg" class="rounded-circle" width="80" height="80">
+                        </div>
+                        <div class="m-2 avatar-option" onclick="selectAvatar(this, 'https://randomuser.me/api/portraits/men/75.jpg')">
+                            <img src="https://randomuser.me/api/portraits/men/75.jpg" class="rounded-circle" width="80" height="80">
+                        </div>
+                        <div class="m-2 avatar-option" onclick="selectAvatar(this, 'https://randomuser.me/api/portraits/women/63.jpg')">
+                            <img src="https://randomuser.me/api/portraits/women/63.jpg" class="rounded-circle" width="80" height="80">
+                        </div>
+                    </div>
+                    <div class="mt-3">
+                        <label for="avatarUpload" class="btn btn-outline-primary w-100">
+                            <i class="fas fa-upload me-2"></i>Загрузить фото
+                        </label>
+                        <input type="file" id="avatarUpload" accept="image/*" class="d-none">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+                    <button type="button" class="btn btn-primary" onclick="saveAvatar()">Сохранить</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Модальное окно редактирования профиля -->
+    <div class="modal fade" id="editProfileModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Редактировать профиль</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="mb-3">
+                            <label for="editName" class="form-label">Имя</label>
+                            <input type="text" class="form-control" id="editName" value="Анна">
+                        </div>
+                        <div class="mb-3">
+                            <label for="editSurname" class="form-label">Фамилия</label>
+                            <input type="text" class="form-control" id="editSurname" value="Иванова">
+                        </div>
+                        <div class="mb-3">
+                            <label for="editUsername" class="form-label">Имя пользователя</label>
+                            <input type="text" class="form-control" id="editUsername" value="anna_belogo">
+                        </div>
+                        <div class="mb-3">
+                            <label for="editBio" class="form-label">О себе</label>
+                            <textarea class="form-control" id="editBio" rows="3">Фотограф и путешественник. Люблю исследовать красивые места Беларуси и делиться ими с другими.</textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+                    <button type="button" class="btn btn-primary" onclick="saveProfile()">Сохранить изменения</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Font Awesome -->
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    
+    <script>
+        // Выбор аватарки
+        function selectAvatar(element, imgUrl) {
+            document.querySelectorAll('.avatar-option').forEach(opt => {
+                opt.classList.remove('selected');
+            });
+            element.classList.add('selected');
+            element.dataset.selectedAvatar = imgUrl;
+        }
+        
+        // Сохранение аватарки
+        function saveAvatar() {
+            const selected = document.querySelector('.avatar-option.selected');
+            if (selected) {
+                const avatarUrl = selected.dataset.selectedAvatar;
+                document.querySelector('.avatar-img').src = avatarUrl;
+                
+                // Анимация
+                const avatarContainer = document.querySelector('.avatar-container');
+                avatarContainer.classList.add('animate__animated', 'animate__bounceIn');
+                setTimeout(() => {
+                    avatarContainer.classList.remove('animate__animated', 'animate__bounceIn');
+                }, 1000);
+                
+                // Закрытие модального окна
+                const modal = bootstrap.Modal.getInstance(document.getElementById('avatarModal'));
+                modal.hide();
+            }
+        }
+        
+        // Загрузка фото
+        document.getElementById('avatarUpload').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    // Создаем новый вариант аватарки
+                    const newAvatarOption = document.createElement('div');
+                    newAvatarOption.className = 'm-2 avatar-option selected';
+                    newAvatarOption.innerHTML = `<img src="${event.target.result}" class="rounded-circle" width="80" height="80">`;
+                    newAvatarOption.onclick = function() {
+                        selectAvatar(this, event.target.result);
+                    };
+                    
+                    // Убираем выделение с других вариантов
+                    document.querySelectorAll('.avatar-option').forEach(opt => {
+                        opt.classList.remove('selected');
+                    });
+                    
+                    // Добавляем новый вариант в начало
+                    document.querySelector('.modal-body .d-flex').prepend(newAvatarOption);
+                    newAvatarOption.dataset.selectedAvatar = event.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+        
+        // Сохранение профиля
+        function saveProfile() {
+            // Здесь должна быть логика сохранения на сервер
+            // Для демо просто обновляем данные на странице
+            document.querySelector('.profile-name').textContent = 
+                document.getElementById('editName').value + ' ' + document.getElementById('editSurname').value;
+            document.querySelector('.profile-username').textContent = 
+                '@' + document.getElementById('editUsername').value;
+            document.querySelector('.profile-bio').textContent = 
+                document.getElementById('editBio').value;
+            
+            // Анимация
+            document.querySelector('.profile-name').classList.add('animate__animated', 'animate__pulse');
+            setTimeout(() => {
+                document.querySelector('.profile-name').classList.remove('animate__animated', 'animate__pulse');
+            }, 1000);
+            
+            // Закрытие модального окна
+            const modal = bootstrap.Modal.getInstance(document.getElementById('editProfileModal'));
+            modal.hide();
+        }
+        
+        // Инициализация анимаций при загрузке
+        document.addEventListener('DOMContentLoaded', function() {
+            // Анимация элементов с задержкой
+            const elements = document.querySelectorAll('.animate__animated');
+            elements.forEach((el, index) => {
+                if (el.classList.contains('animate__delay-1s') || 
+                    el.classList.contains('animate__delay-2s') || 
+                    el.classList.contains('animate__delay-3s') || 
+                    el.classList.contains('animate__delay-4s')) {
+                    return;
+                }
+                
+                el.style.animationDelay = `${index * 0.1}s`;
+            });
+        });
+    </script>
+
+
+
+
+
   <script src="/scripts/profile.js"></script>
 </body>
 </html>
+
+
