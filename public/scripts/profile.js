@@ -6,15 +6,15 @@ async function loadProfile() {
         const data = await response.json();
 
         if (!response.ok || !data.user) {
-            window.location.href = '/auth/auth.html';
+            window.location.href = '/pages/auth.html';
             return;
         }
 
         document.getElementById('welcome').textContent = `Добро пожаловать, ${data.user.name}!`;
         document.getElementById('info').textContent = `Ваш никнейм: ${data.user.nickname}`;
     } catch (err) {
-        alert('Ошибка при получении данных. Перенаправление на вход.');
-        window.location.href = '/auth/auth.html';
+        console.log('Ошибка при получении данных. Перенаправление на вход.');
+        window.location.href = '/pages/auth.html';
     }
 }
 
