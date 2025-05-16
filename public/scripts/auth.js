@@ -86,8 +86,6 @@ signupForm.addEventListener('submit', async event => {
         const registerResult = await registerResponse.json();
 
         if (registerResponse.ok) {
-            alert(registerResult.message);
-
             // Автоматический логин
             const loginResponse = await fetch('http://localhost:3000/login', {
                 method: 'POST',
