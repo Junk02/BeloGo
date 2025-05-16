@@ -1,23 +1,18 @@
 <!DOCTYPE html>
 <html lang="ru">
-
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>BeloGo — Вход и Регистрация</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
-  <!--<link rel="stylesheet" href="../styles/auth.css">-->
-  <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>О нас - BeloGo</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
     <!-- Animate.css -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    
 </head>
-
 <body>
-
-
-<!-- Навигационная панель -->
+    <!-- Навигация -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top" id="mainNavbar">
         <div class="container">
             <a class="navbar-brand" href="/index.html">
@@ -41,17 +36,483 @@
                         <a class="nav-link" href="/pages/auth.html"><i class="fas fa-user me-1"></i> Войти</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link active" href="/pages/about.html"><i class="bi bi-info-circle-fill"></i> О нас</a>
+                        <a class="nav-link" href="/pages/about.html"><i class="bi bi-info-circle-fill"></i> О нас</a>
                     </li>
                 </ul>
             </div>
         </div>
     </nav>
 
+    <style>
+
+    .navbar-brand {
+        font-weight: 700;
+    }
+        .navbar {
+        transition: all 0.3s ease;
+    }
+            
+    .navbar-hide {
+        transform: translateY(-100%);
+    }
+
+    .navbar-brand {
+        font-weight: 700;
+    }
+    </style>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+        const navbar = document.getElementById('mainNavbar');
+        let lastScroll = 0;
+
+        window.addEventListener('scroll', function () {
+            const currentScroll = window.pageYOffset;
+
+            if (currentScroll <= 0) {
+                // Вверху страницы - показываем хедер
+                navbar.classList.remove('navbar-hide');
+                return;
+            }
+
+            if (currentScroll > lastScroll && !navbar.classList.contains('navbar-hide')) {
+                // Прокрутка вниз - скрываем хедер
+                navbar.classList.add('navbar-hide');
+            } else if (currentScroll < lastScroll && navbar.classList.contains('navbar-hide')) {
+                // Прокрутка вверх - показываем хедер
+                navbar.classList.remove('navbar-hide');
+            }
+
+            lastScroll = currentScroll;
+        });
+    });
+    </script>
+
     <!----------------->
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Герой секция -->
+    <section class="hero-section text-center animate__animated animate__fadeIn" style="padding: 20vh">
+        <div class="container position-relative">
+            <h1 class="display-3 fw-bold mb-4 animate__animated animate__fadeInDown">О нашем проекте</h1>
+            <p class="lead mb-5 animate__animated animate__fadeInUp animate__delay-1s">Красота Беларуси в одном приложении!</p>
+            <a href="#contact" class="btn btn-light btn-lg px-4 py-2 animate__animated animate__fadeInUp animate__delay-2s">Связаться с нами</a>
+        </div>
+    </section>
 
+    <!-- О проекте -->
+    <section class="py-5 bg-white">
+        <div class="container py-5">
+            <div class="row align-items-center">
+                <div class="col-lg-6 mb-5 mb-lg-0 animate-on-scroll" data-animation="animate__fadeInLeft">
+                    <h2 class="fw-bold mb-4">О нашем проекте</h2>
+                    <p class="text-muted mb-4">Сайт для поиска интересных мест в Беларуси. Здесь вы можете не только построить маршрут, но и поделиться фотографиями, сделанными в вашем путешествии, или посмотреть снимки других пользователей.</p>
+                    <p class="text-muted mb-4">дайте дистант пжпжпжпжжпжпжпж</p>
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="bg-primary rounded-circle p-2 text-white me-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+                                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                                <path d="M10.97 4.97a.235.235 0 0 0-.02.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-1.071-1.05z"/>
+                            </svg>
+                        </div>
+                        <p class="mb-0">Инновационные технологии(нет)</p>
+                    </div>
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="bg-primary rounded-circle p-2 text-white me-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+                                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                                <path d="M10.97 4.97a.235.235 0 0 0-.02.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-1.071-1.05z"/>
+                            </svg>
+                        </div>
+                        <p class="mb-0">Профессиональная команда?</p>
+                    </div>
+                    <div class="d-flex align-items-center">
+                        <div class="bg-primary rounded-circle p-2 text-white me-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+                                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                                <path d="M10.97 4.97a.235.235 0 0 0-.02.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-1.071-1.05z"/>
+                            </svg>
+                        </div>
+                        <p class="mb-0">Клиентоориентированный подход</p>
+                    </div>
+                </div>
+                <div class="col-lg-6 animate-on-scroll" data-animation="animate__fadeInRight">
+                    <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="О нашем проекте" class="img-fluid rounded shadow-lg">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- О себе (здесь вы можете добавить информацию о себе) -->
+    <section class="py-5 bg-light">
+        <div class="container py-5">
+            <div class="row justify-content-center">
+                <div class="col-lg-8 text-center animate-on-scroll" data-animation="animate__fadeInUp">
+                    <h2 class="fw-bold mb-5">О себе</h2>
+                    <div class="bg-white p-5 rounded shadow-sm">
+                        <img src="https://images.unsplash.com/photo-1531427186611-ecfd6d936c79?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80" alt="Ваше фото" class="rounded-circle mb-4" width="150" height="150">
+                        <h3 class="h4 mb-3">Ваше Имя</h3>
+                        <p class="text-muted mb-4">Здесь вы можете написать о себе, своем опыте, образовании и увлечениях. Расскажите, почему вы создали этот проект и какие цели преследуете.</p>
+                        <p class="text-muted">vfvdabgdb</p>
+                        <div class="mt-4">
+                            <a href="#" class="social-icon me-2"><i class="fab fa-github"></i></a>
+                            <a href="#" class="social-icon me-2"><i class="fab fa-linkedin-in"></i></a>
+                            <a href="#" class="social-icon me-2"><i class="fab fa-twitter"></i></a>
+                            <a href="#" class="social-icon"><i class="fas fa-envelope"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Наша команда -->
+    <section class="py-5 bg-white">
+        <div class="container py-5">
+            <div class="row justify-content-center mb-5">
+                <div class="col-lg-8 text-center animate-on-scroll" data-animation="animate__fadeInUp">
+                    <h2 class="fw-bold mb-3">Наша команда</h2>
+                    <p class="text-muted">Познакомьтесь с талантливыми людьми, которые работают над нашим проектом</p>
+                </div>
+            </div>
+            <div class="row g-4">
+                <div class="col-md-6 col-lg-3 animate-on-scroll" data-animation="animate__fadeInUp">
+                    <div class="team-card h-100">
+                        <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80" class="card-img-top team-img" alt="Член команды">
+                        <div class="card-body text-center">
+                            <h5 class="card-title mb-1">Алексей Петров</h5>
+                            <p class="text-muted small mb-3">Frontend разработчик</p>
+                            <p class="card-text small text-muted">Специалист по React и Vue.js с 4-летним опытом работы.</p>
+                            <div class="mt-3">
+                                <a href="#" class="social-icon me-1"><i class="fab fa-github"></i></a>
+                                <a href="#" class="social-icon me-1"><i class="fab fa-linkedin-in"></i></a>
+                                <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3 animate-on-scroll" data-animation="animate__fadeInUp" data-animation-delay="100">
+                    <div class="team-card h-100">
+                        <img src="https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80" class="card-img-top team-img" alt="Член команды">
+                        <div class="card-body text-center">
+                            <h5 class="card-title mb-1">Мария Иванова</h5>
+                            <p class="text-muted small mb-3">UX/UI дизайнер</p>
+                            <p class="card-text small text-muted">Создает интуитивно понятные и красивые интерфейсы.</p>
+                            <div class="mt-3">
+                                <a href="#" class="social-icon me-1"><i class="fab fa-dribbble"></i></a>
+                                <a href="#" class="social-icon me-1"><i class="fab fa-behance"></i></a>
+                                <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3 animate-on-scroll" data-animation="animate__fadeInUp" data-animation-delay="200">
+                    <div class="team-card h-100">
+                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80" class="card-img-top team-img" alt="Член команды">
+                        <div class="card-body text-center">
+                            <h5 class="card-title mb-1">Дмитрий Смирнов</h5>
+                            <p class="text-muted small mb-3">Backend разработчик</p>
+                            <p class="card-text small text-muted">Эксперт по Node.js и Python с фокусом на масштабируемости.</p>
+                            <div class="mt-3">
+                                <a href="#" class="social-icon me-1"><i class="fab fa-github"></i></a>
+                                <a href="#" class="social-icon me-1"><i class="fab fa-stack-overflow"></i></a>
+                                <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3 animate-on-scroll" data-animation="animate__fadeInUp" data-animation-delay="300">
+                    <div class="team-card h-100">
+                        <img src="https://images.unsplash.com/photo-1489424731084-a5d8b219a5bb?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80" class="card-img-top team-img" alt="Член команды">
+                        <div class="card-body text-center">
+                            <h5 class="card-title mb-1">Анна Козлова</h5>
+                            <p class="text-muted small mb-3">Маркетолог</p>
+                            <p class="card-text small text-muted">Специалист по цифровому маркетингу и SMM.</p>
+                            <div class="mt-3">
+                                <a href="#" class="social-icon me-1"><i class="fab fa-linkedin-in"></i></a>
+                                <a href="#" class="social-icon me-1"><i class="fab fa-facebook-f"></i></a>
+                                <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Наши ценности -->
+    <section class="py-5 bg-light">
+        <div class="container py-5">
+            <div class="row justify-content-center mb-5">
+                <div class="col-lg-8 text-center animate-on-scroll" data-animation="animate__fadeInUp">
+                    <h2 class="fw-bold mb-3">Наши ценности</h2>
+                    <p class="text-muted">Принципы, которые лежат в основе всего, что мы делаем</p>
+                </div>
+            </div>
+            <div class="row g-4">
+                <div class="col-md-6 col-lg-3 animate-on-scroll" data-animation="animate__fadeInUp">
+                    <div class="h-100 p-4 bg-white rounded shadow-sm text-center">
+                        <div class="feature-icon mx-auto">
+                            <i class="fas fa-lightbulb"></i>
+                        </div>
+                        <h4 class="h5 mb-3">Инновации</h4>
+                        <p class="text-muted mb-0">Мы постоянно ищем новые, более эффективные способы решения задач.</p>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3 animate-on-scroll" data-animation="animate__fadeInUp" data-animation-delay="100">
+                    <div class="h-100 p-4 bg-white rounded shadow-sm text-center">
+                        <div class="feature-icon mx-auto">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <h4 class="h5 mb-3">Командная работа</h4>
+                        <p class="text-muted mb-0">Мы верим, что лучшие результаты достигаются совместными усилиями.</p>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3 animate-on-scroll" data-animation="animate__fadeInUp" data-animation-delay="200">
+                    <div class="h-100 p-4 bg-white rounded shadow-sm text-center">
+                        <div class="feature-icon mx-auto">
+                            <i class="fas fa-hand-holding-heart"></i>
+                        </div>
+                        <h4 class="h5 mb-3">Ответственность</h4>
+                        <p class="text-muted mb-0">Мы берем на себя обязательства и выполняем их в срок.</p>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3 animate-on-scroll" data-animation="animate__fadeInUp" data-animation-delay="300">
+                    <div class="h-100 p-4 bg-white rounded shadow-sm text-center">
+                        <div class="feature-icon mx-auto">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <h4 class="h5 mb-3">Развитие</h4>
+                        <p class="text-muted mb-0">Мы постоянно учимся и совершенствуем свои навыки.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Наши достижения -->
+    <section class="py-5 bg-white">
+        <div class="container py-5">
+            <div class="row g-4">
+                <div class="col-md-6 col-lg-3 animate-on-scroll" data-animation="animate__fadeIn">
+                    <div class="stats-item text-center p-4">
+                        <div class="stats-number mb-2" data-count="150">0</div>
+                        <h5 class="mb-0">Довольных клиентов</h5>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3 animate-on-scroll" data-animation="animate__fadeIn" data-animation-delay="100">
+                    <div class="stats-item text-center p-4">
+                        <div class="stats-number mb-2" data-count="42">0</div>
+                        <h5 class="mb-0">Завершенных проектов</h5>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3 animate-on-scroll" data-animation="animate__fadeIn" data-animation-delay="200">
+                    <div class="stats-item text-center p-4">
+                        <div class="stats-number mb-2" data-count="15">0</div>
+                        <h5 class="mb-0">Наград</h5>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3 animate-on-scroll" data-animation="animate__fadeIn" data-animation-delay="300">
+                    <div class="stats-item text-center p-4">
+                        <div class="stats-number mb-2" data-count="99">0</div>
+                        <h5 class="mb-0">Процентов качества</h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Наша история -->
+    <section class="py-5 bg-light">
+        <div class="container py-5">
+            <div class="row justify-content-center mb-5">
+                <div class="col-lg-8 text-center animate-on-scroll" data-animation="animate__fadeInUp">
+                    <h2 class="fw-bold mb-3">Наша история</h2>
+                    <p class="text-muted">Путь, который мы прошли с момента основания</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-10 mx-auto animate-on-scroll" data-animation="animate__fadeInUp">
+                    <div class="timeline">
+                        <div class="timeline-item">
+                            <h4 class="mb-3">Основание компании</h4>
+                            <div class="bg-white p-4 rounded shadow-sm">
+                                <div class="d-flex justify-content-between mb-2">
+                                    <span class="text-primary fw-bold">Январь 2020</span>
+                                </div>
+                                <p class="mb-0">Начало нашего пути с небольшой команды из 3 человек и офиса в 20 квадратных метров.</p>
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <h4 class="mb-3">Первый крупный проект</h4>
+                            <div class="bg-white p-4 rounded shadow-sm">
+                                <div class="d-flex justify-content-between mb-2">
+                                    <span class="text-primary fw-bold">Август 2020</span>
+                                </div>
+                                <p class="mb-0">Завершили разработку платформы для известного ритейлера, что стало поворотным моментом в развитии компании.</p>
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <h4 class="mb-3">Расширение команды</h4>
+                            <div class="bg-white p-4 rounded shadow-sm">
+                                <div class="d-flex justify-content-between mb-2">
+                                    <span class="text-primary fw-bold">Март 2021</span>
+                                </div>
+                                <p class="mb-0">Команда выросла до 15 специалистов, мы переехали в новый офис и начали работать с международными клиентами.</p>
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <h4 class="mb-3">Запуск собственного продукта</h4>
+                            <div class="bg-white p-4 rounded shadow-sm">
+                                <div class="d-flex justify-content-between mb-2">
+                                    <span class="text-primary fw-bold">Сентябрь 2022</span>
+                                </div>
+                                <p class="mb-0">Представили на рынке наш флагманский продукт, который получил признание среди профессионалов отрасли.</p>
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <h4 class="mb-3">Настоящее время</h4>
+                            <div class="bg-white p-4 rounded shadow-sm">
+                                <div class="d-flex justify-content-between mb-2">
+                                    <span class="text-primary fw-bold">2023 - сейчас</span>
+                                </div>
+                                <p class="mb-0">Продолжаем расти и развиваться, работая над интересными проектами и внедряя инновационные решения.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Контакты -->
+    <section class="py-5 bg-white" id="contact">
+        <div class="container py-5">
+            <div class="row justify-content-center mb-5">
+                <div class="col-lg-8 text-center animate-on-scroll" data-animation="animate__fadeInUp">
+                    <h2 class="fw-bold mb-3">Свяжитесь с нами</h2>
+                    <p class="text-muted">Готовы начать сотрудничество? Напишите нам или зайдите в гости</p>
+                </div>
+            </div>
+            <div class="row g-4">
+                <div class="col-lg-6 animate-on-scroll" data-animation="animate__fadeInLeft">
+                    <div class="bg-light p-5 rounded h-100">
+                        <h4 class="mb-4">Контактная информация</h4>
+                        <div class="d-flex mb-4">
+                            <div class="bg-primary rounded-circle p-2 text-white me-3">
+                                <i class="fas fa-map-marker-alt"></i>
+                            </div>
+                            <div>
+                                <h5 class="h6 mb-1">Адрес</h5>
+                                <p class="mb-0 text-muted">г. Москва, ул. Примерная, д. 123, офис 45</p>
+                            </div>
+                        </div>
+                        <div class="d-flex mb-4">
+                            <div class="bg-primary rounded-circle p-2 text-white me-3">
+                                <i class="fas fa-phone-alt"></i>
+                            </div>
+                            <div>
+                                <h5 class="h6 mb-1">Телефон</h5>
+                                <p class="mb-0 text-muted">+7 (123) 456-78-90</p>
+                            </div>
+                        </div>
+                        <div class="d-flex">
+                            <div class="bg-primary rounded-circle p-2 text-white me-3">
+                                <i class="fas fa-envelope"></i>
+                            </div>
+                            <div>
+                                <h5 class="h6 mb-1">Email</h5>
+                                <p class="mb-0 text-muted">info@вашпроект.ru</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 animate-on-scroll" data-animation="animate__fadeInRight">
+                    <div class="bg-light p-5 rounded h-100">
+                        <h4 class="mb-4">Напишите нам</h4>
+                        <form>
+                            <div class="mb-3">
+                                <input type="text" class="form-control py-3" placeholder="Ваше имя">
+                            </div>
+                            <div class="mb-3">
+                                <input type="email" class="form-control py-3" placeholder="Email адрес">
+                            </div>
+                            <div class="mb-3">
+                                <input type="text" class="form-control py-3" placeholder="Тема">
+                            </div>
+                            <div class="mb-3">
+                                <textarea class="form-control py-3" rows="4" placeholder="Сообщение"></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary w-100 py-3">Отправить сообщение</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Футер -->
+    <footer class="py-5">
+        <div class="container py-4">
+            <div class="row g-4">
+                <div class="col-lg-4 animate-on-scroll" data-animation="animate__fadeInUp">
+                    <h3 class="h4 text-white mb-4">Название Проекта</h3>
+                    <p class="text-muted">Краткое описание вашего проекта и его миссии. Можно добавить несколько вдохновляющих слов о том, что движет вашей командой.</p>
+                    <div class="mt-4">
+                        <a href="#" class="social-icon me-2"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="social-icon me-2"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="social-icon me-2"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-4 animate-on-scroll" data-animation="animate__fadeInUp" data-animation-delay="100">
+                    <h4 class="h5 text-white mb-4">Навигация</h4>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="#" class="text-muted">Главная</a></li>
+                        <li class="mb-2"><a href="#" class="text-muted">О нас</a></li>
+                        <li class="mb-2"><a href="#" class="text-muted">Услуги</a></li>
+                        <li class="mb-2"><a href="#" class="text-muted">Портфолио</a></li>
+                        <li><a href="#" class="text-muted">Контакты</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-2 col-md-4 animate-on-scroll" data-animation="animate__fadeInUp" data-animation-delay="200">
+                    <h4 class="h5 text-white mb-4">Услуги</h4>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="#" class="text-muted">Веб-разработка</a></li>
+                        <li class="mb-2"><a href="#" class="text-muted">Мобильные приложения</a></li>
+                        <li class="mb-2"><a href="#" class="text-muted">UI/UX дизайн</a></li>
+                        <li class="mb-2"><a href="#" class="text-muted">Маркетинг</a></li>
+                        <li><a href="#" class="text-muted">Консалтинг</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-4 col-md-4 animate-on-scroll" data-animation="animate__fadeInUp" data-animation-delay="300">
+                    <h4 class="h5 text-white mb-4">Подписаться на рассылку</h4>
+                    <p class="text-muted mb-4">Подпишитесь на нашу рассылку, чтобы получать последние новости и обновления.</p>
+                    <form class="mb-3">
+                        <div class="input-group">
+                            <input type="email" class="form-control" placeholder="Ваш email">
+                            <button class="btn btn-primary" type="submit">Подписаться</button>
+                        </div>
+                    </form>
+                    <p class="small text-muted mb-0">Мы не рассылаем спам. Отписаться можно в любое время.</p>
+                </div>
+            </div>
+            <hr class="my-4 bg-secondary">
+            <div class="row align-items-center">
+                <div class="col-md-6 text-center text-md-start animate-on-scroll" data-animation="animate__fadeIn">
+                    <p class="small text-muted mb-0">© 2023 Название Проекта. Все права защищены.</p>
+                </div>
+                <div class="col-md-6 text-center text-md-end animate-on-scroll" data-animation="animate__fadeIn" data-animation-delay="100">
+                    <p class="small text-muted mb-0">Разработано с <i class="fas fa-heart text-danger"></i> командой Название Проекта</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS, Popper.js, Font Awesome и другие скрипты -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js"></script>
+    
+   
 </body>
-
 </html>
