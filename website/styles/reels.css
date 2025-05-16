@@ -3,6 +3,7 @@ html, body {
             margin: 0;
             padding: 0;
             overflow: hidden;
+            touch-action: pan-y;
         }
         
         .tiktok-container {
@@ -30,16 +31,16 @@ html, body {
         }
         
         .swiper-pagination-vertical .swiper-pagination-bullet {
-            width: 8px;
-            height: 8px;
+            width: 6px;
+            height: 6px;
             background: rgba(255, 255, 255, 0.5);
             opacity: 1;
         }
         
         .swiper-pagination-vertical .swiper-pagination-bullet-active {
             background: #fff;
-            height: 16px;
-            border-radius: 8px;
+            height: 12px;
+            border-radius: 6px;
         }
         
         .horizontal-swiper {
@@ -55,34 +56,40 @@ html, body {
         
         .horizontal-swiper .swiper-pagination {
             position: absolute;
-            bottom: 20px;
+            bottom: 15px;
             left: 0;
             width: 100%;
             display: flex;
             justify-content: center;
-            gap: 8px;
+            gap: 6px;
         }
         
         .horizontal-swiper .swiper-pagination-bullet {
-            width: 8px;
-            height: 8px;
+            width: 6px;
+            height: 6px;
             background: rgba(255, 255, 255, 0.5);
             opacity: 1;
         }
         
         .horizontal-swiper .swiper-pagination-bullet-active {
             background: #fff;
-            width: 16px;
-            border-radius: 8px;
+            width: 12px;
+            border-radius: 6px;
         }
         
         .slide-content {
             position: absolute;
-            bottom: 20px;
-            left: 20px;
+            bottom: 15px;
+            left: 15px;
             color: white;
-            text-shadow: 1px 1px 3px rgba(0,0,0,0.8);
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
             z-index: 10;
+            font-size: 14px;
+        }
+        
+        .slide-content h5 {
+            font-size: 16px;
+            margin-bottom: 5px;
         }
         
         #mainNavbar {
@@ -90,14 +97,91 @@ html, body {
         }
         
         /* Стили для анимации */
-        .vertical-swiper .swiper-slide {
-            transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-        
+        .vertical-swiper .swiper-slide,
         .horizontal-swiper .swiper-slide {
-            transition: opacity 0.5s ease;
+            opacity: 1;
+            transition: opacity 0.5s ease, transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+            pointer-events: auto;
         }
         
+        .vertical-swiper .swiper-slide:not(.swiper-slide-active),
         .horizontal-swiper .swiper-slide:not(.swiper-slide-active) {
             opacity: 0 !important;
+            pointer-events: none;
+        }
+        
+        .img {
+            height: 100%;
+            width: 100%;
+            object-fit: cover;
+        }
+        
+        /* Медиазапросы для мобильных устройств */
+        @media screen and (max-width: 767px) {
+            .swiper-pagination-vertical {
+                right: 5px;
+                gap: 6px;
+            }
+            
+            .slide-content {
+                bottom: 10px;
+                left: 10px;
+                font-size: 12px;
+            }
+            
+            .slide-content h5 {
+                font-size: 14px;
+            }
+            
+            #mainNavbar {
+                padding: 0.5rem 1rem;
+            }
+            
+            .navbar-brand {
+                font-size: 1rem;
+            }
+            
+            .nav-link {
+                padding: 0.5rem;
+            }
+        }
+        
+        @media screen and (max-width: 420px) {
+            .img {
+                height: auto;
+                max-height: 70vh;
+                width: 100%;
+            
+            }
+            
+            .swiper-slide {
+                padding-top: 15%;
+                display: flex;
+                align-items: flex-start;
+            }
+            
+            .swiper-pagination-vertical .swiper-pagination-bullet {
+                width: 5px;
+                height: 5px;
+            }
+            
+            .swiper-pagination-vertical .swiper-pagination-bullet-active {
+                height: 10px;
+            }
+            
+            .horizontal-swiper .swiper-pagination-bullet {
+                width: 5px;
+                height: 5px;
+            }
+            
+            .horizontal-swiper .swiper-pagination-bullet-active {
+                width: 10px;
+            }
+
+            .slide-content{
+                bottom: 80px;
+            }
+
+            
+
         }

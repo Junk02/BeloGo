@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BeloGo - Карта Беларуси</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Animate.css -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <style>
+        :root {
+            --primary-color: #6f42c1;
+            --secondary-color: #f8f9fa;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f5f5;
+        }
+        
+        #map-container {
+            height: calc(100vh - 56px);
+            position: relative;
+            overflow: hidden;
+            border-radius: 0 0 15px 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        #map {
+            height: 100%;
+            width: 100%;
+        }
+        
+        .map-controls {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            z-index: 1000;
+        }
+        
+        .btn-map-control {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: white;
+            color: var(--primary-color);
+            border: none;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-map-control:hover {
+            background-color: var(--primary-color);
+            color: white;
+            transform: scale(1.1);
+        }
+        
+        .marker-form {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            width: 90%;
+            max-width: 500px;
+            display: none;
+        }
+        
+        .marker-form.show {
+            display: block;
+            animation: fadeInUp 0.5s;
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translate(-50%, 20px);
+            }
+            to {
+                opacity: 1;
+                transform: translate(-50%, 0);
+            }
+        }
+        
+        .custom-popup .leaflet-popup-content-wrapper {
+            border-radius: 10px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+        }
+        
+        .custom-popup .leaflet-popup-content {
+            margin: 10px;
+        }
+        
+        .pending-marker {
+            filter: hue-rotate(90deg) opacity(0.7);
+        }
+        
+        .navbar-brand {
+            font-weight: 700;
+        }
+        
+        .toast-container {
+            position: fixed;
+            top: 70px;
+            right: 20px;
+            z-index: 1100;
+        }
+        
+        .leaflet-marker-icon {
+            transition: transform 0.3s ease;
+        }
+        
+        .leaflet-marker-icon:hover {
+            transform: scale(1.2);
+        }
+    </style>
+</head>
+<body>
+    <!-- Навигационная панель -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <i class="fas fa-map-marked-alt me-2"></i>BeloGo
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#"><i class="fas fa-home me-1"></i> Главная</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#"><i class="fas fa-map me-1"></i> Карта</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#"><i class="fas fa-user me-1"></i> Профиль</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Контейнер карты -->
+    <div id="map-container">
+        <div id="map"></div>
+        
+        <!-- Элементы управления картой -->
+        <div class="map-controls">
+            <button id="add-marker-btn" class="btn-map-control animate__animated animate__bounceIn" title="Добавить метку">
+                <i class="fas fa-plus"></i>
+            </button>
+            <button id="locate-btn" class="btn-map-control animate__animated animate__bounceIn animate__delay-1s" title="Мое местоположение">
+                <i class="fas fa-location-arrow"></i>
+            </button>
+        </div>
+        
+        <!-- Форма добавления метки -->
+        <div id="marker-form" class="marker-form">
+            <h5 class="mb-3 text-center"><i class="fas fa-map-marker-alt me-2"></i>Добавить новую метку</h5>
+            <div class="mb-3">
+                <label for="marker-title" class="form-label">Название</label>
+                <input type="text" class="form-control" id="marker-title" placeholder="Введите название места">
+            </div>
+            <div class="mb-3">
+                <label for="marker-description" class="form-label">Описание</label>
+                <textarea class="form-control" id="marker-description" rows="3" placeholder="Опишите это место"></textarea>
+            </div>
+            <div class="mb-3">
+                <label for="marker-category" class="form-label">Категория</label>
+                <select class="form-select" id="marker-category">
+                    <option value="attraction">Достопримечательность</option>
+                    <option value="restaurant">Ресторан/Кафе</option>
+                    <option value="hotel">Отель</option>
+                    <option value="nature">Природа</option>
+                    <option value="other">Другое</option>
+                </select>
+            </div>
+            <div class="d-flex justify-content-between">
+                <button id="cancel-marker-btn" class="btn btn-secondary">
+                    <i class="fas fa-times me-1"></i> Отмена
+                </button>
+                <button id="submit-marker-btn" class="btn btn-primary">
+                    <i class="fas fa-check me-1"></i> Отправить на модерацию
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Уведомления -->
+    <div class="toast-container">
+        <div id="toast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header">
+                <strong class="me-auto" id="toast-title">Уведомление</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+            <div class="toast-body" id="toast-message">
+                Ваша метка отправлена на модерацию
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
+    <!-- jQuery (для упрощения AJAX) -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    
+    <script>
+        // Инициализация карты
+        const map = L.map('map').setView([53.7098, 27.9534], 7);
+        
+        // Добавление слоя карты
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+        
+        // Границы Беларуси (упрощенные)
+        const belarusBounds = L.latLngBounds(
+            L.latLng(51.25, 23.17), // Юго-запад
+            L.latLng(56.17, 32.77)   // Северо-восток
+        );
+        map.setMaxBounds(belarusBounds);
+        map.on('drag', function() {
+            map.panInsideBounds(belarusBounds, { animate: false });
+        });
+        
+        // Примеры одобренных меток (в реальном приложении будут загружаться с сервера)
+        const approvedMarkers = [
+            {
+                id: 1,
+                lat: 53.9022,
+                lng: 27.5618,
+                title: "Минск",
+                description: "Столица Беларуси",
+                category: "attraction"
+            },
+            {
+                id: 2,
+                lat: 52.0975,
+                lng: 23.6877,
+                title: "Брестская крепость",
+                description: "Мемориальный комплекс",
+                category: "attraction"
+            },
+            {
+                id: 3,
+                lat: 54.5136,
+                lng: 30.4334,
+                title: "Орша",
+                description: "Город в Витебской области",
+                category: "other"
+            }
+        ];
+        
+        // Примеры меток на модерации (в реальном приложении будут загружаться с сервера)
+        const pendingMarkers = [
+            {
+                id: 101,
+                lat: 53.6789,
+                lng: 27.1416,
+                title: "Новое кафе",
+                description: "Открылось недавно",
+                category: "restaurant"
+            }
+        ];
+        
+        // Иконки для разных категорий
+        const markerIcons = {
+            attraction: L.divIcon({
+                html: '<i class="fas fa-landmark" style="color: #6f42c1; font-size: 24px;"></i>',
+                className: 'custom-marker-icon',
+                iconSize: [24, 24],
+                iconAnchor: [12, 24]
+            }),
+            restaurant: L.divIcon({
+                html: '<i class="fas fa-utensils" style="color: #e63946; font-size: 24px;"></i>',
+                className: 'custom-marker-icon',
+                iconSize: [24, 24],
+                iconAnchor: [12, 24]
+            }),
+            hotel: L.divIcon({
+                html: '<i class="fas fa-hotel" style="color: #1d3557; font-size: 24px;"></i>',
+                className: 'custom-marker-icon',
+                iconSize: [24, 24],
+                iconAnchor: [12, 24]
+            }),
+            nature: L.divIcon({
+                html: '<i class="fas fa-tree" style="color: #2a9d8f; font-size: 24px;"></i>',
+                className: 'custom-marker-icon',
+                iconSize: [24, 24],
+                iconAnchor: [12, 24]
+            }),
+            other: L.divIcon({
+                html: '<i class="fas fa-map-marker-alt" style="color: #457b9d; font-size: 24px;"></i>',
+                className: 'custom-marker-icon',
+                iconSize: [24, 24],
+                iconAnchor: [12, 24]
+            }),
+            pending: L.divIcon({
+                html: '<i class="fas fa-clock" style="color: #ffb703; font-size: 24px;"></i>',
+                className: 'custom-marker-icon pending-marker',
+                iconSize: [24, 24],
+                iconAnchor: [12, 24]
+            })
+        };
+        
+        // Добавление одобренных меток на карту
+        approvedMarkers.forEach(marker => {
+            const popupContent = `
+                <div class="custom-popup">
+                    <h6>${marker.title}</h6>
+                    <p>${marker.description}</p>
+                    <small class="text-muted">Категория: ${getCategoryName(marker.category)}</small>
+                </div>
+            `;
+            
+            L.marker([marker.lat, marker.lng], {
+                icon: markerIcons[marker.category]
+            })
+            .addTo(map)
+            .bindPopup(popupContent);
+        });
+        
+        // Добавление меток на модерации (обычно только для администратора)
+        pendingMarkers.forEach(marker => {
+            const popupContent = `
+                <div class="custom-popup">
+                    <h6>${marker.title} <span class="badge bg-warning text-dark">На модерации</span></h6>
+                    <p>${marker.description}</p>
+                    <small class="text-muted">Категория: ${getCategoryName(marker.category)}</small>
+                </div>
+            `;
+            
+            L.marker([marker.lat, marker.lng], {
+                icon: markerIcons['pending']
+            })
+            .addTo(map)
+            .bindPopup(popupContent);
+        });
+        
+        // Получение названия категории
+        function getCategoryName(category) {
+            const names = {
+                attraction: "Достопримечательность",
+                restaurant: "Ресторан/Кафе",
+                hotel: "Отель",
+                nature: "Природа",
+                other: "Другое"
+            };
+            return names[category] || category;
+        }
+        
+        // Переменные для добавления новой метки
+        let newMarker = null;
+        let clickHandler = null;
+        
+        // Обработчики кнопок
+        document.getElementById('add-marker-btn').addEventListener('click', function() {
+            // Анимация кнопки
+            this.classList.add('animate__rubberBand');
+            setTimeout(() => {
+                this.classList.remove('animate__rubberBand');
+            }, 1000);
+            
+            // Показать форму
+            document.getElementById('marker-form').classList.add('show');
+            
+            // Установить обработчик клика по карте
+            clickHandler = map.on('click', function(e) {
+                // Удалить предыдущую временную метку, если есть
+                if (newMarker) {
+                    map.removeLayer(newMarker);
+                }
+                
+                // Добавить новую временную метку
+                newMarker = L.marker(e.latlng, {
+                    icon: markerIcons['pending'],
+                    draggable: true
+                }).addTo(map);
+                
+                // Обновить позицию при перетаскивании
+                newMarker.on('dragend', function() {
+                    updateMarkerPosition(this.getLatLng());
+                });
+                
+                updateMarkerPosition(e.latlng);
+            });
+        });
+        
+        document.getElementById('cancel-marker-btn').addEventListener('click', function() {
+            // Скрыть форму
+            document.getElementById('marker-form').classList.remove('show');
+            
+            // Удалить временную метку
+            if (newMarker) {
+                map.removeLayer(newMarker);
+                newMarker = null;
+            }
+            
+            // Удалить обработчик клика
+            if (clickHandler) {
+                map.off('click', clickHandler);
+                clickHandler = null;
+            }
+        });
+        
+        document.getElementById('submit-marker-btn').addEventListener('click', function() {
+            const title = document.getElementById('marker-title').value.trim();
+            const description = document.getElementById('marker-description').value.trim();
+            const category = document.getElementById('marker-category').value;
+            
+            if (!title || !description) {
+                showToast('Ошибка', 'Пожалуйста, заполните все поля', 'danger');
+                return;
+            }
+            
+            if (!newMarker) {
+                showToast('Ошибка', 'Пожалуйста, выберите место на карте', 'danger');
+                return;
+            }
+            
+            const position = newMarker.getLatLng();
+            
+            // Здесь должен быть AJAX-запрос к серверу
+            // В демо-версии просто добавляем в массив pendingMarkers
+            const newMarkerData = {
+                id: Date.now(),
+                lat: position.lat,
+                lng: position.lng,
+                title: title,
+                description: description,
+                category: category
+            };
+            
+            // В реальном приложении:
+            // $.post('/api/markers', newMarkerData, function(response) {
+            //     showToast('Успех', 'Метка отправлена на модерацию', 'success');
+            // });
+            
+            // Для демо:
+            pendingMarkers.push(newMarkerData);
+            showToast('Успех', 'Метка отправлена на модерацию', 'success');
+            
+            // Сброс формы
+            document.getElementById('marker-form').classList.remove('show');
+            document.getElementById('marker-title').value = '';
+            document.getElementById('marker-description').value = '';
+            
+            // Удаление временной метки
+            map.removeLayer(newMarker);
+            newMarker = null;
+            
+            // Удаление обработчика клика
+            if (clickHandler) {
+                map.off('click', clickHandler);
+                clickHandler = null;
+            }
+        });
+        
+        // Кнопка "Мое местоположение"
+        document.getElementById('locate-btn').addEventListener('click', function() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function(position) {
+                    const userLocation = L.latLng(position.coords.latitude, position.coords.longitude);
+                    
+                    // Проверяем, находится ли локация в пределах Беларуси
+                    if (belarusBounds.contains(userLocation)) {
+                        map.flyTo(userLocation, 13);
+                        
+                        // Добавляем временную метку
+                        if (newMarker) {
+                            map.removeLayer(newMarker);
+                        }
+                        
+                        newMarker = L.marker(userLocation, {
+                            icon: L.divIcon({
+                                html: '<i class="fas fa-user" style="color: #6f42c1; font-size: 24px;"></i>',
+                                className: 'custom-marker-icon',
+                                iconSize: [24, 24],
+                                iconAnchor: [12, 24]
+                            })
+                        }).addTo(map)
+                        .bindPopup('<b>Ваше местоположение</b>')
+                        .openPopup();
+                        
+                        // Анимация кнопки
+                        const btn = document.getElementById('locate-btn');
+                        btn.classList.add('animate__rubberBand');
+                        setTimeout(() => {
+                            btn.classList.remove('animate__rubberBand');
+                        }, 1000);
+                    } else {
+                        showToast('Ошибка', 'Вы находитесь за пределами Беларуси', 'danger');
+                    }
+                }, function() {
+                    showToast('Ошибка', 'Не удалось определить ваше местоположение', 'danger');
+                });
+            } else {
+                showToast('Ошибка', 'Геолокация не поддерживается вашим браузером', 'danger');
+            }
+        });
+        
+        // Обновление позиции маркера
+        function updateMarkerPosition(latlng) {
+            // В реальном приложении можно обновлять координаты в форме
+            console.log('Новые координаты:', latlng.lat, latlng.lng);
+        }
+        
+        // Показать уведомление
+        function showToast(title, message, type = 'success') {
+            const toast = document.getElementById('toast');
+            const toastTitle = document.getElementById('toast-title');
+            const toastMessage = document.getElementById('toast-message');
+            
+            // Установка цвета в зависимости от типа
+            toast.className = 'toast';
+            toast.classList.add('show');
+            
+            if (type === 'success') {
+                toast.querySelector('.toast-header').className = 'toast-header bg-success text-white';
+            } else if (type === 'danger') {
+                toast.querySelector('.toast-header').className = 'toast-header bg-danger text-white';
+            } else {
+                toast.querySelector('.toast-header').className = 'toast-header bg-primary text-white';
+            }
+            
+            toastTitle.textContent = title;
+            toastMessage.textContent = message;
+            
+            // Автоматическое скрытие через 5 секунд
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 5000);
+        }
+    </script>
+</body>
+</html>
