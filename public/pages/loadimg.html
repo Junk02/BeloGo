@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="ru">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,326 +15,13 @@
     <!-- Animate.css -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
     <link rel="stylesheet" href="loadimg.html">
-    <style>
-        :root {
-            --primary-color: #6f42c1;
-            --secondary-color: #f8f9fa;
-            --dark-color: #343a40;
-        }
-        
-        body {
-            background-color: #f8f9fa;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-        
-        .upload-container {
-            max-width: 1000px;
-            margin: 0 auto;
-            padding: 2rem;
-            background-color: white;
-            border-radius: 15px;
-            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.08);
-            margin-top: 2rem;
-            margin-bottom: 2rem;
-            transition: all 0.3s ease;
-        }
-        
-        .upload-header {
-            text-align: center;
-            margin-bottom: 2rem;
-            position: relative;
-        }
-        
-        .upload-title {
-            font-size: 2rem;
-            font-weight: 700;
-            color: var(--dark-color);
-            margin-bottom: 0.5rem;
-        }
-        
-        .upload-subtitle {
-            color: #6c757d;
-            font-size: 1rem;
-        }
-        
-        .upload-area {
-            border: 2px dashed #dee2e6;
-            border-radius: 12px;
-            padding: 3rem 1rem;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            margin-bottom: 2rem;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .upload-area:hover {
-            border-color: var(--primary-color);
-            background-color: rgba(111, 66, 193, 0.03);
-        }
-        
-        .upload-icon {
-            font-size: 3rem;
-            color: var(--primary-color);
-            margin-bottom: 1rem;
-            transition: all 0.3s ease;
-        }
-        
-        .upload-text {
-            font-size: 1.1rem;
-            color: var(--dark-color);
-            margin-bottom: 0.5rem;
-        }
-        
-        .upload-hint {
-            font-size: 0.9rem;
-            color: #6c757d;
-        }
-        
-        .upload-input {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            top: 0;
-            left: 0;
-            opacity: 0;
-            cursor: pointer;
-        }
-        
-        .preview-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-            gap: 1rem;
-            margin-bottom: 2rem;
-        }
-        
-        .preview-item {
-            position: relative;
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
-            transition: all 0.3s ease;
-            aspect-ratio: 1/1;
-        }
-        
-        .preview-img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-        
-        .preview-remove {
-            position: absolute;
-            top: 5px;
-            right: 5px;
-            width: 25px;
-            height: 25px;
-            background-color: rgba(255, 255, 255, 0.8);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #dc3545;
-            cursor: pointer;
-            opacity: 0;
-            transition: all 0.3s ease;
-        }
-        
-        .preview-item:hover .preview-remove {
-            opacity: 1;
-        }
-        
-        .form-label {
-            font-weight: 600;
-            color: var(--dark-color);
-            margin-bottom: 0.5rem;
-        }
-        
-        .form-control, .form-select {
-            border-radius: 10px;
-            padding: 10px 15px;
-            border: 1px solid #dee2e6;
-            transition: all 0.3s ease;
-        }
-        
-        .form-control:focus, .form-select:focus {
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 0.25rem rgba(111, 66, 193, 0.25);
-        }
-        
-        .btn-upload {
-            background-color: var(--primary-color);
-            color: white;
-            border: none;
-            padding: 12px 25px;
-            border-radius: 10px;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            width: 100%;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-        
-        .btn-upload:hover {
-            background-color: #5a32a3;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(111, 66, 193, 0.3);
-        }
-        
-        /* Стили для карты */
-        #map-container {
-            height: 300px;
-            border-radius: 12px;
-            margin-bottom: 1.5rem;
-            overflow: hidden;
-            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
-            position: relative;
-        }
-        
-        #map {
-            height: 100%;
-            width: 100%;
-        }
-        
-        .map-controls {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            z-index: 1000;
-        }
-        
-        .btn-map-control {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background-color: white;
-            color: var(--primary-color);
-            border: none;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-            margin-bottom: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.3s ease;
-        }
-        
-        .btn-map-control:hover {
-            background-color: var(--primary-color);
-            color: white;
-            transform: scale(1.1);
-        }
-        
-        /* Анимации */
-        .animate-fade-in {
-            animation: fadeIn 0.5s ease forwards;
-        }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
-        /* Адаптация для мобильных */
-        @media (max-width: 768px) {
-            .upload-container {
-                padding: 1.5rem;
-                margin-top: 1rem;
-            }
-            
-            .upload-title {
-                font-size: 1.5rem;
-            }
-            
-            .preview-container {
-                grid-template-columns: repeat(2, 1fr);
-            }
-            
-            #map-container {
-                height: 250px;
-            }
-        }
 
-        .navbar {
-            transition: all 0.3s ease;
-        }
-                
-        .navbar-hide {
-            transform: translateY(-100%);
-        }
-
-        .navbar-brand {
-            font-weight: 700;
-        }
-
-    </style>
+    <link rel="stylesheet" href="/styles/loadimg.css">
 </head>
+
 <body>
 
-    <!-- Навигация -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top" id="mainNavbar">
-        <div class="container">
-            <a class="navbar-brand" href="/index.html">
-                <i class="fas fa-map-marked-alt me-2"></i>BeloGo
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarCollapse">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="/pages/map.html"><i class="fas fa-map me-1"></i> Карта</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/pages/reels.html"><i class="bi bi-collection-play-fill"></i> Лента</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link active" href="/pages/loadimg.html"><i class="bi bi-envelope-plus-fill"></i> Добавить пост</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/pages/auth.html"><i class="fas fa-user me-1"></i> Войти</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/pages/about.html"><i class="bi bi-info-circle-fill"></i> О нас</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
-
-
-    <script>
-    
-        document.addEventListener('DOMContentLoaded', function () {
-        const navbar = document.getElementById('mainNavbar');
-        let lastScroll = 0;
-
-        window.addEventListener('scroll', function () {
-        const currentScroll = window.pageYOffset;
-
-        if (currentScroll <= 0) {
-            // Вверху страницы - показываем хедер
-            navbar.classList.remove('navbar-hide');
-            return;
-        }
-
-        if (currentScroll > lastScroll && !navbar.classList.contains('navbar-hide')) {
-            // Прокрутка вниз - скрываем хедер
-            navbar.classList.add('navbar-hide');
-        } else if (currentScroll < lastScroll && navbar.classList.contains('navbar-hide')) {
-            // Прокрутка вверх - показываем хедер
-            navbar.classList.remove('navbar-hide');
-        }
-
-        lastScroll = currentScroll;
-        });
-        });
-
-    </script>
-
-
-
-
+    <div id="header-placeholder"></div>
 
     <!-- Основной контент -->
     <div class="container">
@@ -342,7 +30,7 @@
                 <h1 class="upload-title">Добавить фотографии</h1>
                 <p class="upload-subtitle">Поделитесь своими впечатлениями с сообществом</p>
             </div>
-            
+
             <!-- Область загрузки -->
             <div class="upload-area" id="uploadArea">
                 <div class="upload-icon">
@@ -352,21 +40,23 @@
                 <p class="upload-hint">Поддерживаются JPG, PNG, размером до 10MB</p>
                 <input type="file" id="fileInput" class="upload-input" multiple accept="image/*">
             </div>
-            
+
             <!-- Превью загруженных фото -->
             <div class="preview-container" id="previewContainer"></div>
-            
+
             <!-- Форма описания -->
             <div class="description-area">
                 <div class="mb-3">
                     <label for="photoTitle" class="form-label">Название</label>
-                    <input type="text" class="form-control" id="photoTitle" placeholder="Введите название для ваших фото">
+                    <input type="text" class="form-control" id="photoTitle"
+                        placeholder="Введите название для ваших фото">
                 </div>
                 <div class="mb-3">
                     <label for="photoDescription" class="form-label">Описание</label>
-                    <textarea class="form-control" id="photoDescription" rows="4" placeholder="Расскажите о этих фотографиях"></textarea>
+                    <textarea class="form-control" id="photoDescription" rows="4"
+                        placeholder="Расскажите о этих фотографиях"></textarea>
                 </div>
-                
+
                 <!-- Карта для выбора местоположения -->
                 <div class="mb-3">
                     <label class="form-label">Местоположение</label>
@@ -378,17 +68,18 @@
                             </button>
                         </div>
                     </div>
-                    <input type="text" class="form-control mt-2" id="locationName" placeholder="Название места" readonly>
+                    <input type="text" class="form-control mt-2" id="locationName" placeholder="Название места"
+                        readonly>
                     <input type="hidden" id="locationLat">
                     <input type="hidden" id="locationLng">
                 </div>
-                
+
                 <div class="mb-3">
                     <label for="photoTags" class="form-label">Теги (через запятую)</label>
                     <input type="text" class="form-control" id="photoTags" placeholder="природа, озеро, лето">
                 </div>
             </div>
-            
+
             <!-- Кнопка загрузки -->
             <button class="btn btn-upload" id="uploadBtn">
                 <i class="fas fa-upload me-2"></i> Опубликовать фотографии
@@ -400,290 +91,16 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <!-- Leaflet JS -->
     <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
-    
+
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const uploadArea = document.getElementById('uploadArea');
-            const fileInput = document.getElementById('fileInput');
-            const previewContainer = document.getElementById('previewContainer');
-            const uploadBtn = document.getElementById('uploadBtn');
-            const locationName = document.getElementById('locationName');
-            const locationLat = document.getElementById('locationLat');
-            const locationLng = document.getElementById('locationLng');
-            
-            let files = [];
-            let map;
-            let marker = null;
-            let currentLocation = null;
-            
-            // Инициализация карты
-            function initMap() {
-                map = L.map('map').setView([53.9, 27.5667], 7); // Центр Беларуси
-                
-                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                }).addTo(map);
-                
-                // Обработчик клика по карте
-                map.on('click', function(e) {
-                    if (marker) {
-                        map.removeLayer(marker);
-                    }
-                    
-                    marker = L.marker(e.latlng, {
-                        draggable: true
-                    }).addTo(map);
-                    
-                    // Получаем название места (в демо просто координаты)
-                    locationName.value = `${e.latlng.lat.toFixed(4)}, ${e.latlng.lng.toFixed(4)}`;
-                    locationLat.value = e.latlng.lat;
-                    locationLng.value = e.latlng.lng;
-                    
-                    // При перемещении маркера обновляем координаты
-                    marker.on('dragend', function() {
-                        const newPos = marker.getLatLng();
-                        locationName.value = `${newPos.lat.toFixed(4)}, ${newPos.lng.toFixed(4)}`;
-                        locationLat.value = newPos.lat;
-                        locationLng.value = newPos.lng;
-                    });
-                });
-            }
-            
-            // Инициализация карты
-            initMap();
-            
-            // Кнопка "Мое местоположение"
-            document.getElementById('locateBtn').addEventListener('click', function() {
-                if (navigator.geolocation) {
-                    navigator.geolocation.getCurrentPosition(function(position) {
-                        const userLocation = L.latLng(position.coords.latitude, position.coords.longitude);
-                        
-                        // Удаляем предыдущий маркер
-                        if (marker) {
-                            map.removeLayer(marker);
-                        }
-                        
-                        // Добавляем новый маркер
-                        marker = L.marker(userLocation, {
-                            draggable: true
-                        }).addTo(map);
-                        
-                        // Центрируем карту
-                        map.setView(userLocation, 13);
-                        
-                        // Заполняем поля
-                        locationName.value = "Мое местоположение";
-                        locationLat.value = userLocation.lat;
-                        locationLng.value = userLocation.lng;
-                        
-                        // При перемещении маркера обновляем координаты
-                        marker.on('dragend', function() {
-                            const newPos = marker.getLatLng();
-                            locationName.value = `${newPos.lat.toFixed(4)}, ${newPos.lng.toFixed(4)}`;
-                            locationLat.value = newPos.lat;
-                            locationLng.value = newPos.lng;
-                        });
-                    }, function() {
-                        alert('Не удалось определить ваше местоположение');
-                    });
-                } else {
-                    alert('Геолокация не поддерживается вашим браузером');
-                }
+        fetch('/partials/header.html')
+            .then(res => res.text())
+            .then(html => {
+                document.getElementById('header-placeholder').innerHTML = html;
             });
-            
-            // Обработчики для drag and drop
-            uploadArea.addEventListener('dragover', function(e) {
-                e.preventDefault();
-                this.classList.add('active');
-            });
-            
-            uploadArea.addEventListener('dragleave', function() {
-                this.classList.remove('active');
-            });
-            
-            uploadArea.addEventListener('drop', function(e) {
-                e.preventDefault();
-                this.classList.remove('active');
-                handleFiles(e.dataTransfer.files);
-            });
-            
-            // Обработчик клика по области загрузки
-            uploadArea.addEventListener('click', function() {
-                fileInput.click();
-            });
-            
-            // Обработчик выбора файлов
-            fileInput.addEventListener('change', function() {
-                if (this.files.length > 0) {
-                    handleFiles(this.files);
-                }
-            });
-            
-            // Функция обработки выбранных файлов
-            function handleFiles(selectedFiles) {
-                // Очищаем предыдущий выбор
-                files = [];
-                previewContainer.innerHTML = '';
-                
-                // Проверяем каждый файл
-                for (let i = 0; i < selectedFiles.length; i++) {
-                    const file = selectedFiles[i];
-                    
-                    // Проверка типа файла
-                    if (!file.type.match('image.*')) {
-                        continue;
-                    }
-                    
-                    // Проверка размера файла (до 10MB)
-                    if (file.size > 10 * 1024 * 1024) {
-                        continue;
-                    }
-                    
-                    files.push(file);
-                    
-                    // Создаем превью
-                    const reader = new FileReader();
-                    reader.onload = function(e) {
-                        const previewItem = document.createElement('div');
-                        previewItem.className = 'preview-item animate-fade-in';
-                        previewItem.innerHTML = `
-                            <img src="${e.target.result}" class="preview-img" alt="Превью">
-                            <div class="preview-remove" data-index="${files.length - 1}">
-                                <i class="fas fa-times"></i>
-                            </div>
-                        `;
-                        previewContainer.appendChild(previewItem);
-                        
-                        // Анимация добавления
-                        previewItem.style.animationDelay = `${i * 0.1}s`;
-                        
-                        // Обработчик удаления превью
-                        previewItem.querySelector('.preview-remove').addEventListener('click', function(e) {
-                            e.stopPropagation();
-                            const index = parseInt(this.getAttribute('data-index'));
-                            files.splice(index, 1);
-                            previewContainer.removeChild(previewItem);
-                            
-                            // Обновляем индексы у оставшихся элементов
-                            const removeButtons = document.querySelectorAll('.preview-remove');
-                            removeButtons.forEach((btn, idx) => {
-                                btn.setAttribute('data-index', idx);
-                            });
-                        });
-                    };
-                    reader.readAsDataURL(file);
-                }
-            }
-            
-            // Обработчик отправки фотографий
-            uploadBtn.addEventListener('click', function() {
-                if (files.length === 0) {
-                    alert('Пожалуйста, выберите хотя бы одно фото');
-                    return;
-                }
-                
-                const title = document.getElementById('photoTitle').value.trim();
-                const description = document.getElementById('photoDescription').value.trim();
-                const tags = document.getElementById('photoTags').value.trim();
-                const lat = locationLat.value;
-                const lng = locationLng.value;
-                
-                if (!title) {
-                    alert('Пожалуйста, укажите название');
-                    return;
-                }
-                
-                if (!lat || !lng) {
-                    alert('Пожалуйста, укажите местоположение на карте');
-                    return;
-                }
-                
-                // Создаем объект с данными поста
-                const postData = {
-                    title: title,
-                    description: description,
-                    tags: tags.split(',').map(tag => tag.trim()),
-                    location: {
-                        name: locationName.value,
-                        lat: parseFloat(lat),
-                        lng: parseFloat(lng)
-                    },
-                    photos: [],
-                    date: new Date().toISOString(),
-                    author: {
-                        name: "Текущий пользователь", // В реальном приложении брать из системы аутентификации
-                        avatar: "https://randomuser.me/api/portraits/women/44.jpg"
-                    }
-                };
-                
-                // Читаем файлы и добавляем в postData
-                const readers = [];
-                let filesProcessed = 0;
-                
-                for (let i = 0; i < files.length; i++) {
-                    const reader = new FileReader();
-                    reader.onload = function(e) {
-                        postData.photos.push({
-                            url: e.target.result,
-                            name: files[i].name,
-                            type: files[i].type
-                        });
-                        
-                        filesProcessed++;
-                        
-                        // Когда все файлы обработаны
-                        if (filesProcessed === files.length) {
-                            // В реальном приложении здесь будет AJAX-запрос к серверу
-                            console.log('Данные для отправки:', postData);
-                            
-                            // Сохраняем пост в localStorage (для демонстрации)
-                            savePostToFeed(postData);
-                            
-                            // Показываем уведомление об успехе
-                            alert('Фотографии успешно опубликованы!');
-                            
-                            // Сбрасываем форму
-                            resetForm();
-                        }
-                    };
-                    reader.readAsDataURL(files[i]);
-                    readers.push(reader);
-                }
-            });
-            
-            // Функция сохранения поста в "ленту" (в реальном приложении - на сервер)
-            function savePostToFeed(postData) {
-                // Получаем текущие посты из localStorage
-                let feed = JSON.parse(localStorage.getItem('belogoFeed')) || [];
-                
-                // Добавляем новый пост в начало массива
-                feed.unshift(postData);
-                
-                // Сохраняем обратно в localStorage
-                localStorage.setItem('belogoFeed', JSON.stringify(feed));
-                
-                // В реальном приложении здесь будет редирект на страницу ленты
-                // или обновление ленты через AJAX
-            }
-            
-            // Функция сброса формы
-            function resetForm() {
-                files = [];
-                previewContainer.innerHTML = '';
-                fileInput.value = '';
-                document.getElementById('photoTitle').value = '';
-                document.getElementById('photoDescription').value = '';
-                document.getElementById('photoTags').value = '';
-                locationName.value = '';
-                locationLat.value = '';
-                locationLng.value = '';
-                
-                if (marker) {
-                    map.removeLayer(marker);
-                    marker = null;
-                }
-            }
-        });
     </script>
+
+    <script src="/scripts/loadimg.js"></script>
 </body>
+
 </html>

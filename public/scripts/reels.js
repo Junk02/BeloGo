@@ -1,5 +1,15 @@
-document.addEventListener('DOMContentLoaded', function() {
-    // Инициализация вертикального свайпера с анимацией creative
+document.addEventListener('DOMContentLoaded', function () {
+
+    fetch('/api/check-session', { credentials: 'include' })
+        .then(response => response.json())
+        .then(data => {
+            const authLink = document.querySelector('.nav-link[href="/pages/auth.html"]');
+            if (data.loggedIn && authLink) {
+                authLink.innerHTML = '<i class="fas fa-user me-1"></i> Профиль';
+                authLink.href = '/pages/profile.html';
+            }
+        });
+
     const verticalSwiper = new Swiper('.vertical-swiper', {
         direction: 'vertical',
         slidesPerView: 1,
@@ -24,11 +34,11 @@ document.addEventListener('DOMContentLoaded', function() {
         speed: 800,
         on: {
             // Скрываем предыдущий слайд после перехода
-            slideChange: function() {
+            slideChange: function () {
                 const previousSlide = this.slides[this.previousIndex];
                 previousSlide.style.opacity = '0';
                 previousSlide.style.pointerEvents = 'none';
-                
+
                 // Показываем текущий слайд
                 const activeSlide = this.slides[this.activeIndex];
                 activeSlide.style.opacity = '1';
@@ -36,7 +46,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
     });
-    
+
     // Инициализация всех горизонтальных свайперов с fade-эффектом
     const horizontalSwipers = document.querySelectorAll('.horizontal-swiper');
     horizontalSwipers.forEach(container => {
@@ -55,11 +65,11 @@ document.addEventListener('DOMContentLoaded', function() {
             speed: 400,
             on: {
                 // Скрываем предыдущий слайд после перехода
-                slideChange: function() {
+                slideChange: function () {
                     const previousSlide = this.slides[this.previousIndex];
                     previousSlide.style.opacity = '0';
                     previousSlide.style.pointerEvents = 'none';
-                    
+
                     // Показываем текущий слайд
                     const activeSlide = this.slides[this.activeIndex];
                     activeSlide.style.opacity = '1';
@@ -68,7 +78,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     });
-    
+
     // Обработка событий для предотвращения конфликтов свайпов
     document.querySelectorAll('.horizontal-swiper').forEach(swiper => {
         swiper.addEventListener('wheel', (e) => {

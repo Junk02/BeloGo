@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="ru">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -15,55 +16,27 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
     <link rel="stylesheet" href="/styles/map.css">
 </head>
-<body>
-    
-<!-- Навигационная панель -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <div class="container">
-            <a class="navbar-brand" href="/index.html">
-                <i class="fas fa-map-marked-alt me-2"></i>BeloGo
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <a class="nav-link active" href="/pages/map.html"><i class="fas fa-map me-1"></i> Карта</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/pages/reels.html"><i class="bi bi-collection-play-fill"></i> Лента</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/pages/loadimg.html"><i class="bi bi-envelope-plus-fill"></i> Добавить пост</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/pages/auth.html"><i class="fas fa-home me-1"></i> Войти</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/pages/about.html"><i class="bi bi-info-circle-fill"></i> О нас</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
 
-    <!---------------------------->
+<body>
+
+    <div id="header-placeholder"></div>
 
     <!-- Контейнер карты -->
     <div id="map-container">
         <div id="map"></div>
-        
+
         <!-- Элементы управления картой -->
         <div class="map-controls">
-            <button id="add-marker-btn" class="btn-map-control animate__animated animate__bounceIn" title="Добавить метку">
+            <button id="add-marker-btn" class="btn-map-control animate__animated animate__bounceIn"
+                title="Добавить метку">
                 <i class="fas fa-plus"></i>
             </button>
-            <button id="locate-btn" class="btn-map-control animate__animated animate__bounceIn animate__delay-1s" title="Мое местоположение">
+            <button id="locate-btn" class="btn-map-control animate__animated animate__bounceIn animate__delay-1s"
+                title="Мое местоположение">
                 <i class="fas fa-location-arrow"></i>
             </button>
         </div>
-        
+
         <!-- Форма добавления метки -->
         <div id="marker-form" class="marker-form">
             <h5 class="mb-3 text-center"><i class="fas fa-map-marker-alt me-2"></i>Добавить новую метку</h5>
@@ -73,7 +46,8 @@
             </div>
             <div class="mb-3">
                 <label for="marker-description" class="form-label">Описание</label>
-                <textarea class="form-control" id="marker-description" rows="3" placeholder="Опишите это место"></textarea>
+                <textarea class="form-control" id="marker-description" rows="3"
+                    placeholder="Опишите это место"></textarea>
             </div>
             <div class="mb-3">
                 <label for="marker-category" class="form-label">Категория</label>
@@ -95,7 +69,7 @@
             </div>
         </div>
     </div>
-    
+
     <!-- Уведомления -->
     <div class="toast-container">
         <div id="toast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
@@ -115,7 +89,16 @@
     <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
     <!-- jQuery (для упрощения AJAX) -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    
+
+    <script>
+        fetch('/partials/header.html')
+            .then(res => res.text())
+            .then(html => {
+                document.getElementById('header-placeholder').innerHTML = html;
+            });
+    </script>
+
     <script src="/scripts/map.js"></script>
 </body>
+
 </html>

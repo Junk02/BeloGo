@@ -53,6 +53,16 @@ app.get('/', (req, res) => {
     res.send('Сервер работает!');
 });
 
+// Проверка сессии
+app.get('/api/check-session', (req, res) => {
+    if (req.session && req.session.user) {
+        res.json({ loggedIn: true, username: req.session.user.username });
+    } else {
+        res.json({ loggedIn: false });
+    }
+});
+
+
 app.post('/register', async (req, res) => {
     const { name, nickname, password } = req.body;
     log('Client data:');
