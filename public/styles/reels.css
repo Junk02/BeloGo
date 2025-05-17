@@ -1,187 +1,186 @@
 html, body {
-            height: 100%;
-            margin: 0;
-            padding: 0;
-            overflow: hidden;
-            touch-action: pan-y;
-        }
-        
-        .tiktok-container {
-            height: 100vh;
-            background-color: #000;
-        }
-        
-        .vertical-swiper {
-            height: 100%;
-        }
-        
-        .swiper-slide {
-            height: 100vh;
-            overflow: hidden;
-        }
-        
-        .swiper-pagination-vertical {
-            position: absolute;
-            right: 10px;
-            top: 50%;
-            transform: translateY(-50%);
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-        
-        .swiper-pagination-vertical .swiper-pagination-bullet {
-            width: 6px;
-            height: 6px;
-            background: rgba(255, 255, 255, 0.5);
-            opacity: 1;
-        }
-        
-        .swiper-pagination-vertical .swiper-pagination-bullet-active {
-            background: #fff;
-            height: 12px;
-            border-radius: 6px;
-        }
-        
-        .horizontal-swiper {
-            height: 100%;
-            width: 100%;
-        }
-        
-        .horizontal-swiper .swiper-slide {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-        
-        .horizontal-swiper .swiper-pagination {
-            position: absolute;
-            bottom: 15px;
-            left: 0;
-            width: 100%;
-            display: flex;
-            justify-content: center;
-            gap: 6px;
-        }
-        
-        .horizontal-swiper .swiper-pagination-bullet {
-            width: 6px;
-            height: 6px;
-            background: rgba(255, 255, 255, 0.5);
-            opacity: 1;
-        }
-        
-        .horizontal-swiper .swiper-pagination-bullet-active {
-            background: #fff;
-            width: 12px;
-            border-radius: 6px;
-        }
-        
-        .slide-content {
-            position: absolute;
-            bottom: 15px;
-            left: 15px;
-            color: white;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
-            z-index: 10;
-            font-size: 14px;
-        }
-        
-        .slide-content h5 {
-            font-size: 16px;
-            margin-bottom: 5px;
-        }
-        
-        #mainNavbar {
-            z-index: 1000;
-        }
-        
-        /* Стили для анимации */
-        .vertical-swiper .swiper-slide,
-        .horizontal-swiper .swiper-slide {
-            opacity: 1;
-            transition: opacity 0.5s ease, transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
-            pointer-events: auto;
-        }
-        
-        .vertical-swiper .swiper-slide:not(.swiper-slide-active),
-        .horizontal-swiper .swiper-slide:not(.swiper-slide-active) {
-            opacity: 0 !important;
-            pointer-events: none;
-        }
-        
-        .img {
-            height: 100%;
-            width: 100%;
-            object-fit: cover;
-        }
-        
-        /* Медиазапросы для мобильных устройств */
-        @media screen and (max-width: 767px) {
-            .swiper-pagination-vertical {
-                right: 5px;
-                gap: 6px;
-            }
-            
-            .slide-content {
-                bottom: 10px;
-                left: 10px;
-                font-size: 12px;
-            }
-            
-            .slide-content h5 {
-                font-size: 14px;
-            }
-            
-            #mainNavbar {
-                padding: 0.5rem 1rem;
-            }
-            
-            .navbar-brand {
-                font-size: 1rem;
-            }
-            
-            .nav-link {
-                padding: 0.5rem;
-            }
-        }
-        
-        @media screen and (max-width: 420px) {
-            .img {
-                height: auto;
-                max-height: 70vh;
-                width: 100%;
-            
-            }
-            
-            .swiper-slide {
-                padding-top: 15%;
-                display: flex;
-                align-items: flex-start;
-            }
-            
-            .swiper-pagination-vertical .swiper-pagination-bullet {
-                width: 5px;
-                height: 5px;
-            }
-            
-            .swiper-pagination-vertical .swiper-pagination-bullet-active {
-                height: 10px;
-            }
-            
-            .horizontal-swiper .swiper-pagination-bullet {
-                width: 5px;
-                height: 5px;
-            }
-            
-            .horizontal-swiper .swiper-pagination-bullet-active {
-                width: 10px;
-            }
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    touch-action: pan-y;
+}
 
-            .slide-content{
-                bottom: 80px;
-            }
+.tiktok-container {
+    height: 100vh;
+    background-color: #000;
+    position: relative;
+}
 
-            
+.vertical-swiper {
+    height: 100%;
+}
 
-        }
+.swiper-slide {
+    height: 100vh;
+    overflow: hidden;
+    position: relative;
+}
+
+.swiper-pagination-vertical {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    z-index: 10;
+}
+
+.swiper-pagination-vertical .swiper-pagination-bullet {
+    width: 6px;
+    height: 6px;
+    background: rgba(255, 255, 255, 0.5);
+    opacity: 1;
+    transition: all 0.3s ease;
+}
+
+.swiper-pagination-vertical .swiper-pagination-bullet-active {
+    background: #fff;
+    height: 12px;
+    border-radius: 6px;
+}
+
+.horizontal-swiper {
+    height: 100%;
+    width: 100%;
+}
+
+.horizontal-swiper .swiper-slide {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.horizontal-swiper .swiper-pagination {
+    position: absolute;
+    bottom: 15px;
+    left: 0;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    z-index: 10;
+}
+
+.horizontal-swiper .swiper-pagination-bullet {
+    width: 6px;
+    height: 6px;
+    background: rgba(255, 255, 255, 0.5);
+    opacity: 1;
+    transition: all 0.3s ease;
+}
+
+.horizontal-swiper .swiper-pagination-bullet-active {
+    background: #fff;
+    width: 12px;
+    border-radius: 6px;
+}
+
+.slide-content {
+    position: absolute;
+    bottom: 15px;
+    left: 15px;
+    color: white;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+    z-index: 10;
+    font-size: 14px;
+}
+
+.slide-content h5 {
+    font-size: 16px;
+    margin-bottom: 5px;
+}
+
+#mainNavbar {
+    z-index: 1000;
+}
+
+.img {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+    transition: opacity 0.5s ease;
+}
+
+.swiper-slide {
+    transition: opacity 0.5s ease;
+}
+
+.swiper-slide:not(.swiper-slide-active) {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.swiper-loading {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-size: 18px;
+    z-index: 10;
+    display: none;
+}
+
+.swiper-loading.active {
+    display: block;
+}
+
+/* Медиазапросы */
+@media (max-width: 767px) {
+    .swiper-pagination-vertical {
+        right: 5px;
+        gap: 6px;
+    }
+    
+    .slide-content {
+        bottom: 10px;
+        left: 10px;
+        font-size: 12px;
+    }
+    
+    .slide-content h5 {
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 420px) {
+    .img {
+        height: auto;
+        max-height: 70vh;
+    }
+    
+    .swiper-slide {
+        padding-top: 15%;
+        align-items: flex-start;
+    }
+    
+    .swiper-pagination-vertical .swiper-pagination-bullet {
+        width: 5px;
+        height: 5px;
+    }
+    
+    .swiper-pagination-vertical .swiper-pagination-bullet-active {
+        height: 10px;
+    }
+    
+    .horizontal-swiper .swiper-pagination-bullet {
+        width: 5px;
+        height: 5px;
+    }
+    
+    .horizontal-swiper .swiper-pagination-bullet-active {
+        width: 10px;
+    }
+
+    .slide-content {
+        bottom: 80px;
+    }
+}
