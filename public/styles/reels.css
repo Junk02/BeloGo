@@ -9,7 +9,6 @@ html, body {
 .tiktok-container {
     height: 100vh;
     background-color: #000;
-    position: relative;
 }
 
 .vertical-swiper {
@@ -19,7 +18,6 @@ html, body {
 .swiper-slide {
     height: 100vh;
     overflow: hidden;
-    position: relative;
 }
 
 .swiper-pagination-vertical {
@@ -30,7 +28,6 @@ html, body {
     display: flex;
     flex-direction: column;
     gap: 8px;
-    z-index: 10;
 }
 
 .swiper-pagination-vertical .swiper-pagination-bullet {
@@ -38,7 +35,6 @@ html, body {
     height: 6px;
     background: rgba(255, 255, 255, 0.5);
     opacity: 1;
-    transition: all 0.3s ease;
 }
 
 .swiper-pagination-vertical .swiper-pagination-bullet-active {
@@ -66,7 +62,6 @@ html, body {
     display: flex;
     justify-content: center;
     gap: 6px;
-    z-index: 10;
 }
 
 .horizontal-swiper .swiper-pagination-bullet {
@@ -74,7 +69,6 @@ html, body {
     height: 6px;
     background: rgba(255, 255, 255, 0.5);
     opacity: 1;
-    transition: all 0.3s ease;
 }
 
 .horizontal-swiper .swiper-pagination-bullet-active {
@@ -102,39 +96,29 @@ html, body {
     z-index: 1000;
 }
 
+
+/* Стили для анимации */
+.vertical-swiper .swiper-slide,
+.horizontal-swiper .swiper-slide {
+    opacity: 1;
+    transition: opacity 0.5s ease, transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    pointer-events: auto;
+}
+
+.vertical-swiper .swiper-slide:not(.swiper-slide-active),
+.horizontal-swiper .swiper-slide:not(.swiper-slide-active) {
+    opacity: 0 !important;
+    pointer-events: none;
+}
+
 .img {
     height: 100%;
     width: 100%;
     object-fit: cover;
-    transition: opacity 0.5s ease;
 }
 
-.swiper-slide {
-    transition: opacity 0.5s ease;
-}
-
-.swiper-slide:not(.swiper-slide-active) {
-    opacity: 0;
-    pointer-events: none;
-}
-
-.swiper-loading {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    color: white;
-    font-size: 18px;
-    z-index: 10;
-    display: none;
-}
-
-.swiper-loading.active {
-    display: block;
-}
-
-/* Медиазапросы */
-@media (max-width: 767px) {
+/* Медиазапросы для мобильных устройств */
+@media screen and (max-width: 767px) {
     .swiper-pagination-vertical {
         right: 5px;
         gap: 6px;
@@ -149,16 +133,31 @@ html, body {
     .slide-content h5 {
         font-size: 14px;
     }
+    
+    #mainNavbar {
+        padding: 0.5rem 1rem;
+    }
+    
+    .navbar-brand {
+        font-size: 1rem;
+    }
+    
+    .nav-link {
+        padding: 0.5rem;
+    }
 }
 
-@media (max-width: 420px) {
+@media screen and (max-width: 420px) {
     .img {
         height: auto;
         max-height: 70vh;
+        width: 100%;
+    
     }
     
     .swiper-slide {
         padding-top: 15%;
+        display: flex;
         align-items: flex-start;
     }
     
@@ -180,7 +179,10 @@ html, body {
         width: 10px;
     }
 
-    .slide-content {
+    .slide-content{
         bottom: 80px;
     }
+
+    
+
 }
