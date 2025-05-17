@@ -24,3 +24,25 @@
         </div>
     </div>
 </nav>
+
+
+<style>
+    .navbar {
+        transition: all 0.3s ease;
+    }
+
+    .navbar-hide {
+        transform: translateY(-100%);
+    }
+
+    .navbar-brand {
+        font-weight: 700;
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const page = window.location.href;
+        alert(page);
+    });
+</script>
