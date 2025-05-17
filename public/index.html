@@ -114,14 +114,8 @@
     AOS.init();
   </script>
 
-<!-- Подгрузка хедера -->
-  <script>
-    fetch('/partials/header.html')
-      .then(res => res.text())
-      .then(html => {
-        document.getElementById('header-placeholder').innerHTML = html;
-      });
-  </script>
+  <!-- Скрипт для подгрузки хедера -->
+  <script src="/partials/loadHeader.js"></script>
 
 
 

@@ -92,13 +92,8 @@
     <!-- Leaflet JS -->
     <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
 
-    <script>
-        fetch('/partials/header.html')
-            .then(res => res.text())
-            .then(html => {
-                document.getElementById('header-placeholder').innerHTML = html;
-            });
-    </script>
+    <!-- Скрипт для подгрузки хедера -->
+    <script src="/partials/loadHeader.js"></script>
 
     <script src="/scripts/loadimg.js"></script>
 </body>

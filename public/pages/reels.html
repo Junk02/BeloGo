@@ -125,15 +125,9 @@
     <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"></script>
 
-    <!-- Подгрузка хедера -->
-    <script>
-        fetch('/partials/header.html')
-            .then(res => res.text())
-            .then(html => {
-                document.getElementById('header-placeholder').innerHTML = html;
-            });
-    </script>
-
+    <!-- Скрипт для подгрузки хедера -->
+    <script src="/partials/loadHeader.js"></script>
+    
     <script src="/scripts/reels.js"></script>
 </body>
 

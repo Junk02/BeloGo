@@ -19,7 +19,7 @@
 
     <div id="header-placeholder"></div>
 
-    
+
 
     <!-- Герой секция -->
     <section class="hero-section text-center" style="padding: 20vh;">
@@ -445,14 +445,7 @@
     <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js"></script>
 
-    <script>
-        // Анимация при скролле
-        fetch('/partials/header.html')
-            .then(res => res.text())
-            .then(html => {
-                document.getElementById('header-placeholder').innerHTML = html;
-            });
-    </script>
+    <script src="/partials/loadHeader.js"></script>
 
     <script src="/scripts/about.js"></script>
 </body>

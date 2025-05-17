@@ -90,13 +90,8 @@
     <!-- jQuery (для упрощения AJAX) -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-    <script>
-        fetch('/partials/header.html')
-            .then(res => res.text())
-            .then(html => {
-                document.getElementById('header-placeholder').innerHTML = html;
-            });
-    </script>
+        <!-- Скрипт для подгрузки хедера -->
+    <script src="/partials/loadHeader.js"></script>
 
     <script src="/scripts/map.js"></script>
 </body>

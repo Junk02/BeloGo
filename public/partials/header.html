@@ -38,11 +38,25 @@
     .navbar-brand {
         font-weight: 700;
     }
+
+    .nav-link.active {
+        font-weight: bold;
+        color: #ffffff !important;
+        background-color: rgba(255, 255, 255, 0.1);
+        border-radius: 5px;
+    }
 </style>
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        const page = window.location.href;
-        alert(page);
+        const path = window.location.pathname;
+        const links = document.querySelectorAll('.navbar-nav .nav-link');
+
+        links.forEach(link => {
+            const linkPath = new URL(link.href).pathname;
+            if (linkPath === path) {
+                link.classList.add('active');
+            }
+        });
     });
 </script>

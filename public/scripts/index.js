@@ -1,8 +1,6 @@
 document.addEventListener('DOMContentLoaded', function () {
     const navbar = document.getElementById('mainNavbar');
     let lastScroll = 0;
-    const page = window.location.href;
-    alert(page);
 
     fetch('/api/check-session', { credentials: 'include' })
         .then(response => response.json())
@@ -13,9 +11,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 authLink.href = '/pages/profile.html';
             }
         });
-
-
-
+    
     window.addEventListener('scroll', function () {
         const currentScroll = window.pageYOffset;
 
