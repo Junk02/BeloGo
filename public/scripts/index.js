@@ -1,7 +1,4 @@
 document.addEventListener('DOMContentLoaded', function () {
-    const navbar = document.getElementById('mainNavbar');
-    let lastScroll = 0;
-
     fetch('/api/check-session', { credentials: 'include' })
         .then(response => response.json())
         .then(data => {
