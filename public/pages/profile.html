@@ -18,7 +18,7 @@
 
     <h1 id="welcome">Загрузка...</h1>
     <p id="info"></p>
-    <button class="btn btn-danger" id="logoutBtn">Выйти</button>
+    
 
     <div class="container py-5">
         <div class="row justify-content-center">
@@ -26,9 +26,16 @@
                 <!-- Карточка профиля -->
                 <div class="profile-card animate__animated animate__fadeIn">
                     <div class="profile-header">
-                        <button class="edit-profile-btn" data-bs-toggle="modal" data-bs-target="#editProfileModal">
-                            <i class="fas fa-pencil-alt"></i>
-                        </button>
+
+                        
+                            <button class="edit-profile-btn" data-bs-toggle="modal" data-bs-target="#editProfileModal">
+                                <i class="fas fa-pencil-alt"></i>
+                            </button>
+                        
+                            <button class="edit-setprofile-btn" data-bs-toggle="modal" data-bs-target="#editSetprofileModal">
+                                <i class="bi bi-gear-fill"></i>
+                            </button>
+
                     </div>
 
                     <!-- Аватарка -->
@@ -40,13 +47,11 @@
                     </div>
 
                     <div class="profile-info">
-                        <h1 class="profile-name animate__animated animate__fadeIn animate__delay-1s">Анна Иванова</h1>
-                        <p class="profile-username animate__animated animate__fadeIn animate__delay-1s">@anna_belogo</p>
-                        <p class="profile-bio animate__animated animate__fadeIn animate__delay-1s">Фотограф и
-                            путешественник. Люблю исследовать красивые места Беларуси и делиться ими с другими.</p>
+                        <h1 class="profile-name animate__animated animate__fadeIn animate__delay-0.5s">Анна</h1>
+                        <p class="profile-username animate__animated animate__fadeIn animate__delay-0.5s">@anna_belogo</p>
 
                         <div
-                            class="d-flex justify-content-center mb-4 animate__animated animate__fadeIn animate__delay-2s">
+                            class="d-flex justify-content-center mb-4 animate__animated animate__fadeIn animate__delay-1s">
                             <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
                             <a href="#" class="social-icon"><i class="fab fa-telegram"></i></a>
                             <a href="#" class="social-icon"><i class="fab fa-vk"></i></a>
@@ -77,46 +82,12 @@
                 </div>
 
                 <!-- Раздел "О себе" -->
-                <div class="profile-section animate__animated animate__fadeIn animate__delay-3s">
+                <div class="profile-section animate__animated animate__backInUp animate__delay-0.2s">
                     <h3 class="section-title">О себе</h3>
-                    <p>Я профессиональный фотограф из Минска. Специализируюсь на пейзажной и туристической фотографии.
-                        Люблю показывать красоту Беларуси через свои работы.</p>
-                    <p>В свободное время провожу мастер-классы по фотографии и путешествую по стране в поисках
-                        интересных кадров.</p>
+                    <p class="profile-bio animate__animated animate__fadeIn animate__delay-0.5s">Добавьте информацию о себе.</p>
                 </div>
 
-                <!-- Раздел "Навыки" -->
-                <div class="profile-section animate__animated animate__fadeIn animate__delay-3s">
-                    <h3 class="section-title">Навыки</h3>
-                    <div>
-                        <span class="skill-badge">Фотография</span>
-                        <span class="skill-badge">Adobe Photoshop</span>
-                        <span class="skill-badge">Lightroom</span>
-                        <span class="skill-badge">Пейзажи</span>
-                        <span class="skill-badge">Путешествия</span>
-                        <span class="skill-badge">Обучение</span>
-                    </div>
-                </div>
-
-                <!-- Раздел "Последняя активность" -->
-                <div class="profile-section animate__animated animate__fadeIn animate__delay-4s">
-                    <h3 class="section-title">Последняя активность</h3>
-                    <div class="activity-item">
-                        <div class="activity-date">Сегодня, 15:30</div>
-                        <p class="activity-text">Добавил новое место: "Озеро Нарочь"</p>
-                    </div>
-                    <div class="activity-item">
-                        <div class="activity-date">Вчера, 18:45</div>
-                        <p class="activity-text">Прокомментировал публикацию "Старый город в Гродно"</p>
-                    </div>
-                    <div class="activity-item">
-                        <div class="activity-date">2 дня назад</div>
-                        <p class="activity-text">Добавил 5 новых фотографий в альбом "Осень в Беловежской пуще"</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+                
 
     <!-- Модальное окно смены аватарки -->
     <div class="modal fade" id="avatarModal" tabindex="-1" aria-hidden="true">
@@ -189,17 +160,13 @@
                             <input type="text" class="form-control" id="editName" value="Анна">
                         </div>
                         <div class="mb-3">
-                            <label for="editSurname" class="form-label">Фамилия</label>
-                            <input type="text" class="form-control" id="editSurname" value="Иванова">
-                        </div>
-                        <div class="mb-3">
                             <label for="editUsername" class="form-label">Имя пользователя</label>
                             <input type="text" class="form-control" id="editUsername" value="anna_belogo">
                         </div>
                         <div class="mb-3">
                             <label for="editBio" class="form-label">О себе</label>
                             <textarea class="form-control" id="editBio"
-                                rows="3">Фотограф и путешественник. Люблю исследовать красивые места Беларуси и делиться ими с другими.</textarea>
+                                rows="3">Добавьте информацию о себе.</textarea>
                         </div>
                     </form>
                 </div>
@@ -210,6 +177,30 @@
             </div>
         </div>
     </div>
+
+    <!-- Модальное окно настроек -->
+    <div class="modal fade" id="editSetprofileModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Настройки профиля</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="mb-3">
+                            <button class="btn btn-danger" id="logoutBtn">Выйти</button>
+                        </div>
+                        <div class="mb-3">
+                            <button class="btn btn-danger" id="logoutBtn">Удалить профиль</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

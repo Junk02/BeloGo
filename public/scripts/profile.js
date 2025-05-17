@@ -89,7 +89,7 @@ function saveProfile() {
     // Здесь должна быть логика сохранения на сервер
     // Для демо просто обновляем данные на странице
     document.querySelector('.profile-name').textContent =
-        document.getElementById('editName').value + ' ' + document.getElementById('editSurname').value;
+        document.getElementById('editName').value;
     document.querySelector('.profile-username').textContent =
         '@' + document.getElementById('editUsername').value;
     document.querySelector('.profile-bio').textContent =
