@@ -5,11 +5,12 @@
 
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    padding-top: 56px;
     background-color: #f5f5f5;
 }
 
 #map-container {
-    height: calc(100vh - 56px);
+    height: calc(100vh - 0px);
     position: relative;
     overflow: hidden;
     border-radius: 0 0 15px 15px;
