@@ -1,5 +1,5 @@
 :root {
-    --primary-color: #6f42c1;
+    --primary-color: #362f43;
     --secondary-color: #f8f9fa;
     --dark-color: #343a40;
 }
@@ -19,7 +19,7 @@ body {
 }
 
 .profile-header {
-    background: linear-gradient(135deg, var(--primary-color), #8e44ad);
+    background: linear-gradient(135deg, var(--primary-color), #382e3c);
     display: flex;
     justify-content: space-between;
     color: white;

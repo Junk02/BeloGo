@@ -11,7 +11,7 @@ async function loadProfile() {
         }
 
         document.getElementById('welcome').textContent = `Добро пожаловать, ${data.user.name}!`;
-        document.getElementById('info').textContent = `Ваш никнейм: ${data.user.nickname}`;
+        document.getElementById('info').textContent = `@${data.user.nickname}`;
     } catch (err) {
         console.log('Ошибка при получении данных. Перенаправление на вход.');
         window.location.href = '/pages/auth.html';
@@ -92,6 +92,7 @@ function saveProfile() {
         document.getElementById('editName').value;
     document.querySelector('.profile-username').textContent =
         '@' + document.getElementById('editUsername').value;
+    data.user.nickname = document.querySelector('.profile-username').textContent;
     document.querySelector('.profile-bio').textContent =
         document.getElementById('editBio').value;
 

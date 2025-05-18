@@ -1,5 +1,5 @@
 :root {
-    --primary-color: #6f42c1;
+    --primary-color: #4e455d;
     --secondary-color: #f8f9fa;
     --dark-color: #343a40;
 }
@@ -142,7 +142,7 @@ body {
 
 .form-control:focus, .form-select:focus {
     border-color: var(--primary-color);
-    box-shadow: 0 0 0 0.25rem rgba(111, 66, 193, 0.25);
+    box-shadow: 0 0 0 0.25rem rgba(73, 66, 87, 0.25);
 }
 
 .btn-upload {
@@ -159,7 +159,7 @@ body {
 }
 
 .btn-upload:hover {
-    background-color: #5a32a3;
+    background-color: #3f394b;
     transform: translateY(-2px);
     box-shadow: 0 5px 15px rgba(111, 66, 193, 0.3);
 }
