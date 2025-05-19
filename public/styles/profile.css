@@ -19,7 +19,7 @@ body {
 }
 
 .profile-header {
-    background: linear-gradient(135deg, var(--primary-color), #382e3c);
+    background: linear-gradient(135deg, #7d7c7e, #48384f);
     display: flex;
     justify-content: space-between;
     color: white;
