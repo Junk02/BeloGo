@@ -179,6 +179,26 @@ body {
     width: 100%;
 }
 
+.leaflet-control-attribution {
+    display: none !important;
+}
+
+.leaflet-control-geocoder {
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    width: 250px;
+}
+
+.leaflet-control-geocoder-form input {
+    padding: 8px 12px;
+    font-size: 14px;
+}
+
+.leaflet-control-geocoder-icon {
+    background-color: #fff;
+    border-radius: 0 5px 5px 0;
+}
+
 .map-controls {
     position: absolute;
     top: 10px;

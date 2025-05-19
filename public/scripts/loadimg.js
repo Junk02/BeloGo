@@ -145,31 +145,97 @@ document.addEventListener('DOMContentLoaded', function () {
             });
     });
 
-    // Инициализация карты
+
     function initMap() {
-        map = L.map('map').setView([53.9, 27.5667], 7);
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '&copy; OpenStreetMap contributors'
-        }).addTo(map);
+        const belarusBounds = L.latLngBounds(
+        L.latLng(51.25, 23.00),
+        L.latLng(56.17, 32.80)
+    );
 
-        map.on('click', function (e) {
-            if (marker) map.removeLayer(marker);
-            marker = L.marker(e.latlng, { draggable: true }).addTo(map);
+    // Инициализация карты
+    const map = L.map('map', {
+        maxBounds: belarusBounds,
+        maxBoundsViscosity: 1.0,
+        attributionControl: false,
+        minZoom: 5,
+        maxZoom: 17
+    }).setView([53.9, 27.5], 7);
 
-            locationName.value = `${e.latlng.lat.toFixed(4)}, ${e.latlng.lng.toFixed(4)}`;
-            locationLat.value = e.latlng.lat;
-            locationLng.value = e.latlng.lng;
+    // Добавляем тайлы OSM
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        noWrap: true // Предотвращаем повторение карты
+    }).addTo(map);
 
-            marker.on('dragend', function () {
-                const pos = marker.getLatLng();
-                locationName.value = `${pos.lat.toFixed(4)}, ${pos.lng.toFixed(4)}`;
-                locationLat.value = pos.lat;
-                locationLng.value = pos.lng;
+    // Добавляем поиск с ограничением по Беларуси
+    /*const geocoder = L.Control.Geocoder.nominatim({
+        bounds: belarusBounds,
+        countrycodes: 'by', // Только Беларусь
+        limit: 5
+    });
+    
+    L.Control.geocoder({
+        geocoder: geocoder,
+        position: 'topright',
+        placeholder: 'Искать в Беларуси...',
+        errorMessage: 'Место не найдено',
+        suggestMinLength: 3,
+        queryMinLength: 3,
+        defaultMarkGeocode: false,
+        showResultIcons: true,
+        collapsed: false,
+        expand: 'click'
+    })
+    .on('markgeocode', function(e) {
+        // Проверяем, что найденное место в пределах Беларуси
+        if (belarusBounds.contains(e.geocode.center)) {
+            map.fitBounds(e.geocode.bbox, {
+                maxZoom: 14,
+                padding: [50, 50]
             });
+        if (!belarusBounds.contains(e.geocode.center)) {
+            alert('Это место находится за пределами Беларуси. Пожалуйста, выберите локацию внутри страны.');
+            return;
+        }
+            
+            // Добавляем маркер
+            L.marker(e.geocode.center)
+                .addTo(map)
+                .bindPopup(e.geocode.name)
+                .openPopup();
+        } else {
+            alert('Пожалуйста, выбирайте места только в пределах Беларуси');
+        }
+    })
+    .addTo(map); */
+
+    // Ограничение перемещения
+    map.on('drag', function() {
+        map.panInsideBounds(belarusBounds, { animate: false });
+    });
+
+
+    map.on('click', function (e) {
+        if (marker) map.removeLayer(marker);
+        marker = L.marker(e.latlng, { draggable: true }).addTo(map);
+
+        locationName.value = `${e.latlng.lat.toFixed(4)}, ${e.latlng.lng.toFixed(4)}`;
+        locationLat.value = e.latlng.lat;
+        locationLng.value = e.latlng.lng;
+
+        marker.on('dragend', function () {
+            const pos = marker.getLatLng();
+            locationName.value = `${pos.lat.toFixed(4)}, ${pos.lng.toFixed(4)}`;
+            locationLat.value = pos.lat;
+            locationLng.value = pos.lng;
         });
+    });
     }
 
     initMap();
+
+    
+
+
 
     document.getElementById('locateBtn').addEventListener('click', function () {
         if (navigator.geolocation) {
