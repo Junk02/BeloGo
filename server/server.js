@@ -1,6 +1,7 @@
 const express = require('express');
 const session = require('express-session');
 const cors = require('cors');
+const multer = require('multer');
 const path = require('path');
 const bcrypt = require('bcrypt');
 const sqlite3 = require('sqlite3').verbose();
@@ -18,10 +19,33 @@ db.run(`
   )
 `);
 
+db.run(`
+  CREATE TABLE IF NOT EXISTS posts (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER NOT NULL,
+    title TEXT NOT NULL,
+    description TEXT,
+    latitude REAL,
+    longitude REAL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id)
+  )
+`);
+
+db.run(`
+  CREATE TABLE IF NOT EXISTS photos (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    post_id INTEGER NOT NULL,
+    filename TEXT NOT NULL,
+    FOREIGN KEY (post_id) REFERENCES posts(id)
+  )
+`);
+
+
 
 app.use(cors({
-  origin: 'http://localhost:3000', // замени на свой порт, если другой
-  credentials: true
+    origin: 'http://localhost:3000', // замени на свой порт, если другой
+    credentials: true
 }));
 
 app.use(express.json());
@@ -39,6 +63,19 @@ app.use(session({
     }
 }));
 
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, '../public/uploads/'); // папка для фото
+    },
+    filename: (req, file, cb) => {
+        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+        cb(null, uniqueSuffix + path.extname(file.originalname));
+    }
+});
+
+const upload = multer({ storage });
+
+
 const red = '\x1b[31m';
 const green = '\x1b[32m';
 const reset = '\x1b[0m';
@@ -53,6 +90,77 @@ app.get('/', (req, res) => {
     res.send('Сервер работает!');
 });
 
+
+// Получение постов для ленты
+app.get('/api/posts', (req, res) => {
+  const sql = `
+    SELECT posts.id AS post_id, posts.title, posts.description, posts.created_at,
+           photos.filename
+    FROM posts
+    LEFT JOIN photos ON posts.id = photos.post_id
+    ORDER BY posts.created_at DESC
+  `;
+
+  db.all(sql, [], (err, rows) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).json({ error: 'Ошибка при получении постов' });
+    }
+
+    // Группируем фотки по постам
+    const postsMap = {};
+    rows.forEach(row => {
+      if (!postsMap[row.post_id]) {
+        postsMap[row.post_id] = {
+          id: row.post_id,
+          title: row.title,
+          description: row.description,
+          created_at: row.created_at,
+          photos: []
+        };
+      }
+      if (row.filename) {
+        postsMap[row.post_id].photos.push('/uploads/' + row.filename);
+      }
+    });
+
+    const posts = Object.values(postsMap);
+    res.json(posts);
+  });
+});
+
+
+// Добавление поста
+app.post('/upload-post', upload.array('images', 5), (req, res) => {
+    if (!req.session.user) {
+        return res.status(401).json({ message: 'Не авторизован' });
+    }
+
+    const { title, description, latitude, longitude } = req.body;
+    const images = req.files;
+
+    if (!title || images.length === 0) {
+        return res.status(400).json({ message: 'Нужно указать название и добавить хотя бы одно фото' });
+    }
+
+    // Сохраняем пост
+    const insertPost = `INSERT INTO posts (user_id, title, description, latitude, longitude) VALUES (?, ?, ?, ?, ?)`;
+    db.run(insertPost, [req.session.user.id, title, description, latitude, longitude], function (err) {
+        if (err) {
+            return res.status(500).json({ message: 'Ошибка при создании поста' });
+        }
+
+        const postId = this.lastID;
+        const insertPhoto = db.prepare(`INSERT INTO photos (post_id, filename) VALUES (?, ?)`);
+        for (const file of images) {
+            insertPhoto.run(postId, file.filename);
+        }
+        insertPhoto.finalize();
+        res.status(201).json({ message: 'Пост успешно добавлен!' });
+    });
+});
+
+
 // Проверка сессии
 app.get('/api/check-session', (req, res) => {
     if (req.session && req.session.user) {
@@ -61,7 +169,6 @@ app.get('/api/check-session', (req, res) => {
         res.json({ loggedIn: false });
     }
 });
-
 
 app.post('/register', async (req, res) => {
     const { name, nickname, password } = req.body;
@@ -164,20 +271,20 @@ app.post('/login', (req, res) => {
 
 // Получение профиля пользователя (сессии)
 app.get('/profile', (req, res) => {
-  if (!req.session.user) {
-    return res.status(401).json({ message: 'Не авторизован' });
-  }
-  // Иначе возвращаем информацию о пользователе:
-  res.json({ user: req.session.user });
+    if (!req.session.user) {
+        return res.status(401).json({ message: 'Не авторизован' });
+    }
+    // Иначе возвращаем информацию о пользователе:
+    res.json({ user: req.session.user });
 });
 
 // Выход из профиля (сессии)
 app.post('/logout', (req, res) => {
-  req.session.destroy(err => {
-    if (err) return res.status(500).json({ message: 'Ошибка при выходе' });
-    res.clearCookie('connect.sid'); // имя куки по умолчанию
-    res.json({ message: 'Вы успешно вышли' });
-  });
+    req.session.destroy(err => {
+        if (err) return res.status(500).json({ message: 'Ошибка при выходе' });
+        res.clearCookie('connect.sid'); // имя куки по умолчанию
+        res.json({ message: 'Вы успешно вышли' });
+    });
 });
 
 

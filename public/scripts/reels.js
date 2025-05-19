@@ -87,12 +87,70 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
-    // Обработка событий для предотвращения конфликтов свайпов
-    document.querySelectorAll('.horizontal-swiper').forEach(swiper => {
-        swiper.addEventListener('wheel', (e) => {
-            if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) {
-                e.preventDefault();
-            }
-        });
-    });
+
+
+    fetch('/api/posts')
+        .then(res => res.json())
+        .then(posts => {
+            const container = document.getElementById('post-container');
+            posts.forEach(post => {
+                const slide = document.createElement('div');
+                slide.classList.add('swiper-slide');
+
+                // Вложенный горизонтальный swiper
+                let innerSlides = '';
+                post.photos.forEach(photo => {
+                    innerSlides += `
+          <div class="swiper-slide">
+            <div class="position-relative h-100">
+              <img src="${photo}" class="img" alt="Фото">
+              <div class="slide-content">
+                <h5>${post.title}</h5>
+                <p>${post.description || ''}</p>
+              </div>
+            </div>
+          </div>`;
+                });
+
+                slide.innerHTML = `
+        <div class="swiper-container horizontal-swiper">
+          <div class="swiper-wrapper">
+            ${innerSlides}
+          </div>
+          <div class="swiper-pagination"></div>
+        </div>
+      `;
+
+                container.appendChild(slide);
+            });
+
+            // Пересоздаём Swiper'ы
+            verticalSwiper.update();
+            container.querySelectorAll('.horizontal-swiper').forEach(swiper => {
+                new Swiper(swiper, {
+                    direction: 'horizontal',
+                    slidesPerView: 1,
+                    spaceBetween: 0,
+                    pagination: {
+                        el: swiper.querySelector('.swiper-pagination'),
+                        clickable: true,
+                    },
+                    effect: 'creative',
+                    creativeEffect: {
+                        prev: {
+                            shadow: true,
+                            translate: [-400, 0, 0],
+                            opacity: 0
+                        },
+                        next: {
+                            translate: ['100%', 0, 0],
+                            opacity: 0
+                        },
+                    },
+                    speed: 800,
+                });
+            });
+        })
+        .catch(err => console.error('Ошибка при загрузке постов:', err));
+
 });

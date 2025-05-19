@@ -120,18 +120,19 @@ document.addEventListener('DOMContentLoaded', function () {
 
         const formData = new FormData();
         files.forEach(file => {
-            formData.append('photos', file);
+            formData.append('images', file); // <-- исправлено
         });
 
         formData.append('title', document.getElementById('photoTitle').value);
         formData.append('description', document.getElementById('photoDescription').value);
-        formData.append('locationName', locationName.value);
-        formData.append('locationLat', locationLat.value);
-        formData.append('locationLng', locationLng.value);
-        formData.append('tags', document.getElementById('photoTags').value);
+        formData.append('latitude', locationLat.value); // <-- исправлено
+        formData.append('longitude', locationLng.value); // <-- исправлено
+        //formData.append('tags', document.getElementById('photoTags').value); // можно использовать позже
+        //formData.append('locationName', locationName.value); // тоже опционально
 
-        fetch('/api/upload-post', {
+        fetch('/upload-post', { // <-- убедись, что путь такой же как на сервере
             method: 'POST',
+            credentials: 'include', // если используешь сессию
             body: formData
         })
             .then(response => response.json())
@@ -144,6 +145,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 alert('Ошибка при загрузке поста.');
             });
     });
+
 
 
     function initMap() {
