@@ -1,3 +1,5 @@
+// Обновлённый loadimg.js
+
 document.addEventListener('DOMContentLoaded', function () {
     const uploadArea = document.getElementById('uploadArea');
     const fileInput = document.getElementById('fileInput');
@@ -10,283 +12,184 @@ document.addEventListener('DOMContentLoaded', function () {
     let files = [];
     let map;
     let marker = null;
-    let currentLocation = null;
+    const photoCounter = document.getElementById('photoCounter');
+    const photoWarning = document.getElementById('photoWarning');
 
-    fetch('/api/check-session', { credentials: 'include' })
-        .then(response => response.json())
-        .then(data => {
-            const authLink = document.querySelector('.nav-link[href="/pages/auth.html"]');
-            if (data.loggedIn && authLink) {
-                authLink.innerHTML = '<i class="fas fa-user me-1"></i> Профиль';
-                authLink.href = '/pages/profile.html';
-            }
+    const photoToast = new bootstrap.Toast(document.getElementById('photoToast'));
+
+
+
+    function showPreview() {
+        previewContainer.innerHTML = '';
+        files.forEach((file, i) => {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                const item = document.createElement('div');
+                item.classList.add('preview-item');
+
+                const img = document.createElement('img');
+                img.src = e.target.result;
+                img.classList.add('preview-img');
+
+                const removeBtn = document.createElement('div');
+                removeBtn.classList.add('preview-remove');
+                removeBtn.innerHTML = '&times;';
+                removeBtn.addEventListener('click', () => {
+                    files.splice(i, 1);
+                    showPreview(); // Перерисовать превью
+                });
+
+                item.appendChild(img);
+                item.appendChild(removeBtn);
+                previewContainer.appendChild(item);
+            };
+            reader.readAsDataURL(file);
         });
 
-    // Инициализация карты
-    function initMap() {
-        map = L.map('map').setView([53.9, 27.5667], 7); // Центр Беларуси
-
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        }).addTo(map);
-
-        // Обработчик клика по карте
-        map.on('click', function (e) {
-            if (marker) {
-                map.removeLayer(marker);
-            }
-
-            marker = L.marker(e.latlng, {
-                draggable: true
-            }).addTo(map);
-
-            // Получаем название места (в демо просто координаты)
-            locationName.value = `${e.latlng.lat.toFixed(4)}, ${e.latlng.lng.toFixed(4)}`;
-            locationLat.value = e.latlng.lat;
-            locationLng.value = e.latlng.lng;
-
-            // При перемещении маркера обновляем координаты
-            marker.on('dragend', function () {
-                const newPos = marker.getLatLng();
-                locationName.value = `${newPos.lat.toFixed(4)}, ${newPos.lng.toFixed(4)}`;
-                locationLat.value = newPos.lat;
-                locationLng.value = newPos.lng;
-            });
-        });
+        photoCounter.textContent = `${files.length} / 5 фото`;
+        if (files.length < 5) {
+            photoWarning.classList.add('d-none');
+        }
     }
 
-    // Инициализация карты
-    initMap();
-
-    // Кнопка "Мое местоположение"
-    document.getElementById('locateBtn').addEventListener('click', function () {
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(function (position) {
-                const userLocation = L.latLng(position.coords.latitude, position.coords.longitude);
-
-                // Удаляем предыдущий маркер
-                if (marker) {
-                    map.removeLayer(marker);
-                }
-
-                // Добавляем новый маркер
-                marker = L.marker(userLocation, {
-                    draggable: true
-                }).addTo(map);
-
-                // Центрируем карту
-                map.setView(userLocation, 13);
-
-                // Заполняем поля
-                locationName.value = "Мое местоположение";
-                locationLat.value = userLocation.lat;
-                locationLng.value = userLocation.lng;
-
-                // При перемещении маркера обновляем координаты
-                marker.on('dragend', function () {
-                    const newPos = marker.getLatLng();
-                    locationName.value = `${newPos.lat.toFixed(4)}, ${newPos.lng.toFixed(4)}`;
-                    locationLat.value = newPos.lat;
-                    locationLng.value = newPos.lng;
-                });
-            }, function () {
-                alert('Не удалось определить ваше местоположение');
-            });
-        } else {
-            alert('Геолокация не поддерживается вашим браузером');
+    fileInput.addEventListener('click', function (e) {
+        if (files.length >= 5) {
+            e.preventDefault(); // Блокируем открытие окна выбора
+            photoToast.show(); // Показываем уведомление
         }
     });
 
-    // Обработчики для drag and drop
-    uploadArea.addEventListener('dragover', function (e) {
-        e.preventDefault();
-        this.classList.add('active');
+    fileInput.addEventListener('change', function (e) {
+        const selected = Array.from(e.target.files).filter(f => f && f.size > 0);
+        if (selected.length === 0) return;
+
+        const remainingSlots = 5 - files.length;
+        if (remainingSlots <= 0) {
+            photoWarning.classList.remove('d-none');
+            fileInput.value = '';
+            return;
+        }
+
+        const toAdd = selected.slice(0, remainingSlots);
+        files.push(...toAdd);
+        showPreview();
+
+        setTimeout(() => {
+            fileInput.value = '';
+        }, 0);
     });
 
-    uploadArea.addEventListener('dragleave', function () {
-        this.classList.remove('active');
-    });
 
-    uploadArea.addEventListener('drop', function (e) {
-        e.preventDefault();
-        this.classList.remove('active');
-        handleFiles(e.dataTransfer.files);
-    });
-
-    // Обработчик клика по области загрузки
     uploadArea.addEventListener('click', function () {
         fileInput.click();
     });
 
-    // Обработчик выбора файлов
-    fileInput.addEventListener('change', function () {
-        if (this.files.length > 0) {
-            handleFiles(this.files);
-        }
+    uploadArea.addEventListener('dragover', function (e) {
+        e.preventDefault();
+        uploadArea.classList.add('dragover');
     });
 
-    // Функция обработки выбранных файлов
-    function handleFiles(selectedFiles) {
-        // Очищаем предыдущий выбор
-        files = [];
-        previewContainer.innerHTML = '';
+    uploadArea.addEventListener('dragleave', function () {
+        uploadArea.classList.remove('dragover');
+    });
 
-        // Проверяем каждый файл
-        for (let i = 0; i < selectedFiles.length; i++) {
-            const file = selectedFiles[i];
+    uploadArea.addEventListener('drop', function (e) {
+        e.preventDefault();
+        uploadArea.classList.remove('dragover');
 
-            // Проверка типа файла
-            if (!file.type.match('image.*')) {
-                continue;
-            }
+        const dropped = Array.from(e.dataTransfer.files).filter(f => f && f.size > 0);
+        const remainingSlots = 5 - files.length;
 
-            // Проверка размера файла (до 10MB)
-            if (file.size > 10 * 1024 * 1024) {
-                continue;
-            }
-
-            files.push(file);
-
-            // Создаем превью
-            const reader = new FileReader();
-            reader.onload = function (e) {
-                const previewItem = document.createElement('div');
-                previewItem.className = 'preview-item animate-fade-in';
-                previewItem.innerHTML = `
-                            <img src="${e.target.result}" class="preview-img" alt="Превью">
-                            <div class="preview-remove" data-index="${files.length - 1}">
-                                <i class="fas fa-times"></i>
-                            </div>
-                        `;
-                previewContainer.appendChild(previewItem);
-
-                // Анимация добавления
-                previewItem.style.animationDelay = `${i * 0.1}s`;
-
-                // Обработчик удаления превью
-                previewItem.querySelector('.preview-remove').addEventListener('click', function (e) {
-                    e.stopPropagation();
-                    const index = parseInt(this.getAttribute('data-index'));
-                    files.splice(index, 1);
-                    previewContainer.removeChild(previewItem);
-
-                    // Обновляем индексы у оставшихся элементов
-                    const removeButtons = document.querySelectorAll('.preview-remove');
-                    removeButtons.forEach((btn, idx) => {
-                        btn.setAttribute('data-index', idx);
-                    });
-                });
-            };
-            reader.readAsDataURL(file);
+        if (remainingSlots <= 0) {
+            photoWarning.classList.remove('d-none');
+            return;
         }
-    }
 
-    // Обработчик отправки фотографий
+        const toAdd = dropped.slice(0, remainingSlots);
+        files.push(...toAdd);
+        showPreview();
+    });
+
+
+    // Загрузка: Здесь вы можете отправлять файлы через fetch или FormData
     uploadBtn.addEventListener('click', function () {
         if (files.length === 0) {
-            alert('Пожалуйста, выберите хотя бы одно фото');
+            alert('Пожалуйста, выберите хотя бы одну фотографию.');
             return;
         }
 
-        const title = document.getElementById('photoTitle').value.trim();
-        const description = document.getElementById('photoDescription').value.trim();
-        const tags = document.getElementById('photoTags').value.trim();
-        const lat = locationLat.value;
-        const lng = locationLng.value;
+        const formData = new FormData();
+        files.forEach(file => {
+            formData.append('photos', file);
+        });
 
-        if (!title) {
-            alert('Пожалуйста, укажите название');
-            return;
-        }
+        formData.append('title', document.getElementById('photoTitle').value);
+        formData.append('description', document.getElementById('photoDescription').value);
+        formData.append('locationName', locationName.value);
+        formData.append('locationLat', locationLat.value);
+        formData.append('locationLng', locationLng.value);
+        formData.append('tags', document.getElementById('photoTags').value);
 
-        if (!lat || !lng) {
-            alert('Пожалуйста, укажите местоположение на карте');
-            return;
-        }
-
-        // Создаем объект с данными поста
-        const postData = {
-            title: title,
-            description: description,
-            tags: tags.split(',').map(tag => tag.trim()),
-            location: {
-                name: locationName.value,
-                lat: parseFloat(lat),
-                lng: parseFloat(lng)
-            },
-            photos: [],
-            date: new Date().toISOString(),
-            author: {
-                name: "Текущий пользователь", // В реальном приложении брать из системы аутентификации
-                avatar: "https://randomuser.me/api/portraits/women/44.jpg"
-            }
-        };
-
-        // Читаем файлы и добавляем в postData
-        const readers = [];
-        let filesProcessed = 0;
-
-        for (let i = 0; i < files.length; i++) {
-            const reader = new FileReader();
-            reader.onload = function (e) {
-                postData.photos.push({
-                    url: e.target.result,
-                    name: files[i].name,
-                    type: files[i].type
-                });
-
-                filesProcessed++;
-
-                // Когда все файлы обработаны
-                if (filesProcessed === files.length) {
-                    // В реальном приложении здесь будет AJAX-запрос к серверу
-                    console.log('Данные для отправки:', postData);
-
-                    // Сохраняем пост в localStorage (для демонстрации)
-                    savePostToFeed(postData);
-
-                    // Показываем уведомление об успехе
-                    alert('Фотографии успешно опубликованы!');
-
-                    // Сбрасываем форму
-                    resetForm();
-                }
-            };
-            reader.readAsDataURL(files[i]);
-            readers.push(reader);
-        }
+        fetch('/api/upload-post', {
+            method: 'POST',
+            body: formData
+        })
+            .then(response => response.json())
+            .then(data => {
+                alert('Пост успешно загружен!');
+                window.location.href = '/pages/feed.html';
+            })
+            .catch(error => {
+                console.error('Ошибка загрузки:', error);
+                alert('Ошибка при загрузке поста.');
+            });
     });
 
-    // Функция сохранения поста в "ленту" (в реальном приложении - на сервер)
-    function savePostToFeed(postData) {
-        // Получаем текущие посты из localStorage
-        let feed = JSON.parse(localStorage.getItem('belogoFeed')) || [];
+    // Инициализация карты
+    function initMap() {
+        map = L.map('map').setView([53.9, 27.5667], 7);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; OpenStreetMap contributors'
+        }).addTo(map);
 
-        // Добавляем новый пост в начало массива
-        feed.unshift(postData);
+        map.on('click', function (e) {
+            if (marker) map.removeLayer(marker);
+            marker = L.marker(e.latlng, { draggable: true }).addTo(map);
 
-        // Сохраняем обратно в localStorage
-        localStorage.setItem('belogoFeed', JSON.stringify(feed));
+            locationName.value = `${e.latlng.lat.toFixed(4)}, ${e.latlng.lng.toFixed(4)}`;
+            locationLat.value = e.latlng.lat;
+            locationLng.value = e.latlng.lng;
 
-        // В реальном приложении здесь будет редирект на страницу ленты
-        // или обновление ленты через AJAX
+            marker.on('dragend', function () {
+                const pos = marker.getLatLng();
+                locationName.value = `${pos.lat.toFixed(4)}, ${pos.lng.toFixed(4)}`;
+                locationLat.value = pos.lat;
+                locationLng.value = pos.lng;
+            });
+        });
     }
 
-    // Функция сброса формы
-    function resetForm() {
-        files = [];
-        previewContainer.innerHTML = '';
-        fileInput.value = '';
-        document.getElementById('photoTitle').value = '';
-        document.getElementById('photoDescription').value = '';
-        document.getElementById('photoTags').value = '';
-        locationName.value = '';
-        locationLat.value = '';
-        locationLng.value = '';
+    initMap();
 
-        if (marker) {
-            map.removeLayer(marker);
-            marker = null;
+    document.getElementById('locateBtn').addEventListener('click', function () {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(function (position) {
+                const userLocation = L.latLng(position.coords.latitude, position.coords.longitude);
+                if (marker) map.removeLayer(marker);
+                marker = L.marker(userLocation, { draggable: true }).addTo(map);
+                map.setView(userLocation, 13);
+
+                locationName.value = 'Мое местоположение';
+                locationLat.value = userLocation.lat;
+                locationLng.value = userLocation.lng;
+
+                marker.on('dragend', function () {
+                    const pos = marker.getLatLng();
+                    locationName.value = `${pos.lat.toFixed(4)}, ${pos.lng.toFixed(4)}`;
+                    locationLat.value = pos.lat;
+                    locationLng.value = pos.lng;
+                });
+            });
         }
-    }
+    });
 });

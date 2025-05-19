@@ -41,6 +41,11 @@
                 <input type="file" id="fileInput" class="upload-input" multiple accept="image/*">
             </div>
 
+            <!-- Счётчик и предупреждение -->
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <div id="photoCounter" class="text-muted">0 / 5 фото</div>
+            </div>
+
             <!-- Превью загруженных фото -->
             <div class="preview-container" id="previewContainer"></div>
 
@@ -86,6 +91,19 @@
             </button>
         </div>
     </div>
+
+    <!-- Toast уведомление -->
+    <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 9999">
+        <div id="photoToast" class="toast align-items-center text-white bg-danger border-0" role="alert">
+            <div class="d-flex">
+                <div class="toast-body">
+                    Вы можете загрузить не более 5 фото.
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+            </div>
+        </div>
+    </div>
+
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
