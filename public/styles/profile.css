@@ -213,6 +213,10 @@ body {
     font-weight: 500;
 }
 
+#editBio {
+    resize: none;
+}
+
 .edit-profile-btn {
     position: absolute;
     top: 20px;

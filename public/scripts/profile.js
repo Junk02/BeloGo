@@ -1,3 +1,13 @@
+const bioTextarea = document.getElementById('editBio');
+
+// Функция автоувеличения
+function autoResizeTextarea(textarea) {
+    textarea.style.height = 'auto'; // сброс
+    textarea.style.height = textarea.scrollHeight + 'px';
+}
+
+bioTextarea.addEventListener('input', () => autoResizeTextarea(bioTextarea));
+
 document.addEventListener('DOMContentLoaded', () => {
     fetch('/api/check-session', { credentials: 'include' })
         .then(response => response.json())
@@ -8,6 +18,21 @@ document.addEventListener('DOMContentLoaded', () => {
                 authLink.href = '/pages/profile.html';
             }
         });
+
+    // Инициализируем высоту при загрузке
+    autoResizeTextarea(bioTextarea);
+
+    document.getElementById('avatarUpload').addEventListener('change', function () {
+        const file = this.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = function (e) {
+            document.getElementById('avatarPreview').src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+    });
+
     loadProfile();
 });
 
@@ -26,11 +51,14 @@ async function loadProfile() {
         document.getElementById('name').textContent = data.user.name;
         document.getElementById('username').textContent = '@' + data.user.nickname;
         document.getElementById('userinfo').textContent = data.user.bio || 'Добавьте информацию о себе.';
+        document.getElementById('editBio').value = data.user.bio || '';
+
 
 
         // Заполнение формы
         document.getElementById('editName').value = data.user.name;
         document.getElementById('editBio').value = data.user.bio || '';
+        autoResizeTextarea(document.getElementById('editBio'));
     } catch (err) {
         console.error('Ошибка при получении профиля:', err);
         window.location.href = '/pages/auth.html';
@@ -40,8 +68,16 @@ async function loadProfile() {
 async function saveProfile() {
     const name = document.getElementById('editName').value.trim();
     const bio = document.getElementById('editBio').value.trim();
+    const errorBox = document.getElementById('profileError');
 
-    if (!name) return alert('Имя не может быть пустым');
+    // Сброс ошибок
+    errorBox.classList.add('d-none');
+    errorBox.textContent = '';
+
+    // Валидация имени
+    if (!/^[A-Za-zА-Яа-яЁё]+$/.test(name)) {
+        return showValidationError('Имя может содержать только буквы.');
+    }
 
     try {
         const response = await fetch('/profile/update', {
@@ -62,10 +98,16 @@ async function saveProfile() {
         const modal = bootstrap.Modal.getInstance(modalEl);
         if (modal) modal.hide();
     } catch (err) {
+        showValidationError('Не удалось сохранить профиль. Попробуйте позже.');
         console.error(err);
-        alert('Не удалось сохранить профиль');
+    }
+
+    function showValidationError(message) {
+        errorBox.textContent = message;
+        errorBox.classList.remove('d-none');
     }
 }
+
 
 // Выход из аккаунта
 document.getElementById('logoutBtn').addEventListener('click', async () => {
@@ -103,9 +145,21 @@ document.getElementById('deleteAccountBtn').addEventListener('click', async () =
     }
 });
 
-document.getElementById('avatarUpload').addEventListener('change', async function () {
+document.getElementById('avatarUpload').addEventListener('change', function () {
     const file = this.files[0];
     if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = function (e) {
+        document.getElementById('avatarPreview').src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+});
+
+async function saveAvatar() {
+    const fileInput = document.getElementById('avatarUpload');
+    const file = fileInput.files[0];
+    if (!file) return alert('Сначала выберите изображение.');
 
     const formData = new FormData();
     formData.append('avatar', file);
@@ -120,10 +174,8 @@ document.getElementById('avatarUpload').addEventListener('change', async functio
         const data = await response.json();
         if (!response.ok) throw new Error(data.message || 'Ошибка при загрузке');
 
-        // Обновить аватар на странице
-        document.getElementById('profileAvatar').src = data.avatar + '?t=' + Date.now(); // кэш-бастер
+        document.getElementById('profileAvatar').src = data.avatar + '?t=' + Date.now();
 
-        // Закрыть модальное окно
         const modalEl = document.getElementById('avatarModal');
         const modal = bootstrap.Modal.getInstance(modalEl);
         if (modal) modal.hide();
@@ -131,4 +183,4 @@ document.getElementById('avatarUpload').addEventListener('change', async functio
         console.error('Ошибка при загрузке аватарки:', err);
         alert('Не удалось загрузить аватарку');
     }
-});
+}

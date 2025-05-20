@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
     <link rel="stylesheet" href="/styles/profile.css">
+    <script src="https://cdn.jsdelivr.net/npm/@joeattardi/emoji-button@4.6.2/dist/index.min.js"></script>
 </head>
 
 <body>
@@ -22,8 +23,6 @@
                 <!-- Карточка профиля -->
                 <div class="profile-card animate__animated animate__fadeIn">
                     <div class="profile-header">
-
-
                         <button class="edit-profile-btn" data-bs-toggle="modal" data-bs-target="#editSetProfileModal">
                             <i class="fas fa-pencil-alt"></i>
                         </button>
@@ -31,7 +30,6 @@
                         <button class="edit-setprofile-btn" data-bs-toggle="modal" data-bs-target="#settingsModal">
                             <i class="bi bi-gear-fill"></i>
                         </button>
-
                     </div>
 
                     <!-- Аватарка -->
@@ -87,53 +85,27 @@
 
 
                 <!-- Модальное окно смены аватарки -->
+                <!-- Модальное окно смены аватарки -->
                 <div class="modal fade" id="avatarModal" tabindex="-1" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered">
                         <div class="modal-content">
                             <div class="modal-header">
                                 <h5 class="modal-title">Сменить аватар</h5>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                    aria-label="Close"></button>
+                                    aria-label="Закрыть"></button>
                             </div>
-                            <div class="modal-body">
-                                <div class="d-flex flex-wrap justify-content-center">
-                                    <div class="m-2 avatar-option selected"
-                                        onclick="selectAvatar(this, 'https://randomuser.me/api/portraits/women/44.jpg')">
-                                        <img src="https://randomuser.me/api/portraits/women/44.jpg"
-                                            class="rounded-circle" width="80" height="80">
-                                    </div>
-                                    <div class="m-2 avatar-option"
-                                        onclick="selectAvatar(this, 'https://randomuser.me/api/portraits/women/68.jpg')">
-                                        <img src="https://randomuser.me/api/portraits/women/68.jpg"
-                                            class="rounded-circle" width="80" height="80">
-                                    </div>
-                                    <div class="m-2 avatar-option"
-                                        onclick="selectAvatar(this, 'https://randomuser.me/api/portraits/men/32.jpg')">
-                                        <img src="https://randomuser.me/api/portraits/men/32.jpg" class="rounded-circle"
-                                            width="80" height="80">
-                                    </div>
-                                    <div class="m-2 avatar-option"
-                                        onclick="selectAvatar(this, 'https://randomuser.me/api/portraits/women/65.jpg')">
-                                        <img src="https://randomuser.me/api/portraits/women/65.jpg"
-                                            class="rounded-circle" width="80" height="80">
-                                    </div>
-                                    <div class="m-2 avatar-option"
-                                        onclick="selectAvatar(this, 'https://randomuser.me/api/portraits/men/75.jpg')">
-                                        <img src="https://randomuser.me/api/portraits/men/75.jpg" class="rounded-circle"
-                                            width="80" height="80">
-                                    </div>
-                                    <div class="m-2 avatar-option"
-                                        onclick="selectAvatar(this, 'https://randomuser.me/api/portraits/women/63.jpg')">
-                                        <img src="https://randomuser.me/api/portraits/women/63.jpg"
-                                            class="rounded-circle" width="80" height="80">
-                                    </div>
-                                </div>
-                                <div class="mt-3">
-                                    <label for="avatarUpload" class="btn btn-outline-primary w-100">
-                                        <i class="fas fa-upload me-2"></i>Загрузить фото
+                            <div class="modal-body text-center">
+                                <img id="avatarPreview" src="/img/default-avatar.png" alt="Превью"
+                                    class="rounded-circle mb-3"
+                                    style="width: 120px; height: 120px; object-fit: cover; border: 2px solid #ccc;">
+                                <div class="mb-3">
+                                    <label for="avatarUpload" class="btn btn-outline-primary">
+                                        <i class="fas fa-upload me-2"></i>Выбрать файл
                                     </label>
                                     <input type="file" id="avatarUpload" accept="image/*" class="d-none">
                                 </div>
+                                <p class="text-muted">Изображение будет обрезано до квадрата и заменит текущий аватар.
+                                </p>
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
@@ -142,6 +114,7 @@
                         </div>
                     </div>
                 </div>
+
 
                 <!-- Модальное окно редактирования профиля -->
                 <div class="modal fade" id="editSetProfileModal" tabindex="-1" aria-hidden="true">
@@ -154,13 +127,14 @@
                             </div>
                             <div class="modal-body">
                                 <form>
+                                    <div id="profileError" class="alert alert-danger d-none" role="alert"></div>
                                     <div class="mb-3">
                                         <label for="editName" class="form-label">Имя</label>
-                                        <input type="text" class="form-control" id="editName" value="">
+                                        <input type="text" class="form-control" id="editName" maxlength="20">
                                     </div>
                                     <div class="mb-3">
                                         <label for="editBio" class="form-label">О себе</label>
-                                        <textarea class="form-control" id="editBio" rows="3"></textarea>
+                                        <textarea class="form-control" id="editBio" rows="3" maxlength="300"></textarea>
                                     </div>
                                 </form>
                             </div>
