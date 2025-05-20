@@ -2,6 +2,7 @@ const express = require('express');
 const session = require('express-session');
 const cors = require('cors');
 const multer = require('multer');
+const fs = require('fs');
 const path = require('path');
 const bcrypt = require('bcrypt');
 const sqlite3 = require('sqlite3').verbose();
@@ -19,7 +20,9 @@ db.run(`
   )
 `);
 
-//db.run(`ALTER TABLE users ADD COLUMN bio TEXT DEFAULT ''`);
+//db.run(`ALTER TABLE users ADD COLUMN bio TEXT DEFAULT ''`); // Для информации о пользователе
+//db.run(`ALTER TABLE users ADD COLUMN avatar TEXT`); // Для аватарок
+
 
 db.run(`
   CREATE TABLE IF NOT EXISTS posts (
@@ -77,6 +80,17 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage });
 
+const avatarStorage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, '../public/avatars/');
+    },
+    filename: (req, file, cb) => {
+        const uniqueName = Date.now() + '-' + Math.round(Math.random() * 1E9) + path.extname(file.originalname);
+        cb(null, uniqueName);
+    }
+});
+const uploadAvatar = multer({ storage: avatarStorage });
+
 
 const red = '\x1b[31m';
 const green = '\x1b[32m';
@@ -91,6 +105,41 @@ function log(text, type = 'def') {
 app.get('/', (req, res) => {
     res.send('Сервер работает!');
 });
+
+
+// Добавление аватарки
+app.post('/upload-avatar', uploadAvatar.single('avatar'), (req, res) => {
+    if (!req.session.user) {
+        return res.status(401).json({ message: 'Не авторизован' });
+    }
+
+    const userId = req.session.user.id;
+    const newAvatar = '/avatars/' + req.file.filename;
+
+    // Получим старую аватарку
+    db.get('SELECT avatar FROM users WHERE id = ?', [userId], (err, row) => {
+        if (err) return res.status(500).json({ message: 'Ошибка при получении текущей аватарки' });
+
+        // Удалим старую, если была и не загружена с внешнего URL
+        if (row?.avatar && row.avatar.startsWith('/avatars/')) {
+            const oldPath = path.join(__dirname, '../public', row.avatar);
+            fs.unlink(oldPath, err => {
+                if (err) console.warn('Не удалось удалить старую аватарку:', err.message);
+            });
+        }
+
+        // Обновим в базе
+        db.run('UPDATE users SET avatar = ? WHERE id = ?', [newAvatar, userId], function (err) {
+            if (err) return res.status(500).json({ message: 'Ошибка при обновлении аватарки' });
+
+            // Обновим в сессии
+            req.session.user.avatar = newAvatar;
+
+            res.json({ avatar: newAvatar });
+        });
+    });
+});
+
 
 
 // Получение постов для ленты
@@ -278,7 +327,7 @@ app.get('/profile', (req, res) => {
         return res.status(401).json({ message: 'Не авторизован' });
     }
 
-    const sql = `SELECT id, name, nickname, bio FROM users WHERE id = ?`;
+    const sql = `SELECT id, name, nickname, bio, avatar FROM users WHERE id = ?`;
     db.get(sql, [req.session.user.id], (err, user) => {
         if (err) {
             return res.status(500).json({ message: 'Ошибка при получении профиля' });
@@ -352,6 +401,66 @@ app.delete('/users', (req, res) => {
         res.json({ message: `Удалено пользователей: ${this.changes}` });
     });
 });
+
+// Удаление аккаунта
+app.post('/delete-account', (req, res) => {
+    if (!req.session.user) {
+        return res.status(401).json({ message: 'Не авторизован' });
+    }
+
+    const userId = req.session.user.id;
+
+    db.serialize(() => {
+        // Получаем аватарку
+        db.get('SELECT avatar FROM users WHERE id = ?', [userId], (err, userRow) => {
+            if (err) return res.status(500).json({ message: 'Ошибка при получении аватарки' });
+
+            if (userRow?.avatar && userRow.avatar.startsWith('/avatars/')) {
+                const avatarPath = path.join(__dirname, '../public', userRow.avatar);
+                fs.unlink(avatarPath, err => {
+                    if (err) console.warn('Не удалось удалить аватарку:', err.message);
+                });
+            }
+
+            // Получаем все фото постов пользователя
+            db.all(`
+                SELECT filename FROM photos
+                WHERE post_id IN (SELECT id FROM posts WHERE user_id = ?)
+            `, [userId], (err, photoRows) => {
+                if (err) return res.status(500).json({ message: 'Ошибка при получении фотографий' });
+
+                // Удаляем файлы с диска
+                photoRows.forEach(row => {
+                    const photoPath = path.join(__dirname, '../public/uploads', row.filename);
+                    fs.unlink(photoPath, err => {
+                        if (err) console.warn('Не удалось удалить фото:', err.message);
+                    });
+                });
+
+                // Удаляем записи из базы
+                db.run(`DELETE FROM photos WHERE post_id IN (SELECT id FROM posts WHERE user_id = ?)`, [userId], function (err) {
+                    if (err) return res.status(500).json({ message: 'Ошибка при удалении фотографий' });
+
+                    db.run(`DELETE FROM posts WHERE user_id = ?`, [userId], function (err) {
+                        if (err) return res.status(500).json({ message: 'Ошибка при удалении постов' });
+
+                        db.run(`DELETE FROM users WHERE id = ?`, [userId], function (err) {
+                            if (err) return res.status(500).json({ message: 'Ошибка при удалении пользователя' });
+
+                            req.session.destroy(err => {
+                                if (err) return res.status(500).json({ message: 'Ошибка при завершении сессии' });
+
+                                res.clearCookie('connect.sid');
+                                return res.json({ message: 'Аккаунт и все связанные данные удалены' });
+                            });
+                        });
+                    });
+                });
+            });
+        });
+    });
+});
+
 
 // Запуск сервера
 app.listen(PORT, () => {

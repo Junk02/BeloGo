@@ -22,9 +22,11 @@ async function loadProfile() {
         }
 
         // Отображение на странице
+        document.querySelector('.avatar-img').src = data.user.avatar || '/img/default-avatar.png';
         document.getElementById('name').textContent = data.user.name;
         document.getElementById('username').textContent = '@' + data.user.nickname;
         document.getElementById('userinfo').textContent = data.user.bio || 'Добавьте информацию о себе.';
+
 
         // Заполнение формы
         document.getElementById('editName').value = data.user.name;
@@ -76,5 +78,57 @@ document.getElementById('logoutBtn').addEventListener('click', async () => {
     } catch (err) {
         console.error('Ошибка при выходе:', err);
         alert('Не удалось выйти. Попробуйте позже.');
+    }
+});
+
+document.getElementById('deleteAccountBtn').addEventListener('click', async () => {
+    const confirmDelete = confirm('Вы уверены, что хотите удалить аккаунт? Это действие необратимо!');
+    if (!confirmDelete) return;
+
+    try {
+        const response = await fetch('/delete-account', {
+            method: 'POST',
+            credentials: 'include'
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) throw new Error(data.message || 'Ошибка при удалении аккаунта');
+
+        alert('Аккаунт успешно удалён.');
+        window.location.href = '/pages/auth.html';
+    } catch (err) {
+        console.error('Ошибка при удалении аккаунта:', err);
+        alert('Не удалось удалить аккаунт. Попробуйте позже.');
+    }
+});
+
+document.getElementById('avatarUpload').addEventListener('change', async function () {
+    const file = this.files[0];
+    if (!file) return;
+
+    const formData = new FormData();
+    formData.append('avatar', file);
+
+    try {
+        const response = await fetch('/upload-avatar', {
+            method: 'POST',
+            credentials: 'include',
+            body: formData
+        });
+
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.message || 'Ошибка при загрузке');
+
+        // Обновить аватар на странице
+        document.getElementById('profileAvatar').src = data.avatar + '?t=' + Date.now(); // кэш-бастер
+
+        // Закрыть модальное окно
+        const modalEl = document.getElementById('avatarModal');
+        const modal = bootstrap.Modal.getInstance(modalEl);
+        if (modal) modal.hide();
+    } catch (err) {
+        console.error('Ошибка при загрузке аватарки:', err);
+        alert('Не удалось загрузить аватарку');
     }
 });
