@@ -252,7 +252,8 @@ app.post('/login', (req, res) => {
                 req.session.user = {
                     id: user.id,
                     name: user.name,
-                    nickname: user.nickname
+                    nickname: user.nickname,
+                    bio: user.bio || ''
                 };
 
                 // И возвращаем клиенту:
