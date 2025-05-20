@@ -153,9 +153,7 @@ document.addEventListener('DOMContentLoaded', function () {
         // Границы Беларуси
         const belarusBounds = L.latLngBounds(
             L.latLng(51.25, 23.00), // Юго-запад
-            L.latLng(54.17, 25.80),  // Северо-восток
-            L.latLng(54.17, 32),
-            L.latLng(51,23)
+            L.latLng(56.17, 32.80)  // Северо-восток
         );
 
         // Инициализация карты
