@@ -47,6 +47,7 @@ async function loadProfile() {
 
         // Отображение на странице
         document.querySelector('.avatar-img').src = data.user.avatar || '/img/default-avatar.png';
+        document.getElementById('avatarPreview').src = data.user.avatar || '/img/default-avatar.png';
         document.getElementById('name').textContent = data.user.name;
         document.getElementById('username').textContent = '@' + data.user.nickname;
         document.getElementById('userinfo').textContent = data.user.bio || 'Добавьте информацию о себе.';

@@ -1,3 +1,15 @@
+document.addEventListener('DOMContentLoaded', function () {
+    fetch('/api/check-session', { credentials: 'include' })
+        .then(response => response.json())
+        .then(data => {
+            const authLink = document.querySelector('.nav-link[href="/pages/auth.html"]');
+            if (data.loggedIn && authLink) {
+                authLink.innerHTML = '<i class="fas fa-user me-1"></i> Профиль';
+                authLink.href = '/pages/profile.html';
+            }
+        });
+});
+
 // Инициализация карты
 const belarusBounds = L.latLngBounds(
     L.latLng(51.25, 23.00),
@@ -100,28 +112,6 @@ fetch('/api/posts')
         
         
     `;
-
-            // Формируем popup контент
-            /*const popupContent = `
-              <div class="custom-popup">
-                <div class="popup-header">
-                  <h6>${post.title}</h6>
-                </div>
-                <p class="popup-description">${post.description || ''}</p>
-      
-                ${post.photos?.length > 0 ? `
-                  <div class="popup-photos">
-                    <img src="${post.photos[0]}" alt="${post.title}" class="img-thumbnail">
-                  </div>` : ''
-                }
-      
-                <div class="popup-footer">
-                  <button class="btn btn-sm btn-outline-secondary show-details">
-                    <i class="fas fa-info-circle"></i> Подробнее
-                  </button>
-                </div>
-              </div>
-            `;*/
 
             const marker = L.marker([post.latitude, post.longitude], {
                 icon: markerIcons.other
@@ -284,15 +274,3 @@ function showToast(title, message, type = 'success') {
         toast.classList.remove('show');
     }, 5000);
 }
-
-document.addEventListener('DOMContentLoaded', function () {
-    fetch('/api/check-session', { credentials: 'include' })
-        .then(response => response.json())
-        .then(data => {
-            const authLink = document.querySelector('.nav-link[href="/pages/auth.html"]');
-            if (data.loggedIn && authLink) {
-                authLink.innerHTML = '<i class="fas fa-user me-1"></i> Профиль';
-                authLink.href = '/pages/profile.html';
-            }
-        });
-});
