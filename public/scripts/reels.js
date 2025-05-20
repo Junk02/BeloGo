@@ -130,15 +130,64 @@ document.addEventListener('DOMContentLoaded', function () {
                 });
 
                 slide.innerHTML = `
-        <div class="swiper-container horizontal-swiper">
-          <div class="swiper-wrapper">
-            ${innerSlides}
-          </div>
-          <div class="swiper-pagination"></div>
-        </div>
-      `;
+            <div class="swiper-container horizontal-swiper">
+                <div class="swiper-wrapper">
+                ${innerSlides}
+                </div>
+                <div class="swiper-pagination"></div>
+            </div>
+            
+            <!-- Добавляем блок с кнопками справа -->
+            <div class="action-buttons">
+                <div class="action-button like-btn" data-post-id="${post.id}">
+                <i class="far fa-heart"></i>
+                <span class="count">${post.likes || 0}</span>
+                </div>
+            </div>
+            `;
 
                 container.appendChild(slide);
+            });
+
+            
+            document.addEventListener('click', function(e) {
+            if (e.target.closest('.like-btn')) {
+                
+                const likeBtn = e.target.closest('.like-btn');
+                const postId = likeBtn.dataset.postId;
+                const icon = likeBtn.querySelector('i');
+                const countEl = likeBtn.querySelector('.count');
+                
+                // Визуальная обратная связь
+                likeBtn.classList.add('liked');
+                setTimeout(() => likeBtn.classList.remove('liked'), 600);
+                
+                // Переключение состояния
+                const isActive = likeBtn.classList.toggle('active');
+                icon.classList.toggle('far');
+                icon.classList.toggle('fas');
+                
+                // Обновление счетчика
+                let count = parseInt(countEl.textContent);
+                count = isActive ? count + 1 : count - 1;
+                countEl.textContent = count;
+                
+                // Отправка на сервер
+                fetch(`/api/posts/${postId}/like`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ liked: isActive })
+                }).catch(err => {
+                console.error('Ошибка при отправке лайка:', err);
+                // Откатываем изменения при ошибке
+                likeBtn.classList.toggle('active', !isActive);
+                icon.classList.toggle('far');
+                icon.classList.toggle('fas');
+                countEl.textContent = isActive ? count - 1 : count + 1;
+                });
+            }
             });
 
             // Пересоздаём Swiper'ы
