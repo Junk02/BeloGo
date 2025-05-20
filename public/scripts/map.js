@@ -25,28 +25,6 @@ map.on('drag', function () {
 
 // Примеры одобренных меток (в реальном приложении будут загружаться с сервера)
 
-const approvedMarkers = [
-    {
-        id: 1,
-        lat: 53.9022,
-        lng: 27.5618,
-        title: "Минск",
-        description: "Столица Беларуси с богатой историей и культурой",
-        category: "attraction",
-        author: {
-            id: 123,
-            name: "Иван Иванов",
-            profileLink: "/user/123",
-            avatar: "/avatars/user123.jpg"
-        },
-        photos: [
-            "/img/index-image2.jpg",
-            "/img/index-image4.jpg"
-        ]
-    },
-    // ... остальные маркеры
-];
-
 
 // Иконки для разных категорий
 const markerIcons = {
@@ -88,23 +66,29 @@ const markerIcons = {
     })
 };
 
-// Добавление одобренных меток на карту
-approvedMarkers.forEach(marker => {
-    const popupContent = `
+fetch('/api/posts')
+    .then(res => res.json())
+    .then(posts => {
+        posts.forEach(post => {
+            // Проверяем наличие координат
+            if (!post.latitude || !post.longitude) return;
+            console.log(post);
+
+            const popupContent = `
         <div class="custom-popup">
             <div class="popup-header">
-                <h6>${marker.title}</h6>
+                <h6>${post.title}</h6>
             </div>
-            <p class="popup-description">${marker.description}</p>
+            <p class="popup-description">${post.description}</p>
             
-            ${marker.photos && marker.photos.length > 0 ? `
+            ${post.photos && post.photos.length > 0 ? `
             <div class="popup-photos">
-                <img src="${marker.photos[0]}" alt="${marker.title}" class="img-thumbnail">
+                <img src="${post.photos[0]}" alt="${post.title}" class="img-thumbnail">
             </div>` : ''}
             
             <div class="popup-footer">
-                <a href="${marker.author.profileLink}" class="btn btn-sm btn-outline-primary">
-            <img src="${marker.author.avatar}" alt="${marker.author.name}" 
+                <a href="${post.author.nickname}" class="btn btn-sm btn-outline-primary">
+            <img src="${post.author.avatar}" alt="${post.author.name}" 
                 class="rounded-circle me-1" style="width: 20px; height: 20px;">
             
         </a>
@@ -117,29 +101,55 @@ approvedMarkers.forEach(marker => {
         
     `;
 
-    const markerObj = L.marker([marker.lat, marker.lng], {
-        icon: markerIcons[marker.category]
-    }).addTo(map);
+            // Формируем popup контент
+            /*const popupContent = `
+              <div class="custom-popup">
+                <div class="popup-header">
+                  <h6>${post.title}</h6>
+                </div>
+                <p class="popup-description">${post.description || ''}</p>
+      
+                ${post.photos?.length > 0 ? `
+                  <div class="popup-photos">
+                    <img src="${post.photos[0]}" alt="${post.title}" class="img-thumbnail">
+                  </div>` : ''
+                }
+      
+                <div class="popup-footer">
+                  <button class="btn btn-sm btn-outline-secondary show-details">
+                    <i class="fas fa-info-circle"></i> Подробнее
+                  </button>
+                </div>
+              </div>
+            `;*/
 
-    markerObj.bindPopup(popupContent, {
-        maxWidth: 300,
-        className: 'custom-popup-wrapper'
-    });
+            const marker = L.marker([post.latitude, post.longitude], {
+                icon: markerIcons.other
+            }).addTo(map);
 
-    // Обработчик клика для кнопки "Подробнее"
-    markerObj.on('popupopen', function() {
-        document.querySelector('.show-details')?.addEventListener('click', function() {
-            window.location.href = `/place/${marker.id}`;
+            marker.bindPopup(popupContent, {
+                maxWidth: 300,
+                className: 'custom-popup-wrapper'
+            });
+
+            marker.on('popupopen', function () {
+                document.querySelector('.show-details')?.addEventListener('click', () => {
+                    window.location.href = `/post/${post.id}`;
+                });
+            });
         });
+    })
+    .catch(err => {
+        console.error('Ошибка при загрузке постов для карты:', err);
     });
-});
+
 
 // Функция для генерации звёзд рейтинга
 function generateRatingStars(rating) {
     const fullStars = Math.floor(rating);
     const hasHalfStar = rating % 1 >= 0.5;
     let stars = '';
-    
+
     for (let i = 0; i < 5; i++) {
         if (i < fullStars) {
             stars += '<i class="fas fa-star"></i>';

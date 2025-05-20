@@ -1,6 +1,5 @@
 const bioTextarea = document.getElementById('editBio');
 
-// Функция автоувеличения
 function autoResizeTextarea(textarea) {
     textarea.style.height = 'auto'; // сброс
     textarea.style.height = textarea.scrollHeight + 'px';
@@ -58,7 +57,7 @@ async function loadProfile() {
         // Заполнение формы
         document.getElementById('editName').value = data.user.name;
         document.getElementById('editBio').value = data.user.bio || '';
-        autoResizeTextarea(document.getElementById('editBio'));
+        autoResizeTextarea(bioTextarea);
     } catch (err) {
         console.error('Ошибка при получении профиля:', err);
         window.location.href = '/pages/auth.html';

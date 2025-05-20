@@ -142,15 +142,25 @@ app.post('/upload-avatar', uploadAvatar.single('avatar'), (req, res) => {
 
 
 
-// Получение постов для ленты
+// Получение постов для ленты и карты
 app.get('/api/posts', (req, res) => {
     const sql = `
-    SELECT posts.id AS post_id, posts.title, posts.description, posts.created_at,
-           photos.filename
-    FROM posts
-    LEFT JOIN photos ON posts.id = photos.post_id
-    ORDER BY posts.created_at DESC
-  `;
+        SELECT posts.id AS post_id,
+               posts.title,
+               posts.description,
+               posts.latitude,
+               posts.longitude,
+               posts.created_at,
+               posts.user_id,
+               users.name AS author_name,
+               users.nickname AS author_nickname,
+               users.avatar AS author_avatar,
+               photos.filename
+        FROM posts
+        LEFT JOIN users ON posts.user_id = users.id
+        LEFT JOIN photos ON posts.id = photos.post_id
+        ORDER BY posts.created_at DESC
+    `;
 
     db.all(sql, [], (err, rows) => {
         if (err) {
@@ -166,7 +176,15 @@ app.get('/api/posts', (req, res) => {
                     id: row.post_id,
                     title: row.title,
                     description: row.description,
+                    latitude: row.latitude,
+                    longitude: row.longitude,
                     created_at: row.created_at,
+                    author: {
+                        id: row.user_id,
+                        name: row.author_name,
+                        nickname: row.author_nickname,
+                        avatar: row.author_avatar || '/img/default-avatar.jpg'
+                    },
                     photos: []
                 };
             }
@@ -179,6 +197,8 @@ app.get('/api/posts', (req, res) => {
         res.json(posts);
     });
 });
+
+
 
 
 // Добавление поста

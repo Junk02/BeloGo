@@ -1,5 +1,3 @@
-// Обновлённый loadimg.js с ограничением меток в Беларуси
-
 document.addEventListener('DOMContentLoaded', function () {
     const uploadArea = document.getElementById('uploadArea');
     const fileInput = document.getElementById('fileInput');
@@ -141,7 +139,7 @@ document.addEventListener('DOMContentLoaded', function () {
             .then(response => response.json())
             .then(data => {
                 alert('Пост успешно загружен!');
-                window.location.href = '/pages/feed.html';
+                window.location.href = '/pages/reels.html';
             })
             .catch(error => {
                 console.error('Ошибка загрузки:', error);
