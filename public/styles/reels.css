@@ -186,3 +186,9 @@ html, body {
     
 
 }
+
+.contsl{
+    display: flex;
+    flex-wrap: nowrap;
+
+}

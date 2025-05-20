@@ -106,9 +106,24 @@ document.addEventListener('DOMContentLoaded', function () {
             <div class="position-relative h-100">
               <img src="${photo}" class="img" alt="Фото">
               <div class="slide-content">
-                <h5>${post.title}</h5>
-                <p>${post.description || ''} <a href="#" style="color: rgb(200, 200, 200);
-                text-decoration: burlywood"> Подробнее... </a> </p>
+                <div class="contsl">
+                    <div>
+                        <a href="3"> <img src="/img/belarus.jpg" class="rounded-circle" style="width: 50px; height: 50px; object-fit: cover;"> </a> 
+
+                        <style>
+                            .rounded-circle {
+                                border: 1px solid #000; 
+                                border-radius: 50%; 
+                            }
+                        </style>
+                     
+                        </div>
+                    
+                    <div style="padding-left: 10px"> 
+                        <h5>${post.title}</h5>
+                        <p>${post.description || ''} </p>
+                    </div>
+                </div>
               </div>
             </div>
           </div>`;
