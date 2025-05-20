@@ -1,60 +1,52 @@
 // Инициализация карты
-const map = L.map('map').setView([53.7098, 27.9534], 7);
+const belarusBounds = L.latLngBounds(
+    L.latLng(51.25, 23.00),
+    L.latLng(56.17, 32.80)
+);
+
+// Инициализация карты
+const map = L.map('map', {
+    maxBounds: belarusBounds,
+    maxBoundsViscosity: 1.0,
+    attributionControl: false,
+    minZoom: 7,
+    maxZoom: 17
+}).setView([53.9, 27.5], 7);
 
 // Добавление слоя карты
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
 }).addTo(map);
 
-// Границы Беларуси (упрощенные)
-const belarusBounds = L.latLngBounds(
-    L.latLng(51.25, 23.17), // Юго-запад
-    L.latLng(56.17, 32.77)   // Северо-восток
-);
 map.setMaxBounds(belarusBounds);
 map.on('drag', function () {
     map.panInsideBounds(belarusBounds, { animate: false });
 });
 
 // Примеры одобренных меток (в реальном приложении будут загружаться с сервера)
+
 const approvedMarkers = [
     {
         id: 1,
         lat: 53.9022,
         lng: 27.5618,
         title: "Минск",
-        description: "Столица Беларуси",
-        category: "attraction"
+        description: "Столица Беларуси с богатой историей и культурой",
+        category: "attraction",
+        author: {
+            id: 123,
+            name: "Иван Иванов",
+            profileLink: "/user/123",
+            avatar: "/avatars/user123.jpg"
+        },
+        photos: [
+            "/img/index-image2.jpg",
+            "/img/index-image4.jpg"
+        ]
     },
-    {
-        id: 2,
-        lat: 52.0975,
-        lng: 23.6877,
-        title: "Брестская крепость",
-        description: "Мемориальный комплекс",
-        category: "attraction"
-    },
-    {
-        id: 3,
-        lat: 54.5136,
-        lng: 30.4334,
-        title: "Орша",
-        description: "Город в Витебской области",
-        category: "other"
-    }
+    // ... остальные маркеры
 ];
 
-// Примеры меток на модерации (в реальном приложении будут загружаться с сервера)
-const pendingMarkers = [
-    {
-        id: 101,
-        lat: 53.6789,
-        lng: 27.1416,
-        title: "Новое кафе",
-        description: "Открылось недавно",
-        category: "restaurant"
-    }
-];
 
 // Иконки для разных категорий
 const markerIcons = {
@@ -99,36 +91,68 @@ const markerIcons = {
 // Добавление одобренных меток на карту
 approvedMarkers.forEach(marker => {
     const popupContent = `
-                <div class="custom-popup">
-                    <h6>${marker.title}</h6>
-                    <p>${marker.description}</p>
-                    <small class="text-muted">Категория: ${getCategoryName(marker.category)}</small>
-                </div>
-            `;
+        <div class="custom-popup">
+            <div class="popup-header">
+                <h6>${marker.title}</h6>
+            </div>
+            <p class="popup-description">${marker.description}</p>
+            
+            ${marker.photos && marker.photos.length > 0 ? `
+            <div class="popup-photos">
+                <img src="${marker.photos[0]}" alt="${marker.title}" class="img-thumbnail">
+            </div>` : ''}
+            
+            <div class="popup-footer">
+                <a href="${marker.author.profileLink}" class="btn btn-sm btn-outline-primary">
+            <img src="${marker.author.avatar}" alt="${marker.author.name}" 
+                class="rounded-circle me-1" style="width: 20px; height: 20px;">
+            
+        </a>
+                <button class="btn btn-sm btn-outline-secondary show-details">
+                    <i class="fas fa-info-circle"></i> Подробнее
+                </button>
+            </div>
+        </div>
+        
+        
+    `;
 
-    L.marker([marker.lat, marker.lng], {
+    const markerObj = L.marker([marker.lat, marker.lng], {
         icon: markerIcons[marker.category]
-    })
-        .addTo(map)
-        .bindPopup(popupContent);
+    }).addTo(map);
+
+    markerObj.bindPopup(popupContent, {
+        maxWidth: 300,
+        className: 'custom-popup-wrapper'
+    });
+
+    // Обработчик клика для кнопки "Подробнее"
+    markerObj.on('popupopen', function() {
+        document.querySelector('.show-details')?.addEventListener('click', function() {
+            window.location.href = `/place/${marker.id}`;
+        });
+    });
 });
 
-// Добавление меток на модерации (обычно только для администратора)
-pendingMarkers.forEach(marker => {
-    const popupContent = `
-                <div class="custom-popup">
-                    <h6>${marker.title} <span class="badge bg-warning text-dark">На модерации</span></h6>
-                    <p>${marker.description}</p>
-                    <small class="text-muted">Категория: ${getCategoryName(marker.category)}</small>
-                </div>
-            `;
+// Функция для генерации звёзд рейтинга
+function generateRatingStars(rating) {
+    const fullStars = Math.floor(rating);
+    const hasHalfStar = rating % 1 >= 0.5;
+    let stars = '';
+    
+    for (let i = 0; i < 5; i++) {
+        if (i < fullStars) {
+            stars += '<i class="fas fa-star"></i>';
+        } else if (i === fullStars && hasHalfStar) {
+            stars += '<i class="fas fa-star-half-alt"></i>';
+        } else {
+            stars += '<i class="far fa-star"></i>';
+        }
+    }
+    return stars;
+}
 
-    L.marker([marker.lat, marker.lng], {
-        icon: markerIcons['pending']
-    })
-        .addTo(map)
-        .bindPopup(popupContent);
-});
+
 
 // Получение названия категории
 function getCategoryName(category) {
@@ -146,38 +170,6 @@ function getCategoryName(category) {
 let newMarker = null;
 let clickHandler = null;
 
-// Обработчики кнопок
-document.getElementById('add-marker-btn').addEventListener('click', function () {
-    // Анимация кнопки
-    this.classList.add('animate__rubberBand');
-    setTimeout(() => {
-        this.classList.remove('animate__rubberBand');
-    }, 1000);
-
-    // Показать форму
-    document.getElementById('marker-form').classList.add('show');
-
-    // Установить обработчик клика по карте
-    clickHandler = map.on('click', function (e) {
-        // Удалить предыдущую временную метку, если есть
-        if (newMarker) {
-            map.removeLayer(newMarker);
-        }
-
-        // Добавить новую временную метку
-        newMarker = L.marker(e.latlng, {
-            icon: markerIcons['pending'],
-            draggable: true
-        }).addTo(map);
-
-        // Обновить позицию при перетаскивании
-        newMarker.on('dragend', function () {
-            updateMarkerPosition(this.getLatLng());
-        });
-
-        updateMarkerPosition(e.latlng);
-    });
-});
 
 document.getElementById('cancel-marker-btn').addEventListener('click', function () {
     // Скрыть форму
@@ -249,48 +241,6 @@ document.getElementById('submit-marker-btn').addEventListener('click', function 
     }
 });
 
-// Кнопка "Мое местоположение"
-document.getElementById('locate-btn').addEventListener('click', function () {
-    if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(function (position) {
-            const userLocation = L.latLng(position.coords.latitude, position.coords.longitude);
-
-            // Проверяем, находится ли локация в пределах Беларуси
-            if (belarusBounds.contains(userLocation)) {
-                map.flyTo(userLocation, 13);
-
-                // Добавляем временную метку
-                if (newMarker) {
-                    map.removeLayer(newMarker);
-                }
-
-                newMarker = L.marker(userLocation, {
-                    icon: L.divIcon({
-                        html: '<i class="fas fa-user" style="color: #6f42c1; font-size: 24px;"></i>',
-                        className: 'custom-marker-icon',
-                        iconSize: [24, 24],
-                        iconAnchor: [12, 24]
-                    })
-                }).addTo(map)
-                    .bindPopup('<b>Ваше местоположение</b>')
-                    .openPopup();
-
-                // Анимация кнопки
-                const btn = document.getElementById('locate-btn');
-                btn.classList.add('animate__rubberBand');
-                setTimeout(() => {
-                    btn.classList.remove('animate__rubberBand');
-                }, 1000);
-            } else {
-                showToast('Ошибка', 'Вы находитесь за пределами Беларуси', 'danger');
-            }
-        }, function () {
-            showToast('Ошибка', 'Не удалось определить ваше местоположение', 'danger');
-        });
-    } else {
-        showToast('Ошибка', 'Геолокация не поддерживается вашим браузером', 'danger');
-    }
-});
 
 // Обновление позиции маркера
 function updateMarkerPosition(latlng) {

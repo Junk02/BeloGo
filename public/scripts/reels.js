@@ -82,6 +82,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     const activeSlide = this.slides[this.activeIndex];
                     activeSlide.style.opacity = '1';
                     activeSlide.style.pointerEvents = 'auto';
+                    
                 }
             }
         });
@@ -106,7 +107,8 @@ document.addEventListener('DOMContentLoaded', function () {
               <img src="${photo}" class="img" alt="Фото">
               <div class="slide-content">
                 <h5>${post.title}</h5>
-                <p>${post.description || ''}</p>
+                <p>${post.description || ''} <a href="#" style="color: rgb(200, 200, 200);
+                text-decoration: burlywood"> Подробнее... </a> </p>
               </div>
             </div>
           </div>`;

@@ -1,4 +1,4 @@
-// Обновлённый loadimg.js
+// Обновлённый loadimg.js с ограничением меток в Беларуси
 
 document.addEventListener('DOMContentLoaded', function () {
     const uploadArea = document.getElementById('uploadArea');
@@ -27,8 +27,6 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
 
-
-
     function showPreview() {
         previewContainer.innerHTML = '';
         files.forEach((file, i) => {
@@ -46,7 +44,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 removeBtn.innerHTML = '&times;';
                 removeBtn.addEventListener('click', () => {
                     files.splice(i, 1);
-                    showPreview(); // Перерисовать превью
+                    showPreview();
                 });
 
                 item.appendChild(img);
@@ -64,8 +62,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
     fileInput.addEventListener('click', function (e) {
         if (files.length >= 5) {
-            e.preventDefault(); // Блокируем открытие окна выбора
-            photoToast.show(); // Показываем уведомление
+            e.preventDefault();
+            photoToast.show();
         }
     });
 
@@ -88,7 +86,6 @@ document.addEventListener('DOMContentLoaded', function () {
             fileInput.value = '';
         }, 0);
     });
-
 
     uploadArea.addEventListener('click', function () {
         fileInput.click();
@@ -120,8 +117,6 @@ document.addEventListener('DOMContentLoaded', function () {
         showPreview();
     });
 
-
-    // Загрузка: Здесь вы можете отправлять файлы через fetch или FormData
     uploadBtn.addEventListener('click', function () {
         if (files.length === 0) {
             alert('Пожалуйста, выберите хотя бы одну фотографию.');
@@ -130,19 +125,17 @@ document.addEventListener('DOMContentLoaded', function () {
 
         const formData = new FormData();
         files.forEach(file => {
-            formData.append('images', file); // <-- исправлено
+            formData.append('images', file);
         });
 
         formData.append('title', document.getElementById('photoTitle').value);
         formData.append('description', document.getElementById('photoDescription').value);
-        formData.append('latitude', locationLat.value); // <-- исправлено
-        formData.append('longitude', locationLng.value); // <-- исправлено
-        //formData.append('tags', document.getElementById('photoTags').value); // можно использовать позже
-        //formData.append('locationName', locationName.value); // тоже опционально
+        formData.append('latitude', locationLat.value);
+        formData.append('longitude', locationLng.value);
 
-        fetch('/upload-post', { // <-- убедись, что путь такой же как на сервере
+        fetch('/upload-post', {
             method: 'POST',
-            credentials: 'include', // если используешь сессию
+            credentials: 'include',
             body: formData
         })
             .then(response => response.json())
@@ -156,16 +149,17 @@ document.addEventListener('DOMContentLoaded', function () {
             });
     });
 
-
-
     function initMap() {
+        // Границы Беларуси
         const belarusBounds = L.latLngBounds(
-            L.latLng(51.25, 23.00),
-            L.latLng(56.17, 32.80)
+            L.latLng(51.25, 23.00), // Юго-запад
+            L.latLng(54.17, 25.80),  // Северо-восток
+            L.latLng(54.17, 32),
+            L.latLng(51,23)
         );
 
         // Инициализация карты
-        const map = L.map('map', {
+        map = L.map('map', {
             maxBounds: belarusBounds,
             maxBoundsViscosity: 1.0,
             attributionControl: false,
@@ -175,58 +169,21 @@ document.addEventListener('DOMContentLoaded', function () {
 
         // Добавляем тайлы OSM
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            noWrap: true // Предотвращаем повторение карты
+            noWrap: true
         }).addTo(map);
-
-        // Добавляем поиск с ограничением по Беларуси
-        /*const geocoder = L.Control.Geocoder.nominatim({
-            bounds: belarusBounds,
-            countrycodes: 'by', // Только Беларусь
-            limit: 5
-        });
-        
-        L.Control.geocoder({
-            geocoder: geocoder,
-            position: 'topright',
-            placeholder: 'Искать в Беларуси...',
-            errorMessage: 'Место не найдено',
-            suggestMinLength: 3,
-            queryMinLength: 3,
-            defaultMarkGeocode: false,
-            showResultIcons: true,
-            collapsed: false,
-            expand: 'click'
-        })
-        .on('markgeocode', function(e) {
-            // Проверяем, что найденное место в пределах Беларуси
-            if (belarusBounds.contains(e.geocode.center)) {
-                map.fitBounds(e.geocode.bbox, {
-                    maxZoom: 14,
-                    padding: [50, 50]
-                });
-            if (!belarusBounds.contains(e.geocode.center)) {
-                alert('Это место находится за пределами Беларуси. Пожалуйста, выберите локацию внутри страны.');
-                return;
-            }
-                
-                // Добавляем маркер
-                L.marker(e.geocode.center)
-                    .addTo(map)
-                    .bindPopup(e.geocode.name)
-                    .openPopup();
-            } else {
-                alert('Пожалуйста, выбирайте места только в пределах Беларуси');
-            }
-        })
-        .addTo(map); */
 
         // Ограничение перемещения
         map.on('drag', function () {
             map.panInsideBounds(belarusBounds, { animate: false });
         });
 
-
+        // Обработчик клика по карте с проверкой границ
         map.on('click', function (e) {
+            if (!belarusBounds.contains(e.latlng)) {
+                alert('Пожалуйста, выбирайте места только в пределах Беларуси');
+                return;
+            }
+
             if (marker) map.removeLayer(marker);
             marker = L.marker(e.latlng, { draggable: true }).addTo(map);
 
@@ -234,8 +191,14 @@ document.addEventListener('DOMContentLoaded', function () {
             locationLat.value = e.latlng.lat;
             locationLng.value = e.latlng.lng;
 
-            marker.on('dragend', function () {
+            marker.on('dragend', function (e) {
                 const pos = marker.getLatLng();
+                if (!belarusBounds.contains(pos)) {
+                    alert('Метка должна оставаться в пределах Беларуси');
+                    // Возвращаем маркер на предыдущую позицию
+                    marker.setLatLng([locationLat.value, locationLng.value]);
+                    return;
+                }
                 locationName.value = `${pos.lat.toFixed(4)}, ${pos.lng.toFixed(4)}`;
                 locationLat.value = pos.lat;
                 locationLng.value = pos.lng;
@@ -245,14 +208,22 @@ document.addEventListener('DOMContentLoaded', function () {
 
     initMap();
 
-
-
-
-
     document.getElementById('locateBtn').addEventListener('click', function () {
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(function (position) {
                 const userLocation = L.latLng(position.coords.latitude, position.coords.longitude);
+                
+                // Проверяем, находится ли местоположение в Беларуси
+                const belarusBounds = L.latLngBounds(
+                    L.latLng(51.25, 23.00),
+                    L.latLng(56.17, 32.80)
+                );
+                
+                if (!belarusBounds.contains(userLocation)) {
+                    alert('Ваше местоположение находится за пределами Беларуси. Пожалуйста, выберите место вручную.');
+                    return;
+                }
+
                 if (marker) map.removeLayer(marker);
                 marker = L.marker(userLocation, { draggable: true }).addTo(map);
                 map.setView(userLocation, 13);
@@ -261,13 +232,23 @@ document.addEventListener('DOMContentLoaded', function () {
                 locationLat.value = userLocation.lat;
                 locationLng.value = userLocation.lng;
 
-                marker.on('dragend', function () {
+                marker.on('dragend', function (e) {
                     const pos = marker.getLatLng();
+                    if (!belarusBounds.contains(pos)) {
+                        alert('Метка должна оставаться в пределах Беларуси');
+                        marker.setLatLng([locationLat.value, locationLng.value]);
+                        return;
+                    }
                     locationName.value = `${pos.lat.toFixed(4)}, ${pos.lng.toFixed(4)}`;
                     locationLat.value = pos.lat;
                     locationLng.value = pos.lng;
                 });
+            }, function (error) {
+                console.error('Ошибка геолокации:', error);
+                alert('Не удалось определить ваше местоположение. Пожалуйста, выберите место вручную.');
             });
+        } else {
+            alert('Геолокация не поддерживается вашим браузером. Пожалуйста, выберите место вручную.');
         }
     });
 });

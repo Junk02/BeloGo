@@ -112,3 +112,73 @@ body {
 .leaflet-marker-icon:hover {
     transform: scale(1.2);
 }
+
+.custom-popup-wrapper .leaflet-popup-content {
+    margin: 0;
+    padding: 0;
+    width: 100% !important;
+}
+
+.custom-popup {
+    padding: 15px;
+    font-size: 14px;
+}
+
+.popup-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.popup-header h6 {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.rating {
+    display: flex;
+    align-items: center;
+}
+
+.rating i {
+    color: #FFD700;
+    font-size: 12px;
+    margin-right: 3px;
+}
+
+.rating span {
+    font-size: 12px;
+    color: #6c757d;
+}
+
+.popup-description {
+    margin-bottom: 10px;
+    color: #495057;
+}
+
+.popup-photos {
+    margin-bottom: 10px;
+}
+
+.popup-photos img {
+    width: 100%;
+    height: auto;
+    border-radius: 5px;
+}
+
+.popup-footer {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+}
+
+.popup-footer .btn {
+    padding: 0.25rem 0.5rem;
+    font-size: 12px;
+}
+
+.popup-footer .btn i {
+    margin-right: 3px;
+}
