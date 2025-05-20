@@ -1,3 +1,29 @@
+document.addEventListener('DOMContentLoaded', function () {
+    // Анимация элементов с задержкой
+    fetch('/api/check-session', { credentials: 'include' })
+        .then(response => response.json())
+        .then(data => {
+            const authLink = document.querySelector('.nav-link[href="/pages/auth.html"]');
+            if (data.loggedIn && authLink) {
+                authLink.innerHTML = '<i class="fas fa-user me-1"></i> Профиль';
+                authLink.href = '/pages/profile.html';
+            }
+        });
+
+    const elements = document.querySelectorAll('.animate__animated');
+    elements.forEach((el, index) => {
+        if (el.classList.contains('animate__delay-1s') ||
+            el.classList.contains('animate__delay-2s') ||
+            el.classList.contains('animate__delay-3s') ||
+            el.classList.contains('animate__delay-4s')) {
+            return;
+        }
+
+        el.style.animationDelay = `${index * 0.1}s`;
+    });
+});
+
+
 async function loadProfile() {
     try {
         const response = await fetch('http://localhost:3000/profile', {
@@ -12,6 +38,7 @@ async function loadProfile() {
 
         document.getElementById('welcome').textContent = `Добро пожаловать, ${data.user.name}!`;
         document.getElementById('info').textContent = `@${data.user.nickname}`;
+        console.log(data.user.bio);
     } catch (err) {
         console.log('Ошибка при получении данных. Перенаправление на вход.');
         window.location.href = '/pages/auth.html';
@@ -85,51 +112,40 @@ document.getElementById('avatarUpload').addEventListener('change', function (e) 
 });
 
 // Сохранение профиля
-function saveProfile() {
-    // Здесь должна быть логика сохранения на сервер
-    // Для демо просто обновляем данные на странице
-    document.querySelector('.profile-name').textContent =
-        document.getElementById('editName').value;
-    document.querySelector('.profile-username').textContent =
-        '@' + document.getElementById('editUsername').value;
-    data.user.nickname = document.querySelector('.profile-username').textContent;
-    document.querySelector('.profile-bio').textContent =
-        document.getElementById('editBio').value;
+async function saveProfile() {
+    const name = document.getElementById('editName').value;
+    const bio = document.getElementById('editBio').value;
 
-    // Анимация
-    document.querySelector('.profile-name').classList.add('animate__animated', 'animate__pulse');
-    setTimeout(() => {
-        document.querySelector('.profile-name').classList.remove('animate__animated', 'animate__pulse');
-    }, 1000);
-
-    // Закрытие модального окна
-    const modal = bootstrap.Modal.getInstance(document.getElementById('editProfileModal'));
-    modal.hide();
-}
-
-// Инициализация анимаций при загрузке
-document.addEventListener('DOMContentLoaded', function () {
-    // Анимация элементов с задержкой
-
-    fetch('/api/check-session', { credentials: 'include' })
-        .then(response => response.json())
-        .then(data => {
-            const authLink = document.querySelector('.nav-link[href="/pages/auth.html"]');
-            if (data.loggedIn && authLink) {
-                authLink.innerHTML = '<i class="fas fa-user me-1"></i> Профиль';
-                authLink.href = '/pages/profile.html';
-            }
+    try {
+        const response = await fetch('/profile/update', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ name, bio })
         });
 
-    const elements = document.querySelectorAll('.animate__animated');
-    elements.forEach((el, index) => {
-        if (el.classList.contains('animate__delay-1s') ||
-            el.classList.contains('animate__delay-2s') ||
-            el.classList.contains('animate__delay-3s') ||
-            el.classList.contains('animate__delay-4s')) {
-            return;
+        if (!response.ok) {
+            throw new Error('Ошибка при сохранении данных');
         }
 
-        el.style.animationDelay = `${index * 0.1}s`;
-    });
-});
+        const result = await response.json();
+
+        // Обновление на странице
+        document.querySelector('.profile-name').textContent = result.name || name;
+        document.querySelector('.profile-bio').textContent = result.bio || bio;
+
+        // Анимация
+        document.querySelector('.profile-name').classList.add('animate__animated', 'animate__pulse');
+        setTimeout(() => {
+            document.querySelector('.profile-name').classList.remove('animate__animated', 'animate__pulse');
+        }, 1000);
+
+        // Закрытие модального окна
+        const modal = bootstrap.Modal.getInstance(document.getElementById('editProfileModal'));
+        modal.hide();
+    } catch (error) {
+        console.error('Ошибка:', error);
+        alert('Не удалось сохранить изменения. Попробуйте позже.');
+    }
+}

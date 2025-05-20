@@ -19,6 +19,8 @@ db.run(`
   )
 `);
 
+//db.run(`ALTER TABLE users ADD COLUMN bio TEXT DEFAULT ''`);
+
 db.run(`
   CREATE TABLE IF NOT EXISTS posts (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -93,7 +95,7 @@ app.get('/', (req, res) => {
 
 // Получение постов для ленты
 app.get('/api/posts', (req, res) => {
-  const sql = `
+    const sql = `
     SELECT posts.id AS post_id, posts.title, posts.description, posts.created_at,
            photos.filename
     FROM posts
@@ -101,32 +103,32 @@ app.get('/api/posts', (req, res) => {
     ORDER BY posts.created_at DESC
   `;
 
-  db.all(sql, [], (err, rows) => {
-    if (err) {
-      console.error(err);
-      return res.status(500).json({ error: 'Ошибка при получении постов' });
-    }
+    db.all(sql, [], (err, rows) => {
+        if (err) {
+            console.error(err);
+            return res.status(500).json({ error: 'Ошибка при получении постов' });
+        }
 
-    // Группируем фотки по постам
-    const postsMap = {};
-    rows.forEach(row => {
-      if (!postsMap[row.post_id]) {
-        postsMap[row.post_id] = {
-          id: row.post_id,
-          title: row.title,
-          description: row.description,
-          created_at: row.created_at,
-          photos: []
-        };
-      }
-      if (row.filename) {
-        postsMap[row.post_id].photos.push('/uploads/' + row.filename);
-      }
+        // Группируем фотки по постам
+        const postsMap = {};
+        rows.forEach(row => {
+            if (!postsMap[row.post_id]) {
+                postsMap[row.post_id] = {
+                    id: row.post_id,
+                    title: row.title,
+                    description: row.description,
+                    created_at: row.created_at,
+                    photos: []
+                };
+            }
+            if (row.filename) {
+                postsMap[row.post_id].photos.push('/uploads/' + row.filename);
+            }
+        });
+
+        const posts = Object.values(postsMap);
+        res.json(posts);
     });
-
-    const posts = Object.values(postsMap);
-    res.json(posts);
-  });
 });
 
 
@@ -274,9 +276,50 @@ app.get('/profile', (req, res) => {
     if (!req.session.user) {
         return res.status(401).json({ message: 'Не авторизован' });
     }
-    // Иначе возвращаем информацию о пользователе:
-    res.json({ user: req.session.user });
+
+    const sql = `SELECT id, name, nickname, bio FROM users WHERE id = ?`;
+    db.get(sql, [req.session.user.id], (err, user) => {
+        if (err) {
+            return res.status(500).json({ message: 'Ошибка при получении профиля' });
+        }
+
+        res.json({ user });
+    });
 });
+
+
+// Изменение информации о пользователе
+app.post('/profile/update', (req, res) => {
+    console.log('Сессия:', req.session);
+    if (!req.session.user) {
+        return res.status(401).json({ message: 'Не авторизован' });
+    }
+
+    const { name, bio } = req.body;
+
+    if (!name) {
+        return res.status(400).json({ message: 'Имя не может быть пустым' });
+    }
+
+    console.log('Получено:', name, bio);
+
+
+    const sql = `UPDATE users SET name = ?, bio = ? WHERE id = ?`;
+    db.run(sql, [name, bio || '', req.session.user.id], function (err) {
+        if (err) {
+            return res.status(500).json({ message: 'Ошибка при обновлении профиля' });
+        }
+
+        // Обновляем данные в сессии
+        req.session.user.name = name;
+        req.session.user.bio = bio;
+
+        res.json({ name, bio });
+    });
+});
+
+
+
 
 // Выход из профиля (сессии)
 app.post('/logout', (req, res) => {
@@ -291,7 +334,7 @@ app.post('/logout', (req, res) => {
 
 // Получение всех пользователей (админ панель)
 app.get('/users', (req, res) => {
-    db.all('SELECT id, name, nickname, password FROM users', (err, rows) => {
+    db.all('SELECT id, name, nickname, bio, password FROM users', (err, rows) => {
         if (err) {
             return res.status(500).json({ message: 'Ошибка при получении пользователей' });
         }
