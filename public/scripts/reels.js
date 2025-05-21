@@ -97,6 +97,7 @@ document.addEventListener('DOMContentLoaded', function () {
             posts.forEach(post => {
                 const slide = document.createElement('div');
                 slide.classList.add('swiper-slide');
+                console.log(post);
 
                 // Вложенный горизонтальный swiper
                 let innerSlides = '';
@@ -108,7 +109,7 @@ document.addEventListener('DOMContentLoaded', function () {
               <div class="slide-content">
                 <div class="contsl">
                     <div>
-                        <a href="3"> <img src="/img/belarus.jpg" class="rounded-circle" style="width: 50px; height: 50px; object-fit: cover;"> </a> 
+                        <a href="3"> <img src="${post.author.avatar}" class="rounded-circle" style="width: 50px; height: 50px; object-fit: cover;"> </a> 
 
                         <style>
                             .rounded-circle {
