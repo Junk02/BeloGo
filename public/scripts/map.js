@@ -89,14 +89,23 @@ fetch('/api/posts')
             const popupContent = `
 <div class="custom-popup p-2" style="max-width: 260px; font-family: 'Segoe UI', sans-serif;">
     <div class="d-flex align-items-center mb-2">
+    
+    
+    <a href="/users/${post.author.nickname}" class="text-decoration-none fw-semibold text-dark">
         <img src="${post.author.avatar}" alt="${post.author.name}" 
-             class="rounded-circle me-2" style="width: 40px; height: 40px; object-fit: cover;">
-        <div>
-            <a href="/users/${post.author.nickname}" class="text-decoration-none fw-semibold text-dark">
-                ${post.author.name}
-            </a><br>
-            <small class="text-muted">@${post.author.nickname}</small>
-        </div>
+        class="rounded-circle me-2" style="width: 40px; height: 40px; object-fit: cover;">
+    </a>
+    
+    
+    <a href="/users/${post.author.nickname}" class="text-decoration-none fw-semibold text-dark">
+                <div>
+                    ${post.author.name}
+                    <br>
+                    <small class="text-muted">@${post.author.nickname}</small>
+                </div>
+            
+
+        </a>
     </div>
 
     <h6 class="mb-1 text-primary">${post.title}</h6>
@@ -108,7 +117,7 @@ fetch('/api/posts')
              class="rounded img-fluid" style="max-height: 120px; object-fit: cover;">
     </div>` : ''}
 
-    <div class="d-flex justify-content-between align-items-center">
+    <div class="d-flex justify-content-center align-items-center">
         <button class="btn btn-sm btn-outline-secondary show-details">
             <i class="fas fa-info-circle me-1"></i> Подробнее
         </button>

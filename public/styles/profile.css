@@ -216,6 +216,9 @@ body {
 #editBio {
     resize: none;
 }
+.mt-5 {
+  margin-top: 1rem !important;
+}
 
 .edit-profile-btn {
     position: absolute;
@@ -292,6 +295,7 @@ body {
         opacity: 0;
         transform: scale(0.5);
     }
+
     100% {
         opacity: 1;
         transform: scale(1);
@@ -306,6 +310,7 @@ body {
     from {
         opacity: 0;
     }
+
     to {
         opacity: 1;
     }
@@ -325,21 +330,21 @@ body {
         padding: 1.5rem;
         height: 150px;
     }
-    
+
     .avatar-container {
         width: 120px;
         height: 120px;
         margin-top: -60px;
     }
-    
+
     .profile-name {
         font-size: 1.5rem;
     }
-    
+
     .stats-card {
         padding: 1rem;
     }
-    
+
     .stats-card .stat-value {
         font-size: 1.5rem;
     }
@@ -348,119 +353,132 @@ body {
 
 /* Стили для контейнера с фотографиями */
 .photos-container {
-  background-color: white;
-  border-radius: 15px;
-  padding: 2rem;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-  margin-bottom: 3rem;
+    background-color: white;
+    border-radius: 15px;
+    padding: 2rem;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    margin-bottom: 3rem;
 }
 
 .section-header {
-  padding-bottom: 0.5rem;
-  border-bottom: 2px solid #f0f0f0;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid #f0f0f0;
 }
 
 .photo-thumbnail {
-  position: relative;
-  border-radius: 10px;
-  overflow: hidden;
-  aspect-ratio: 1/1;
-  transition: all 0.3s ease;
-  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+    position: relative;
+    border-radius: 10px;
+    overflow: hidden;
+    aspect-ratio: 1/1;
+    transition: all 0.3s ease;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
 }
 
 .photo-thumbnail img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: transform 0.3s ease;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
 }
 
 .photo-thumbnail:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
 }
 
 .photo-thumbnail:hover img {
-  transform: scale(1.05);
+    transform: scale(1.05);
 }
 
 .photo-overlay {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: linear-gradient(to top, rgba(0,0,0,0.7), transparent);
-  padding: 15px;
-  opacity: 0;
-  transition: opacity 0.3s ease;
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.7), transparent);
+    padding: 15px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
 }
 
 .photo-thumbnail:hover .photo-overlay {
-  opacity: 1;
+    opacity: 1;
 }
 
 .photo-stats {
-  color: white;
-  font-size: 0.9rem;
+    color: white;
+    font-size: 0.9rem;
 }
 
 .photo-stats span {
-  margin-right: 10px;
+    margin-right: 10px;
 }
 
 .photo-action {
-  opacity: 0.8;
-  transition: all 0.2s ease;
+    opacity: 0.8;
+    transition: all 0.2s ease;
 }
 
 .photo-action:hover {
-  opacity: 1;
-  transform: scale(1.1);
+    opacity: 1;
+    transform: scale(1.1);
 }
 
 /* Адаптация для мобильных */
 @media (max-width: 768px) {
-  .photos-container {
-    padding: 1.5rem;
-  }
-  
-  .photo-stats {
-    font-size: 0.8rem;
-  }
-  
-  .photo-action {
-    width: 30px;
-    height: 30px;
-    padding: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
+    .photos-container {
+        padding: 1.5rem;
+    }
+
+    .photo-stats {
+        font-size: 0.8rem;
+    }
+
+    .photo-action {
+        width: 30px;
+        height: 30px;
+        padding: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
 }
 
 .photo-thumbnail {
-  animation: fadeInUp 0.5s ease forwards;
-  opacity: 0;
+    animation: fadeInUp 0.5s ease forwards;
+    opacity: 0;
 }
 
 @keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 /* Задержка для анимации каждого элемента */
-.photo-thumbnail:nth-child(1) { animation-delay: 0.1s; }
-.photo-thumbnail:nth-child(2) { animation-delay: 0.2s; }
-.photo-thumbnail:nth-child(3) { animation-delay: 0.3s; }
-.photo-thumbnail:nth-child(4) { animation-delay: 0.4s; }
+.photo-thumbnail:nth-child(1) {
+    animation-delay: 0.1s;
+}
+
+.photo-thumbnail:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.photo-thumbnail:nth-child(3) {
+    animation-delay: 0.3s;
+}
+
+.photo-thumbnail:nth-child(4) {
+    animation-delay: 0.4s;
+}
+
 /* и так далее... */
