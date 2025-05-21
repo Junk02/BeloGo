@@ -87,31 +87,35 @@ fetch('/api/posts')
             console.log(post);
 
             const popupContent = `
-        <div class="custom-popup">
-            <div class="popup-header">
-                <h6>${post.title}</h6>
-            </div>
-            <p class="popup-description">${post.description}</p>
-            
-            ${post.photos && post.photos.length > 0 ? `
-            <div class="popup-photos">
-                <img src="${post.photos[0]}" alt="${post.title}" class="img-thumbnail">
-            </div>` : ''}
-            
-            <div class="popup-footer">
-                <a href="${post.author.nickname}" class="btn btn-sm btn-outline-primary">
-            <img src="${post.author.avatar}" alt="${post.author.name}" 
-                class="rounded-circle me-1" style="width: 20px; height: 20px;">
-            
-        </a>
-                <button class="btn btn-sm btn-outline-secondary show-details">
-                    <i class="fas fa-info-circle"></i> Подробнее
-                </button>
-            </div>
+<div class="custom-popup p-2" style="max-width: 260px; font-family: 'Segoe UI', sans-serif;">
+    <div class="d-flex align-items-center mb-2">
+        <img src="${post.author.avatar}" alt="${post.author.name}" 
+             class="rounded-circle me-2" style="width: 40px; height: 40px; object-fit: cover;">
+        <div>
+            <a href="/users/${post.author.nickname}" class="text-decoration-none fw-semibold text-dark">
+                ${post.author.name}
+            </a><br>
+            <small class="text-muted">@${post.author.nickname}</small>
         </div>
-        
-        
-    `;
+    </div>
+
+    <h6 class="mb-1 text-primary">${post.title}</h6>
+    <p class="mb-2 text-muted" style="font-size: 0.9rem;">${post.description.slice(0, 20)}...</p>
+
+    ${post.photos && post.photos.length > 0 ? `
+    <div class="popup-photos mb-2 text-center">
+        <img src="${post.photos[0]}" alt="${post.title}" 
+             class="rounded img-fluid" style="max-height: 120px; object-fit: cover;">
+    </div>` : ''}
+
+    <div class="d-flex justify-content-between align-items-center">
+        <button class="btn btn-sm btn-outline-secondary show-details">
+            <i class="fas fa-info-circle me-1"></i> Подробнее
+        </button>
+    </div>
+</div>
+`;
+
 
             const marker = L.marker([post.latitude, post.longitude], {
                 icon: markerIcons.other
