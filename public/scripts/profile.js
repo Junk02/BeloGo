@@ -184,3 +184,138 @@ async function saveAvatar() {
         alert('Не удалось загрузить аватарку');
     }
 }
+
+
+// Функция загрузки фотографий
+async function loadUserPhotos() {
+  try {
+    const response = await fetch('/api/user/photos', { credentials: 'include' });
+    const photos = await response.json();
+    
+    if (!response.ok) throw new Error(photos.message || 'Ошибка загрузки фотографий');
+    
+    renderPhotos(photos);
+  } catch (err) {
+    console.error('Ошибка при загрузке фотографий:', err);
+    document.getElementById('userPhotosGrid').innerHTML = `
+      <div class="col-12 text-center py-5">
+        <i class="fas fa-camera fa-3x mb-3 text-muted"></i>
+        <p class="text-muted">Нет загруженных фотографий</p>
+      </div>
+    `;
+  }
+
+
+const lazyImages = document.querySelectorAll('.lazy');
+if ('IntersectionObserver' in window) {
+  const lazyImageObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const lazyImage = entry.target;
+        lazyImage.src = lazyImage.dataset.src;
+        lazyImage.classList.remove('lazy');
+        lazyImageObserver.unobserve(lazyImage);
+      }
+    });
+  });
+
+  lazyImages.forEach(lazyImage => {
+    lazyImageObserver.observe(lazyImage);
+  });
+}
+
+}
+
+// Функция отрисовки фотографий
+function renderPhotos(photos) {
+  const container = document.getElementById('userPhotosGrid');
+  
+  if (!photos || photos.length === 0) {
+    container.innerHTML = `
+      <div class="col-12 text-center py-5">
+        <i class="fas fa-camera fa-3x mb-3 text-muted"></i>
+        <p class="text-muted">Нет загруженных постов</p>
+      </div>
+    `;
+    return;
+  }
+  
+  let html = '';
+  photos.forEach(photo => {
+    html += `
+      <div class="col-md-4 col-6 mb-3">
+        <div class="photo-thumbnail">
+          <img src="${photo.url}" class="img-fluid" alt="Фото">
+          <div class="photo-overlay">
+            <div class="photo-stats">
+              <span><i class="fas fa-heart me-1"></i> ${photo.likes}</span>
+              <span><i class="fas fa-comment me-1"></i> ${photo.comments}</span>
+            </div>
+            <button class="btn btn-sm btn-danger photo-action" data-photo-id="${photo.id}">
+              <i class="fas fa-trash"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    `;
+  });
+  
+  container.innerHTML = html;
+  
+  // Добавляем обработчики для кнопок удаления
+  document.querySelectorAll('.photo-action').forEach(btn => {
+    btn.addEventListener('click', function() {
+      const photoId = this.dataset.photoId;
+      deletePhoto(photoId);
+    });
+  });
+}
+
+// Функция удаления фотографии
+async function deletePhoto(photoId) {
+  if (!confirm('Вы уверены, что хотите удалить эту фотографию?')) return;
+  
+  try {
+    const response = await fetch(`/api/photos/${photoId}`, {
+      method: 'DELETE',
+      credentials: 'include'
+    });
+    
+    if (!response.ok) throw new Error('Ошибка при удалении');
+    
+    // Перезагружаем фотографии
+    loadUserPhotos();
+  } catch (err) {
+    console.error('Ошибка при удалении фотографии:', err);
+    alert('Не удалось удалить фотографию');
+  }
+}
+
+// Вызываем загрузку фотографий при загрузке страницы
+document.addEventListener('DOMContentLoaded', () => {
+  // ... ваш существующий код ...
+  
+  // Добавьте эту строку в конец
+  loadUserPhotos();
+  
+  // Обработчик кнопки "Показать еще"
+  document.getElementById('loadMorePhotos')?.addEventListener('click', loadMorePhotos);
+});
+
+// Функция для загрузки дополнительных фотографий
+async function loadMorePhotos() {
+  const btn = document.getElementById('loadMorePhotos');
+  btn.disabled = true;
+  btn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i> Загрузка...';
+  
+  try {
+    // Здесь должен быть запрос к API для получения следующей страницы фотографий
+    // Например: /api/user/photos?page=2
+    // После получения добавляем новые фотографии к существующим
+    // В этом примере просто перезагружаем все фотографии
+    await loadUserPhotos();
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Показать еще';
+  }
+}

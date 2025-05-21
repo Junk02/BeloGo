@@ -45,12 +45,9 @@
                         <p class="profile-username animate__animated animate__fadeIn animate__delay-0.5s" id="username">
                         </p>
 
-                        <div
-                            class="d-flex justify-content-center mb-4 animate__animated animate__fadeIn animate__delay-1s">
-                            <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
-                            <a href="#" class="social-icon"><i class="fab fa-telegram"></i></a>
-                            <a href="#" class="social-icon"><i class="fab fa-vk"></i></a>
-                            <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
+                        <div class="profile-section animate__animated animate__backInUp animate__delay-0.2s">
+                            <h3 class="section-title">О себе</h3>
+                            <p class="profile-bio animate__animated animate__fadeIn animate__delay-0.5s" id="userinfo"></p>
                         </div>
 
                         <div class="row animate__animated animate__fadeIn animate__delay-2s">
@@ -74,12 +71,7 @@
                             </div>
                         </div>
                     </div>
-                </div>
 
-                <!-- Раздел "О себе" -->
-                <div class="profile-section animate__animated animate__backInUp animate__delay-0.2s">
-                    <h3 class="section-title">О себе</h3>
-                    <p class="profile-bio animate__animated animate__fadeIn animate__delay-0.5s" id="userinfo"></p>
                 </div>
 
 
@@ -175,6 +167,43 @@
                 <script src="/partials/loadHeader.js"></script>
 
                 <script src="/scripts/profile.js"></script>
+
+
+                <!-- Контейнер с фотографиями пользователя -->
+    <div class="photos-container mt-5 animate__animated animate__fadeIn">
+    <div class="section-header d-flex justify-content-between align-items-center mb-4">
+        <h2 class="section-title">Мои посты</h2>
+        <form action="/pages/loadimg.html"> <button class="btn btn-outline-primary btn-sm">
+        <i class="fas fa-plus me-1"></i> Добавить
+        </button> </form>
+    </div>
+    
+    <div class="row g-3" id="userPhotosGrid">
+        <!-- Фотографии будут загружаться здесь динамически -->
+        <!-- Пример одной фотографии:
+        <div class="col-md-4 col-6">
+        <div class="photo-thumbnail">
+            <img data-src="${photo.url}" class="img-fluid lazy" alt="Фото">
+            <div class="photo-overlay">
+            <div class="photo-stats">
+                <span><i class="fas fa-heart me-1"></i> 245</span>
+                <span><i class="fas fa-comment me-1"></i> 12</span>
+            </div>
+            <button class="btn btn-sm btn-danger photo-action">
+                <i class="fas fa-trash"></i>
+            </button>
+            </div>
+        </div>
+        </div>
+        -->
+    </div>
+    
+    <div class="text-center mt-4">
+        <button class="btn btn-outline-secondary" id="loadMorePhotos">
+        Показать еще
+        </button>
+    </div>
+    </div>
 </body>
 
 </html>

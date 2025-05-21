@@ -21,7 +21,7 @@ const map = L.map('map', {
     maxBounds: belarusBounds,
     maxBoundsViscosity: 1.0,
     attributionControl: false,
-    minZoom: 7,
+    minZoom: 6,
     maxZoom: 17
 }).setView([53.9, 27.5], 7);
 
