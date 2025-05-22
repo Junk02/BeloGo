@@ -78,4 +78,3 @@ document.addEventListener('click', function (e) {
     let count = parseInt(countEl.textContent, 10);
     countEl.textContent = isActive ? count + 1 : count - 1;
 });
-

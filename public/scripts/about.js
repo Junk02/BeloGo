@@ -70,3 +70,32 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
 });
+
+document.getElementById('feedback-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    const form = e.target;
+    const formData = {
+        name: form.name.value.trim(),
+        email: form.email.value.trim(),
+        subject: form.subject.value.trim(),
+        message: form.message.value.trim()
+    };
+
+    fetch('/send-feedback', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(formData)
+    })
+    .then(res => res.json())
+    .then(data => {
+        document.getElementById('feedback-status').textContent = data.message;
+        form.reset();
+    })
+    .catch(err => {
+        console.error('Ошибка:', err);
+        document.getElementById('feedback-status').textContent = 'Произошла ошибка при отправке';
+    });
+});

@@ -91,6 +91,12 @@ const avatarStorage = multer.diskStorage({
 });
 const uploadAvatar = multer({ storage: avatarStorage });
 
+const feedbackDir = path.join(__dirname, '../feedback');
+
+if (!fs.existsSync(feedbackDir)) {
+    fs.mkdirSync(feedbackDir, { recursive: true });
+}
+
 
 const red = '\x1b[31m';
 const green = '\x1b[32m';
@@ -140,6 +146,39 @@ app.post('/upload-avatar', uploadAvatar.single('avatar'), (req, res) => {
     });
 });
 
+// Отправка фидбека
+app.post('/send-feedback', (req, res) => {
+    const { name, email, subject, message } = req.body;
+
+    if (!name || !email || !subject || !message) {
+        return res.status(400).json({ message: 'Пожалуйста, заполните все поля' });
+    }
+
+    const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+    const filename = `feedback-${timestamp}.txt`;
+    const filepath = path.join(feedbackDir, filename);
+
+    const content = `
+=== Обратная связь ===
+Имя: ${name}
+Email: ${email}
+Тема: ${subject}
+Сообщение:
+${message}
+
+Время: ${new Date().toLocaleString()}
+-------------------------
+`;
+
+    fs.writeFile(filepath, content, (err) => {
+        if (err) {
+            console.error('Ошибка при сохранении отзыва:', err);
+            return res.status(500).json({ message: 'Ошибка при сохранении сообщения' });
+        }
+
+        res.json({ message: 'Сообщение успешно отправлено!' });
+    });
+});
 
 // Получение конкретно
 app.get('/api/posts/:id', (req, res) => {
