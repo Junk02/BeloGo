@@ -12,8 +12,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
 // Инициализация карты
 const belarusBounds = L.latLngBounds(
-    L.latLng(51.25, 23.00),
-    L.latLng(56.17, 32.80)
+    //L.latLng(51.25, 23.00),
+    //L.latLng(56.17, 32.80)
 );
 
 // Инициализация карты
