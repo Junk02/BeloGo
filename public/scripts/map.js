@@ -119,7 +119,9 @@ fetch('/api/posts')
 
     <div class="d-flex justify-content-center align-items-center">
         <button class="btn btn-sm btn-outline-secondary show-details">
+        <a href="/pages/post.html?id=${post.id}" class="btn btn-sm">
             <i class="fas fa-info-circle me-1"></i> Подробнее
+        </a>
         </button>
     </div>
 </div>

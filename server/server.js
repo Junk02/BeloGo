@@ -141,6 +141,31 @@ app.post('/upload-avatar', uploadAvatar.single('avatar'), (req, res) => {
 });
 
 
+// Получение конкретно
+app.get('/api/posts/:id', (req, res) => {
+    const postId = req.params.id;
+
+    const sql = `
+        SELECT posts.id AS post_id, posts.title, posts.description, posts.latitude, posts.longitude,
+               posts.created_at, users.name AS author_name, users.nickname AS author_nickname, users.avatar AS author_avatar
+        FROM posts
+        JOIN users ON posts.user_id = users.id
+        WHERE posts.id = ?
+    `;
+
+    db.get(sql, [postId], (err, post) => {
+        if (err || !post) return res.status(404).json({ message: 'Пост не найден' });
+
+        db.all('SELECT filename FROM photos WHERE post_id = ?', [postId], (err, photos) => {
+            if (err) return res.status(500).json({ message: 'Ошибка при загрузке фото' });
+
+            post.photos = photos.map(p => '/uploads/' + p.filename);
+            res.json(post);
+        });
+    });
+});
+
+
 
 // Получение постов для ленты и карты
 app.get('/api/posts', (req, res) => {
