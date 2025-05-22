@@ -268,6 +268,20 @@
         </div>
     </section>
 
+    <!-- Toast для уведомлений -->
+    <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+        <div id="feedbackToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header">
+                <strong class="me-auto" id="toastTitle">Уведомление</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+            <div class="toast-body" id="toastMessage">
+                Сообщение отправлено успешно!
+            </div>
+        </div>
+    </div>
+
+
     <!-- Футер -->
     <footer class="bg-dark text-light py-4 mt-auto">
         <div class="container text-center">
@@ -284,7 +298,7 @@
                 <i class="bi bi-github me-1"></i>
                 <a href="https://github.com/Junk02" target="_blank"
                     class="link-light text-decoration-underline me-3">Junk02</a>
-                <a href="https://github.com/MaksSh2" target="_blank" class="link-light text-decoration-underline">
+                    <a href="https://github.com/MaksSh2" target="_blank" class="link-light text-decoration-underline">
                     <i class="bi bi-github me-1"></i>MaksSh2
                 </a>
             </p>

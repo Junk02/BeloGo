@@ -73,8 +73,15 @@ document.addEventListener('DOMContentLoaded', function () {
 
 document.getElementById('feedback-form').addEventListener('submit', function(e) {
     e.preventDefault();
-
+    
     const form = e.target;
+    const submitBtn = form.querySelector('button[type="submit"]');
+    const originalBtnText = submitBtn.innerHTML;
+    
+    // Показываем индикатор загрузки
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Отправка...';
+    
     const formData = {
         name: form.name.value.trim(),
         email: form.email.value.trim(),
@@ -82,6 +89,8 @@ document.getElementById('feedback-form').addEventListener('submit', function(e) 
         message: form.message.value.trim()
     };
 
+    
+        
     fetch('/send-feedback', {
         method: 'POST',
         headers: {
@@ -92,10 +101,54 @@ document.getElementById('feedback-form').addEventListener('submit', function(e) 
     .then(res => res.json())
     .then(data => {
         document.getElementById('feedback-status').textContent = data.message;
+	showToast('Успех!', 'Ваше сообщение успешно отправлено!', 'success');
         form.reset();
     })
     .catch(err => {
         console.error('Ошибка:', err);
+	showToast('Ошибка!', 'Не удалось отправить сообщение. Попробуйте позже.', 'danger');
         document.getElementById('feedback-status').textContent = 'Произошла ошибка при отправке';
+    })
+    .finally(() => {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = originalBtnText;
     });
 });
+
+// Функция показа уведомления
+function showToast(title, message, type = 'success') {
+    const toastEl = document.getElementById('feedbackToast');
+    const toastTitle = document.getElementById('toastTitle');
+    const toastMessage = document.getElementById('toastMessage');
+    
+    // Устанавливаем заголовок и сообщение
+    toastTitle.textContent = title;
+    toastMessage.textContent = message;
+    
+    // Меняем стиль в зависимости от типа
+    const toastHeader = toastEl.querySelector('.toast-header');
+    toastHeader.className = 'toast-header';
+    
+    if (type === 'success') {
+        toastHeader.classList.add('bg-success', 'text-white');
+    } else if (type === 'danger') {
+        toastHeader.classList.add('bg-danger', 'text-white');
+    } else {
+        toastHeader.classList.add('bg-primary', 'text-white');
+    }
+    
+    // Показываем toast с анимацией
+    const toast = new bootstrap.Toast(toastEl, {
+        animation: true,
+        autohide: true,
+        delay: 5000
+    });
+    toast.show();
+    
+    // Добавляем анимацию для появления
+    toastEl.classList.add('animate__animated', 'animate__fadeInUp');
+    toastEl.addEventListener('hidden.bs.toast', () => {
+        toastEl.classList.remove('animate__animated', 'animate__fadeInUp');
+    });
+}
+
