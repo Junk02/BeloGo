@@ -159,16 +159,16 @@ app.post('/send-feedback', (req, res) => {
     const filepath = path.join(feedbackDir, filename);
 
     const content = `
-=== Обратная связь ===
-Имя: ${name}
-Email: ${email}
-Тема: ${subject}
-Сообщение:
-${message}
+    === Обратная связь ===
+    Имя: ${name}
+    Email: ${email}
+    Тема: ${subject}
+    Сообщение:
+    ${message}
 
-Время: ${new Date().toLocaleString()}
--------------------------
-`;
+    Время: ${new Date().toLocaleString()}
+    -------------------------
+    `;
 
     fs.writeFile(filepath, content, (err) => {
         if (err) {
@@ -180,7 +180,58 @@ ${message}
     });
 });
 
-// Получение конкретно
+app.get('/api/users/:nickname', (req, res) => {
+    const nickname = req.params.nickname;
+
+    const userQuery = `
+        SELECT id, name, nickname, bio, avatar
+        FROM users
+        WHERE nickname = ?
+    `;
+
+    db.get(userQuery, [nickname], (err, user) => {
+        if (err || !user) {
+            return res.status(404).json({ message: 'Пользователь не найден' });
+        }
+
+        const postsQuery = `
+            SELECT 
+                posts.id, 
+                posts.title, 
+                posts.description, 
+                posts.created_at,
+                (
+                    SELECT filename 
+                    FROM photos 
+                    WHERE photos.post_id = posts.id 
+                    ORDER BY id ASC 
+                    LIMIT 1
+                ) AS preview_photo
+            FROM posts
+            WHERE posts.user_id = ?
+            ORDER BY posts.created_at DESC
+        `;
+
+        db.all(postsQuery, [user.id], (err, posts) => {
+            if (err) {
+                return res.status(500).json({ message: 'Ошибка при загрузке постов' });
+            }
+
+            // Добавим ссылку на файл
+            posts.forEach(post => {
+                if (post.preview_photo) {
+                    post.preview_photo = '/uploads/' + post.preview_photo;
+                }
+            });
+
+            res.json({ user, posts });
+        });
+    });
+});
+
+
+
+// Получение конкретного поста
 app.get('/api/posts/:id', (req, res) => {
     const postId = req.params.id;
 
@@ -411,15 +462,36 @@ app.get('/profile', (req, res) => {
         return res.status(401).json({ message: 'Не авторизован' });
     }
 
-    const sql = `SELECT id, name, nickname, bio, avatar FROM users WHERE id = ?`;
-    db.get(sql, [req.session.user.id], (err, user) => {
-        if (err) {
+    const userId = req.session.user.id;
+
+    db.get('SELECT id, name, nickname, bio, avatar FROM users WHERE id = ?', [userId], (err, user) => {
+        if (err || !user) {
             return res.status(500).json({ message: 'Ошибка при получении профиля' });
         }
 
-        res.json({ user });
+        const postsQuery = `
+            SELECT posts.id, posts.title, posts.description, posts.created_at,
+                   (SELECT filename FROM photos WHERE post_id = posts.id LIMIT 1) AS preview
+            FROM posts
+            WHERE user_id = ?
+            ORDER BY created_at DESC
+        `;
+
+        db.all(postsQuery, [userId], (err, posts) => {
+            if (err) {
+                return res.status(500).json({ message: 'Ошибка при загрузке постов' });
+            }
+
+            posts = posts.map(post => ({
+                ...post,
+                preview: post.preview ? '/uploads/' + post.preview : null
+            }));
+
+            res.json({ user, posts });
+        });
     });
 });
+
 
 
 // Изменение информации о пользователе

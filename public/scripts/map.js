@@ -88,42 +88,37 @@ fetch('/api/posts')
 
             const popupContent = `
 <div class="custom-popup p-2" style="max-width: 260px; font-family: 'Segoe UI', sans-serif;">
-    <div class="d-flex align-items-center mb-2">
-    
-    
-    <a href="/users/${post.author.nickname}" class="text-decoration-none fw-semibold text-dark">
-        <img src="${post.author.avatar}" alt="${post.author.name}" 
+  <div class="d-flex align-items-center mb-2">
+    <a href="/pages/user.html?nickname=${post.author.nickname}" class="text-decoration-none fw-semibold text-dark">
+      <img src="${post.author.avatar}" alt="${post.author.name}" 
         class="rounded-circle me-2" style="width: 40px; height: 40px; object-fit: cover;">
     </a>
-    
-    
-    <a href="/users/${post.author.nickname}" class="text-decoration-none fw-semibold text-dark">
-                <div>
-                    ${post.author.name}
-                    <br>
-                    <small class="text-muted">@${post.author.nickname}</small>
-                </div>
-            
+    <a href="/pages/user.html?nickname=${post.author.nickname}" class="text-decoration-none fw-semibold text-dark">
+      <div>
+        ${post.author.name}
+        <br>
+        <small class="text-muted">@${post.author.nickname}</small>
+      </div>
+    </a>
+  </div>
 
-        </a>
-    </div>
+  <h6 class="mb-1 text-primary">${post.title}</h6>
+  <p class="mb-2 text-muted" style="font-size: 0.9rem;">${post.description.slice(0, 20)}...</p>
 
-    <h6 class="mb-1 text-primary">${post.title}</h6>
-    <p class="mb-2 text-muted" style="font-size: 0.9rem;">${post.description.slice(0, 20)}...</p>
-
-    ${post.photos && post.photos.length > 0 ? `
+  ${post.photos && post.photos.length > 0 ? `
     <div class="popup-photos mb-2 text-center">
-        <img src="${post.photos[0]}" alt="${post.title}" 
-             class="rounded img-fluid" style="max-height: 120px; object-fit: cover;">
+      <img src="${post.photos[0]}" alt="${post.title}" 
+           class="rounded img-fluid" style="max-height: 120px; object-fit: cover;">
     </div>` : ''}
 
-    <div class="d-flex justify-content-center align-items-center">
-        <a href="/pages/post.html?id=${post.id}" class="btn btn-sm btn-outline-secondary show-details">
-            <i class="fas fa-info-circle me-1"> </i> Подробнее
-        </a>
-    </div>
+  <div class="d-flex justify-content-center align-items-center">
+    <a href="/pages/post.html?id=${post.id}" class="btn btn-sm btn-outline-secondary show-details">
+      <i class="fas fa-info-circle me-1"> </i> Подробнее
+    </a>
+  </div>
 </div>
 `;
+
 
 
             const marker = L.marker([post.latitude, post.longitude], {
