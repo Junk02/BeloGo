@@ -12,8 +12,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
 // Инициализация карты
 const belarusBounds = L.latLngBounds(
-    //L.latLng(51.25, 23.00),
-    //L.latLng(56.17, 32.80)
+    L.latLng(0, 0),
+    L.latLng(100, 80)
 );
 
 // Инициализация карты
@@ -118,11 +118,9 @@ fetch('/api/posts')
     </div>` : ''}
 
     <div class="d-flex justify-content-center align-items-center">
-        <button class="btn btn-sm btn-outline-secondary show-details">
-        <a href="/pages/post.html?id=${post.id}" class="btn btn-sm">
-            <i class="fas fa-info-circle me-1"></i> Подробнее
+        <a href="/pages/post.html?id=${post.id}" class="btn btn-sm btn-outline-secondary show-details">
+            <i class="fas fa-info-circle me-1"> </i> Подробнее
         </a>
-        </button>
     </div>
 </div>
 `;
