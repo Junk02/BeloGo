@@ -16,16 +16,23 @@
 </head>
 
 <body>
-
+  
   <div class="auth-container" id="authContainer">
+    
     <!-- Вход -->
     <form class="form-wrapper signin-form needs-validation" novalidate id="signinForm">
+      <div class="home-button">
+        <a href="/index.html" class="btn btn-light">
+          <i class="fas fa-home"></i>
+        </a>
+      </div>
+
       <h2>Вход</h2>
       <input type="text" class="form-control" placeholder="Никнейм" required pattern="^[a-zA-Z0-9_]{3,}$">
       <input type="password" class="form-control" placeholder="Пароль" required>
       <button type="submit" class="btn btn-primary w-100">Войти</button>
       <div class="switch-link">
-        Нет аккаунта? <a href="#" id="showSignup">Зарегистрироваться</a>
+        Нет аккаунта? <a href="#" id="showSignup" style="color: rgb(9, 85, 196);">Зарегистрироваться</a>
       </div>
     </form>
 
@@ -36,9 +43,9 @@
       <input type="text" class="form-control" placeholder="Никнейм" pattern="^[a-zA-Z0-9_]{3,}$" required>
       <input type="password" class="form-control" placeholder="Пароль" required>
       <input type="password" class="form-control" placeholder="Подтвердите пароль" required id="confirmPassword">
-      <button type="submit" class="btn btn-success w-100">Зарегистрироваться</button>
+      <button type="submit" class="btn btn-primary w-100">Зарегистрироваться</button>
       <div class="switch-link">
-        Уже есть аккаунт? <a href="#" id="showSignin">Войти</a>
+        Уже есть аккаунт? <a href="#" id="showSignin" style="color: rgb(9, 85, 196);">Войти</a>
       </div>
     </form>
 

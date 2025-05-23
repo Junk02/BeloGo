@@ -239,18 +239,18 @@ footer {
     font-weight: 700;
 }
 
-.btn:hover {
+/* .btn:hover {
     color: var(--bs-btn-hover-color);
     background-color: #5e6773;
     border-color: #424a55;
-}
+} */
 
 .btn-primary {
     --bs-btn-color: #fff;
     --bs-btn-bg: #8693a6;
     --bs-btn-border-color: #000;
     --bs-btn-hover-color: #fff;
-    --bs-btn-hover-bg: #000;
+    --bs-btn-hover-bg: #5e6773;
     --bs-btn-hover-border-color: #7889a2;
     --bs-btn-focus-shadow-rgb: 49,132,253;
     --bs-btn-active-color: #fff;

@@ -4,7 +4,7 @@ body {
     align-items: center;
     height: 100vh;
     margin: 0;
-    background: linear-gradient(135deg, #89f7fe 0%, #66a6ff 100%);
+    background: linear-gradient(135deg, #daebec 0%, #56677e 100%);
     font-family: 'Segoe UI', Tahoma, Verdana, sans-serif;
     overflow: hidden;
 }
@@ -69,4 +69,48 @@ body {
 
 .needs-validation.was-validated .form-control:valid {
     border-color: #28a745;
+}
+
+.btn-primary {
+  --bs-btn-color: #fff;
+  --bs-btn-bg: #839ec6;
+  --bs-btn-border-color: #000;
+  --bs-btn-hover-bg: #627899;
+  --bs-btn-hover-border-color: #5c5d5e;
+  --bs-btn-active-bg: #4e6993;
+}
+
+.home-button {
+  position: fixed;
+  top: 30px;
+  left: 20px;
+  z-index: 1000;
+}
+
+.home-button .btn {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.home-button .btn:hover {
+  transform: scale(1.1);
+  background-color: #f8f9fa;
+}
+
+/* Адаптация для мобильных */
+@media (max-width: 576px) {
+  .home-button {
+    left: 15px;
+  }
+  
+  .home-button .btn {
+    width: 36px;
+    height: 36px;
+    font-size: 0.9rem;
+  }
 }

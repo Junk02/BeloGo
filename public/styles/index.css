@@ -118,3 +118,11 @@ html, body {
         padding: 10px 0;
     }
 }
+
+.btn-primary {
+  --bs-btn-bg: #3365ae;
+  --bs-btn-border-color: #000;
+  --bs-btn-hover-bg: #29528f;
+  --bs-btn-hover-border-color: #294f86;
+  --bs-btn-active-bg: #4e6993;
+}
