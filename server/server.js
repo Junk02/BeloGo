@@ -11,6 +11,10 @@ const app = express();
 const PORT = 3000;
 const time = new Date();
 
+
+//db.run(`ALTER TABLE users ADD COLUMN bio TEXT DEFAULT ''`); // Для информации о пользователе
+//db.run(`ALTER TABLE users ADD COLUMN avatar TEXT`); // Для аватарок
+
 db.run(`
   CREATE TABLE IF NOT EXISTS users (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -19,10 +23,6 @@ db.run(`
     password TEXT NOT NULL
   )
 `);
-
-//db.run(`ALTER TABLE users ADD COLUMN bio TEXT DEFAULT ''`); // Для информации о пользователе
-//db.run(`ALTER TABLE users ADD COLUMN avatar TEXT`); // Для аватарок
-
 
 db.run(`
   CREATE TABLE IF NOT EXISTS posts (
