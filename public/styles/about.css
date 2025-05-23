@@ -327,3 +327,65 @@ footer {
         padding: 10px 0;
     }
 }
+
+@media (max-width: 768px) {
+    .hero-section {
+        padding: 3rem 0;
+    }
+    
+    #feedback-form {
+        padding: 1.5rem;
+    }
+    
+    #feedback-form input,
+    #feedback-form textarea {
+        padding: 0.75rem;
+    }
+    
+    #feedback-form button {
+        padding: 0.75rem;
+    }
+    
+    .position-fixed.bottom-0.end-0 {
+        width: 100%;
+        padding: 0 15px;
+    }
+    
+    #feedbackToast {
+        width: 100%;
+        max-width: 100%;
+        margin-bottom: 1rem;
+    }
+    
+    .bg-light.p-5.rounded {
+        padding: 1.5rem !important;
+    }
+    
+}
+
+@media (max-width: 576px) {
+    .hero-section h1 {
+        font-size: 2rem;
+    }
+    
+    .hero-section p.lead {
+        font-size: 1rem;
+    }
+    
+    #feedback-form {
+        padding: 1rem;
+    }
+    
+    .toast-body {
+        padding: 0.75rem;
+    }
+    
+    .d-flex.mb-4 svg {
+        width: 30px;
+        height: 30px;
+    }
+    
+    .d-flex.mb-4 div {
+        padding-left: 8px;
+    }
+}

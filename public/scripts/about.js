@@ -100,14 +100,14 @@ document.getElementById('feedback-form').addEventListener('submit', function(e) 
     })
     .then(res => res.json())
     .then(data => {
-        document.getElementById('feedback-status').textContent = data.message;
+        // document.getElementById('feedback-status').textContent = data.message;
 	showToast('Успех!', 'Ваше сообщение успешно отправлено!', 'success');
         form.reset();
     })
     .catch(err => {
         console.error('Ошибка:', err);
 	showToast('Ошибка!', 'Не удалось отправить сообщение. Попробуйте позже.', 'danger');
-        document.getElementById('feedback-status').textContent = 'Произошла ошибка при отправке';
+        //document.getElementById('feedback-status').textContent = 'Произошла ошибка при отправке';
     })
     .finally(() => {
         submitBtn.disabled = false;
