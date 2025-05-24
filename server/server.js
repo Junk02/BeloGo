@@ -53,6 +53,16 @@ app.use(cors({
     credentials: true
 }));
 
+app.use(cors({
+    origin: 'http://belogo.ru', // замени на свой порт, если другой
+    credentials: true
+}));
+
+app.use(cors({
+    origin: 'https://belogo.ru', // замени на свой порт, если другой
+    credentials: true
+}));
+
 app.use(express.json());
 app.use(express.static(path.join(__dirname, '../public/')));
 console.log(path.join(__dirname, '../public'));
