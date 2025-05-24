@@ -2,12 +2,12 @@ fetch('/public/partials/header.html')
     .then(response => response.text())
     .then(data => {
         document.getElementById('header-placeholder').innerHTML = data;
+        console.log(data);
 
         // Ждём отрисовки и запускаем всё
         requestAnimationFrame(() => {
-            // === 1. Подсветка активной ссылки ===
-            // === 1. Подсветка активной ссылки ===
             const path = window.location.pathname;
+            console.log(path);
 const links = document.querySelectorAll('.navbar-nav .nav-link');
             const normalize = p => p.replace(/\/index\.html$/, '/').replace(/\/+$/, '');
             links.forEach(link => {
@@ -40,8 +40,6 @@ const links = document.querySelectorAll('.navbar-nav .nav-link');
                 lastScroll = currentScroll;
             });
 
-            // === 3. Проверка авторизации при нажатии на "Добавить пост" ===
-            // === 3. Проверка авторизации при нажатии на "Добавить пост" ===
             const addPostBtn = document.getElementById('add-post-btn');
 
             if (addPostBtn) {
