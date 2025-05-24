@@ -109,7 +109,7 @@ document.addEventListener('DOMContentLoaded', function () {
               <div class="slide-content">
                 <div class="contsl">
                     <div>
-                        <a href="3"> <img src="${post.author.avatar}" class="rounded-circle" style="width: 50px; height: 50px; object-fit: cover;"> </a> 
+                        <a href="/pages/user.html?nickname=${post.author.nickname}"> <img src="${post.author.avatar}" class="rounded-circle" style="width: 50px; height: 50px; object-fit: cover;"> </a> 
 
                         <style>
                             .rounded-circle {

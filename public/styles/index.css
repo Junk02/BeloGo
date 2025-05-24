@@ -77,6 +77,11 @@ html, body {
 
 .navbar-brand {
     font-weight: 700;
+    padding-left: 100px;
+}
+
+.navbar-nav{
+    padding-right: 100px;
 }
 
 .info-section h2 {
@@ -108,6 +113,10 @@ html, body {
     
     .navbar-nav {
         width: 100%;
+    }
+ 
+    .navbar-brand {
+        padding-left: 10px;
     }
     
     .nav-item {

@@ -50,6 +50,7 @@ async function loadProfile() {
     document.getElementById('name').textContent = data.user.name;
     document.getElementById('username').textContent = '@' + data.user.nickname;
     document.getElementById('userinfo').textContent = data.user.bio || 'Добавьте информацию о себе.';
+    document.getElementById('postCount').textContent = data.postCount || 0;
     document.getElementById('editName').value = data.user.name;
     document.getElementById('editBio').value = data.user.bio || '';
     autoResizeTextarea(bioTextarea);
@@ -69,72 +70,65 @@ function renderUserPosts(posts) {
 
   if (!posts.length) {
     container.innerHTML = `
-            <div class="col-12 text-center py-5">
-                <i class="fas fa-camera fa-3x mb-3 text-muted"></i>
-                <p class="text-muted">Нет опубликованных постов</p>
-            </div>
-        `;
+      <div class="col-12 text-center py-5">
+        <i class="fas fa-camera fa-3x mb-3 text-muted"></i>
+        <p class="text-muted">Нет опубликованных постов</p>
+      </div>
+    `;
     return;
   }
 
   container.innerHTML = posts.map(post => `
-        <div class="col-md-4 col-6 mb-3">
-            <a href="/pages/post.html?id=${post.id}" class="text-decoration-none">
-                <div class="photo-thumbnail">
-                    <img src="${post.preview || '/img/default-preview.jpg'}" class="img-fluid" alt="Фото">
-                    <div class="photo-overlay">
-                        <div class="photo-stats text-white">
-                            <h6 class="mb-0">${post.title}</h6>
-                        </div>
-                    </div>
-                </div>
-            </a>
-        </div>
-    `).join('');
-}
+    <div class="col-md-4 col-6 mb-3">
+      <div class="photo-thumbnail position-relative">
+        <a href="/pages/post.html?id=${post.id}" class="text-decoration-none d-block">
+          <img src="${post.preview || '/img/default-preview.jpg'}" class="img-fluid" alt="Фото">
+          <div class="photo-overlay d-flex align-items-center justify-content-center">
+            <div class="photo-stats text-white">
+              <h6 class="mb-0">${post.title}</h6>
+            </div>
+          </div>
+        </a>
+        <button class="btn btn-sm btn-danger delete-post-btn" data-post-id="${post.id}" title="Удалить пост">
+          <i class="fas fa-trash-alt"></i>
+        </button>
+      </div>
+    </div>
+  `).join('');
 
+  // Подключаем модалку
+  const confirmModal = new bootstrap.Modal(document.getElementById('confirmDeleteModal'));
+  const confirmBtn = document.getElementById('confirmDeleteBtn');
+  let currentPostId = null;
 
-async function saveProfile() {
-  const name = document.getElementById('editName').value.trim();
-  const bio = document.getElementById('editBio').value.trim();
-  const errorBox = document.getElementById('profileError');
+  document.querySelectorAll('.delete-post-btn').forEach(btn => {
+    btn.addEventListener('click', function (e) {
+      e.preventDefault();
+      e.stopPropagation();
 
-  // Сброс ошибок
-  errorBox.classList.add('d-none');
-  errorBox.textContent = '';
-
-  // Валидация имени
-  if (!/^[A-Za-zА-Яа-яЁё]+$/.test(name)) {
-    return showValidationError('Имя может содержать только буквы.');
-  }
-
-  try {
-    const response = await fetch('/profile/update', {
-      method: 'POST',
-      credentials: 'include',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name, bio })
+      currentPostId = this.dataset.postId;
+      confirmModal.show();
     });
+  });
 
-    const data = await response.json();
-    if (!response.ok) throw new Error(data.message || 'Ошибка при обновлении профиля');
+  confirmBtn.onclick = async () => {
+    if (!currentPostId) return;
 
-    // Обновить отображение
-    document.getElementById('name').textContent = data.name;
-    document.getElementById('userinfo').textContent = data.bio;
+    try {
+      const res = await fetch(`/api/posts/${currentPostId}`, {
+        method: 'DELETE',
+        credentials: 'include'
+      });
+      const result = await res.json();
 
-    const modalEl = document.getElementById('editSetProfileModal');
-    const modal = bootstrap.Modal.getInstance(modalEl);
-    if (modal) modal.hide();
-  } catch (err) {
-    showValidationError('Не удалось сохранить профиль. Попробуйте позже.');
-    console.error(err);
-  }
-
-  function showValidationError(message) {
-    errorBox.textContent = message;
-    errorBox.classList.remove('d-none');
-  }
+      if (!res.ok) throw new Error(result.message);
+      confirmModal.hide();
+      loadProfile(); // Обновим список постов
+    } catch (err) {
+      alert('Ошибка при удалении поста');
+      console.error(err);
+    }
+  };
 }
 
 

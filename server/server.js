@@ -482,12 +482,14 @@ app.get('/profile', (req, res) => {
                 return res.status(500).json({ message: 'Ошибка при загрузке постов' });
             }
 
+            const postCount = posts.length;
+
             posts = posts.map(post => ({
                 ...post,
                 preview: post.preview ? '/uploads/' + post.preview : null
             }));
 
-            res.json({ user, posts });
+            res.json({ user, posts, postCount });
         });
     });
 });
@@ -616,6 +618,46 @@ app.post('/delete-account', (req, res) => {
         });
     });
 });
+
+app.delete('/api/posts/:id', (req, res) => {
+    if (!req.session.user) {
+        return res.status(401).json({ message: 'Не авторизован' });
+    }
+
+    const postId = req.params.id;
+
+    // Проверим, принадлежит ли пост текущему пользователю
+    const checkQuery = 'SELECT * FROM posts WHERE id = ? AND user_id = ?';
+    db.get(checkQuery, [postId, req.session.user.id], (err, post) => {
+        if (err) return res.status(500).json({ message: 'Ошибка при проверке поста' });
+        if (!post) return res.status(403).json({ message: 'Нет доступа к этому посту' });
+
+        // Получаем фото, чтобы удалить файлы
+        db.all('SELECT filename FROM photos WHERE post_id = ?', [postId], (err, photos) => {
+            if (err) return res.status(500).json({ message: 'Ошибка при получении фотографий' });
+
+            photos.forEach(photo => {
+                const filePath = path.join(__dirname, '../public/uploads', photo.filename);
+                fs.unlink(filePath, err => {
+                    if (err) console.warn('Не удалось удалить файл:', filePath);
+                });
+            });
+
+            // Удаляем фото из базы
+            db.run('DELETE FROM photos WHERE post_id = ?', [postId], err => {
+                if (err) return res.status(500).json({ message: 'Ошибка при удалении фото' });
+
+                // Удаляем сам пост
+                db.run('DELETE FROM posts WHERE id = ?', [postId], err => {
+                    if (err) return res.status(500).json({ message: 'Ошибка при удалении поста' });
+
+                    res.json({ message: 'Пост удалён успешно' });
+                });
+            });
+        });
+    });
+});
+
 
 
 // Запуск сервера

@@ -47,13 +47,14 @@
 
                         <div class="profile-section animate__animated animate__backInUp animate__delay-0.2s">
                             <h3 class="section-title">О себе</h3>
-                            <p class="profile-bio animate__animated animate__fadeIn animate__delay-0.5s" id="userinfo"></p>
+                            <p class="profile-bio animate__animated animate__fadeIn animate__delay-0.5s" id="userinfo">
+                            </p>
                         </div>
 
                         <div class="row animate__animated animate__fadeIn animate__delay-2s">
                             <div class="col-md-4">
                                 <div class="stats-card">
-                                    <div class="stat-value">156</div>
+                                    <div class="stat-value" id="postCount">156</div>
                                     <div class="stat-label">Публикаций</div>
                                 </div>
                             </div>
@@ -125,7 +126,7 @@
                                     <div class="mb-3">
                                         <label for="editBio" class="form-label">О себе</label>
                                         <textarea class="form-control" id="editBio" rows="3" maxlength="300"
-                                        placeholder="Добавьте информацию о себе"></textarea>
+                                            placeholder="Добавьте информацию о себе"></textarea>
                                     </div>
                                 </form>
                             </div>
@@ -170,17 +171,17 @@
 
 
                 <!-- Контейнер с фотографиями пользователя -->
-    <div class="photos-container mt-5 animate__animated animate__fadeIn">
-    <div class="section-header d-flex justify-content-between align-items-center mb-4">
-        <h2 class="section-title">Мои посты</h2>
-        <form action="/pages/loadimg.html"> <button class="btn btn-outline-primary btn-sm">
-        <i class="fas fa-plus me-1"></i> Добавить
-        </button> </form>
-    </div>
-    
-    <div class="row g-3" id="userPhotosGrid">
-        <!-- Фотографии будут загружаться здесь динамически -->
-        <!-- Пример одной фотографии:
+                <div class="photos-container mt-5 animate__animated animate__fadeIn">
+                    <div class="section-header d-flex justify-content-between align-items-center mb-4">
+                        <h2 class="section-title">Мои посты</h2>
+                        <form action="/pages/loadimg.html"> <button class="btn btn-outline-primary btn-sm">
+                                <i class="fas fa-plus me-1"></i> Добавить
+                            </button> </form>
+                    </div>
+
+                    <div class="row g-3" id="userPhotosGrid">
+                        <!-- Фотографии будут загружаться здесь динамически -->
+                        <!-- Пример одной фотографии:
         <div class="col-md-4 col-6">
         <div class="photo-thumbnail">
             <img data-src="${photo.url}" class="img-fluid lazy" alt="Фото">
@@ -196,9 +197,29 @@
         </div>
         </div>
         -->
-    </div>
-    </div>
-    </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Модальное окно подтверждения удаления поста -->
+            <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content border-danger">
+                        <div class="modal-header bg-danger text-white">
+                            <h5 class="modal-title"><i class="fas fa-exclamation-triangle me-2"></i>Удалить пост?</h5>
+                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                                aria-label="Закрыть"></button>
+                        </div>
+                        <div class="modal-body text-center">
+                            <p class="mb-3">Вы уверены, что хотите удалить этот пост?<br>Это действие
+                                <strong>необратимо</strong>.</p>
+                            <button id="confirmDeleteBtn" class="btn btn-danger me-2">Удалить</button>
+                            <button class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
 </body>
 
 </html>
