@@ -12,6 +12,7 @@ const links = document.querySelectorAll('.navbar-nav .nav-link');
             const normalize = p => p.replace(/\/index\.html$/, '/').replace(/\/+$/, '');
             links.forEach(link => {
                 const linkPath = new URL(link.href).pathname;
+                console.log(linkPath);
                 if (normalize(linkPath) === normalize(path)) {
                     link.classList.add('active');
                 }
