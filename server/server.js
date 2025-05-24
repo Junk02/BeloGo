@@ -127,7 +127,7 @@ app.post('/upload-avatar', uploadAvatar.single('avatar'), (req, res) => {
         if (err) return res.status(500).json({ message: 'Ошибка при получении текущей аватарки' });
 
         // Удалим старую, если была и не загружена с внешнего URL
-        if (row?.avatar && row.avatar.startsWith('/avatars/')) {
+        if (row.avatar && row.avatar.startsWith('/avatars/')) {
             const oldPath = path.join(__dirname, '../public', row.avatar);
             fs.unlink(oldPath, err => {
                 if (err) console.warn('Не удалось удалить старую аватарку:', err.message);
