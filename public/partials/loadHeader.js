@@ -55,16 +55,16 @@ const links = document.querySelectorAll('.navbar-nav .nav-link');
                         if (response.ok) {
                             const data = await response.json();
                             if (data.loggedIn) {
-                                window.location.href = '/pages/loadimg.html';
+                                window.location.href = '/public/pages/loadimg.html';
                             } else {
-                                window.location.href = '/pages/auth.html';
+                                window.location.href = '/public/pages/auth.html';
                             }
                         } else {
-                            window.location.href = '/auth.html';
+                            window.location.href = '/public/pages/auth.html';
                         }
                     } catch (error) {
                         console.error('Ошибка при проверке сессии:', error);
-                        window.location.href = '/auth.html';
+                        window.location.href = '/public/pages/auth.html';
                     }
                 });
             }

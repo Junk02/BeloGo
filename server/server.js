@@ -54,7 +54,7 @@ app.use(cors({
 }));
 
 app.use(express.json());
-app.use(express.static(path.join(__dirname, '../public')));
+app.use(express.static(path.join(__dirname, '/public')));
 app.use(express.urlencoded({ extended: true }));
 // Настройка сессий
 app.use(session({
@@ -70,7 +70,7 @@ app.use(session({
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        cb(null, '../public/uploads/'); // папка для фото
+        cb(null, '/public/uploads/'); // папка для фото
     },
     filename: (req, file, cb) => {
         const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
@@ -82,7 +82,7 @@ const upload = multer({ storage });
 
 const avatarStorage = multer.diskStorage({
     destination: (req, file, cb) => {
-        cb(null, '../public/avatars/');
+        cb(null, '/public/avatars/');
     },
     filename: (req, file, cb) => {
         const uniqueName = Date.now() + '-' + Math.round(Math.random() * 1E9) + path.extname(file.originalname);
