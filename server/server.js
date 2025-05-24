@@ -8,7 +8,7 @@ const bcrypt = require('bcrypt');
 const sqlite3 = require('sqlite3').verbose();
 const db = new sqlite3.Database('./users.db');
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 const time = new Date();
 
 
@@ -48,23 +48,23 @@ db.run(`
 
 
 
-app.use(cors({
-    origin: 'http://localhost:3000', // замени на свой порт, если другой
-    credentials: true
-}));
 
 app.use(cors({
     origin: 'http://belogo.ru', // замени на свой порт, если другой
     credentials: true
-}));
-
-app.use(cors({
+},
+{
+    origin: 'http://localhost:3000', // замени на свой порт, если другой
+    credentials: true
+},
+{
     origin: 'https://belogo.ru', // замени на свой порт, если другой
     credentials: true
 }));
 
+
 app.use(express.json());
-app.use(express.static(path.join(__dirname, '../public/')));
+app.use(express.static(path.join(__dirname, '../public')));
 console.log(path.join(__dirname, '../public'));
 app.use(express.urlencoded({ extended: true }));
 // Настройка сессий
