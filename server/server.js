@@ -573,7 +573,7 @@ app.post('/delete-account', (req, res) => {
         db.get('SELECT avatar FROM users WHERE id = ?', [userId], (err, userRow) => {
             if (err) return res.status(500).json({ message: 'Ошибка при получении аватарки' });
 
-            if (userRow?.avatar && userRow.avatar.startsWith('/avatars/')) {
+            if (userRow.avatar && userRow.avatar.startsWith('/avatars/')) {
                 const avatarPath = path.join(__dirname, '../public', userRow.avatar);
                 fs.unlink(avatarPath, err => {
                     if (err) console.warn('Не удалось удалить аватарку:', err.message);
