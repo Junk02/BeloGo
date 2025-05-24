@@ -54,7 +54,7 @@ app.use(cors({
 }));
 
 app.use(express.json());
-app.use(express.static(path.join(__dirname, '/public')));
+app.use(express.static(path.join(__dirname, '../public')));
 app.use(express.urlencoded({ extended: true }));
 // Настройка сессий
 app.use(session({
@@ -91,7 +91,7 @@ const avatarStorage = multer.diskStorage({
 });
 const uploadAvatar = multer({ storage: avatarStorage });
 
-const feedbackDir = path.join(__dirname, '../feedback');
+const feedbackDir = path.join(__dirname, '/feedback');
 
 if (!fs.existsSync(feedbackDir)) {
     fs.mkdirSync(feedbackDir, { recursive: true });
