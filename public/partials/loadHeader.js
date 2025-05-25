@@ -1,18 +1,17 @@
-fetch('http://localhost:3000/public/partials/header.html')
+fetch('/partials/header.html')
     .then(response => response.text())
     .then(data => {
         document.getElementById('header-placeholder').innerHTML = data;
-        console.log(data);
 
         // Ждём отрисовки и запускаем всё
         requestAnimationFrame(() => {
+            // === 1. Подсветка активной ссылки ===
+            // === 1. Подсветка активной ссылки ===
             const path = window.location.pathname;
-            console.log(path);
-const links = document.querySelectorAll('.navbar-nav .nav-link');
+            const links = document.querySelectorAll('.navbar-nav .nav-link');
             const normalize = p => p.replace(/\/index\.html$/, '/').replace(/\/+$/, '');
             links.forEach(link => {
                 const linkPath = new URL(link.href).pathname;
-                console.log(linkPath);
                 if (normalize(linkPath) === normalize(path)) {
                     link.classList.add('active');
                 }
@@ -40,6 +39,8 @@ const links = document.querySelectorAll('.navbar-nav .nav-link');
                 lastScroll = currentScroll;
             });
 
+            // === 3. Проверка авторизации при нажатии на "Добавить пост" ===
+            // === 3. Проверка авторизации при нажатии на "Добавить пост" ===
             const addPostBtn = document.getElementById('add-post-btn');
 
             if (addPostBtn) {
@@ -54,16 +55,16 @@ const links = document.querySelectorAll('.navbar-nav .nav-link');
                         if (response.ok) {
                             const data = await response.json();
                             if (data.loggedIn) {
-                                window.location.href = '/public/pages/loadimg.html';
+                                window.location.href = '/pages/loadimg.html';
                             } else {
-                                window.location.href = '/public/pages/auth.html';
+                                window.location.href = '/pages/auth.html';
                             }
                         } else {
-                            window.location.href = '/public/pages/auth.html';
+                            window.location.href = '/auth.html';
                         }
                     } catch (error) {
                         console.error('Ошибка при проверке сессии:', error);
-                        window.location.href = '/public/pages/auth.html';
+                        window.location.href = '/auth.html';
                     }
                 });
             }

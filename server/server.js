@@ -8,7 +8,7 @@ const bcrypt = require('bcrypt');
 const sqlite3 = require('sqlite3').verbose();
 const db = new sqlite3.Database('./users.db');
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = 3000;
 const time = new Date();
 
 
@@ -48,24 +48,13 @@ db.run(`
 
 
 
-
 app.use(cors({
-    origin: 'http://belogo.ru', // замени на свой порт, если другой
-    credentials: true
-},
-{
     origin: 'http://localhost:3000', // замени на свой порт, если другой
-    credentials: true
-},
-{
-    origin: 'https://belogo.ru', // замени на свой порт, если другой
     credentials: true
 }));
 
-
 app.use(express.json());
 app.use(express.static(path.join(__dirname, '../public')));
-console.log(path.join(__dirname, '../public'));
 app.use(express.urlencoded({ extended: true }));
 // Настройка сессий
 app.use(session({
@@ -81,7 +70,7 @@ app.use(session({
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        cb(null, '/public/uploads/'); // папка для фото
+        cb(null, '../public/uploads/'); // папка для фото
     },
     filename: (req, file, cb) => {
         const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
@@ -93,7 +82,7 @@ const upload = multer({ storage });
 
 const avatarStorage = multer.diskStorage({
     destination: (req, file, cb) => {
-        cb(null, '/public/avatars/');
+        cb(null, '../public/avatars/');
     },
     filename: (req, file, cb) => {
         const uniqueName = Date.now() + '-' + Math.round(Math.random() * 1E9) + path.extname(file.originalname);
@@ -102,7 +91,7 @@ const avatarStorage = multer.diskStorage({
 });
 const uploadAvatar = multer({ storage: avatarStorage });
 
-const feedbackDir = path.join(__dirname, '/feedback');
+const feedbackDir = path.join(__dirname, '../feedback');
 
 if (!fs.existsSync(feedbackDir)) {
     fs.mkdirSync(feedbackDir, { recursive: true });
@@ -138,7 +127,7 @@ app.post('/upload-avatar', uploadAvatar.single('avatar'), (req, res) => {
         if (err) return res.status(500).json({ message: 'Ошибка при получении текущей аватарки' });
 
         // Удалим старую, если была и не загружена с внешнего URL
-        if (row.avatar && row.avatar.startsWith('/avatars/')) {
+        if (row?.avatar && row.avatar.startsWith('/avatars/')) {
             const oldPath = path.join(__dirname, '../public', row.avatar);
             fs.unlink(oldPath, err => {
                 if (err) console.warn('Не удалось удалить старую аватарку:', err.message);
@@ -584,7 +573,7 @@ app.post('/delete-account', (req, res) => {
         db.get('SELECT avatar FROM users WHERE id = ?', [userId], (err, userRow) => {
             if (err) return res.status(500).json({ message: 'Ошибка при получении аватарки' });
 
-            if (userRow.avatar && userRow.avatar.startsWith('/avatars/')) {
+            if (userRow?.avatar && userRow.avatar.startsWith('/avatars/')) {
                 const avatarPath = path.join(__dirname, '../public', userRow.avatar);
                 fs.unlink(avatarPath, err => {
                     if (err) console.warn('Не удалось удалить аватарку:', err.message);
