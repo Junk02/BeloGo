@@ -131,6 +131,50 @@ function renderUserPosts(posts) {
   };
 }
 
+async function saveProfile() {
+  const name = document.getElementById('editName').value.trim();
+  const bio = document.getElementById('editBio').value.trim();
+  const errorBox = document.getElementById('profileError');
+
+  // Сброс ошибок
+  errorBox.classList.add('d-none');
+  errorBox.textContent = '';
+
+  // Валидация имени
+  if (!/^[A-Za-zА-Яа-яЁё]+$/.test(name)) {
+    return showValidationError('Имя может содержать только буквы.');
+  }
+
+  try {
+    const response = await fetch('/profile/update', {
+      method: 'POST',
+      credentials: 'include',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, bio })
+    });
+
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.message || 'Ошибка при обновлении профиля');
+
+    // Обновить отображение
+    document.getElementById('name').textContent = data.name;
+    document.getElementById('userinfo').textContent = data.bio;
+
+    const modalEl = document.getElementById('editSetProfileModal');
+    const modal = bootstrap.Modal.getInstance(modalEl);
+    if (modal) modal.hide();
+  } catch (err) {
+    showValidationError('Не удалось сохранить профиль. Попробуйте позже.');
+    console.error(err);
+  }
+
+  function showValidationError(message) {
+    errorBox.textContent = message;
+    errorBox.classList.remove('d-none');
+  }
+}
+
+
 
 // Выход из аккаунта
 document.getElementById('logoutBtn').addEventListener('click', async () => {
