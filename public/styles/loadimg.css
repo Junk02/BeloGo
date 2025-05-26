@@ -247,7 +247,7 @@ body {
 @media (max-width: 768px) {
     .upload-container {
         padding: 1.5rem;
-        margin-top: 1rem;
+        margin-top: 4rem;
     }
     
     .upload-title {
@@ -274,7 +274,6 @@ body {
 .navbar-brand {
     font-weight: 700;
 }
-
 
 @media (max-width: 992px) {
     .navbar-collapse {
