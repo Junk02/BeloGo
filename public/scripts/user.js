@@ -25,6 +25,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         document.getElementById('profileAvatar').src = data.user.avatar || '/img/default-avatar.jpg';
         document.getElementById('name').textContent = data.user.name;
         document.getElementById('username').textContent = '@' + data.user.nickname;
+        document.getElementById('postCount').textContent = data.postCount || 0;
         document.getElementById('userinfo').textContent = data.user.bio || 'Пользователь пока ничего о себе не рассказал.';
 
         renderPosts(data.posts);

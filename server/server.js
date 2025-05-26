@@ -217,17 +217,20 @@ app.get('/api/users/:nickname', (req, res) => {
                 return res.status(500).json({ message: 'Ошибка при загрузке постов' });
             }
 
-            // Добавим ссылку на файл
+            // Добавим ссылку на превью-фото
             posts.forEach(post => {
                 if (post.preview_photo) {
                     post.preview_photo = '/uploads/' + post.preview_photo;
                 }
             });
 
-            res.json({ user, posts });
+            const postCount = posts.length;
+
+            res.json({ user, posts, postCount });
         });
     });
 });
+
 
 
 
